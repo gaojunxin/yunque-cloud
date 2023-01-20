@@ -9,6 +9,7 @@ import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.ServiceConstants;
 import com.xueyi.common.core.constant.gen.GenConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.core.*;
 import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
@@ -41,6 +42,8 @@ public class VelocityUtils {
      * @return 模板列表
      */
     public static VelocityContext prepareContext(GenTableDto genTable) {
+        if(StrUtil.hasEmpty(genTable.getPackageName(), genTable.getModuleName(), genTable.getBusinessName(), genTable.getAuthorityName()))
+            throw new ServiceException("请先编辑完善信息！");
         String businessName = genTable.getBusinessName();
         String packageName = genTable.getPackageName();
         String tplCategory = genTable.getTplCategory();
@@ -139,7 +142,10 @@ public class VelocityUtils {
     public static void setMenuVelocityContext(VelocityContext context, JSONObject optionsObj) {
         context.put("parentModuleId", getParentModuleId(optionsObj));
         context.put("parentMenuId", getParentMenuId(optionsObj));
-        context.put("parentMenuAncestors", optionsObj.getString(GenConstants.OptionField.PARENT_MENU_ANCESTORS.getCode()));
+        String parentMenuAncestors = optionsObj.getString(GenConstants.OptionField.PARENT_MENU_ANCESTORS.getCode());
+        context.put("parentMenuAncestors", parentMenuAncestors);
+        List<String> ancestorsArr = StrUtil.split(parentMenuAncestors, StrUtil.COMMA);
+        context.put("level", ancestorsArr.size());
         // 生成菜单menuId0-9
         for (int i = 0; i < 10; i++) {
             context.put("menuId" + i, IdUtil.getSnowflake(0, 0).nextId());

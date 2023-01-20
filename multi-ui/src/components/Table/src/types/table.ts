@@ -48,6 +48,7 @@ export interface ExpandedRowRenderRecord<T> extends TableCustomRecord<T> {
   indent?: number;
   expanded?: boolean;
 }
+
 export interface ColumnFilterItem {
   text?: string;
   value?: string;
