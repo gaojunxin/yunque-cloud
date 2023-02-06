@@ -56,7 +56,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2022-2025 xueyitt.cn All Rights Reserved.</span>
+      <span>Copyright © 2022-2023 xueyitt.cn All Rights Reserved.</span>
     </div>
   </div>
 </template>
