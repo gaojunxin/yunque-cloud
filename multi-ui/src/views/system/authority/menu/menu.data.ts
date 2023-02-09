@@ -100,6 +100,7 @@ export function initialize(data: MenuIM) {
       menu.paramPath = data.paramPath;
       menu.perms = data.perms;
       menu.hideTab = data.hideTab;
+      menu.hideMenu = DicShowHideEnum.HIDE;
       break;
     case MenuTypeEnum.BUTTON:
       menu.perms = data.perms;
