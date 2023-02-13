@@ -61,10 +61,9 @@ public class SysRoleManagerImpl extends BaseManagerImpl<SysRoleQuery, SysRoleDto
      */
     @Override
     public int updateDataScope(Long id, String roleKey, String dataScope) {
-        return baseMapper.update(new SysRoleDto(),
+        return baseMapper.update(null,
                 Wrappers.<SysRolePo>update().lambda()
                         .set(SysRolePo::getDataScope, dataScope)
-                        .set(SysRolePo::getRoleKey, roleKey)
                         .eq(SysRolePo::getId, id));
     }
 
