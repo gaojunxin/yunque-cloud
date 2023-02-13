@@ -34,6 +34,7 @@ export interface LoginIM {
  */
 export interface GetUserIM {
   user: UserIM;
+  enterprise: EnterpriseIM;
   roles: [];
   permissions: [];
   routes: Map<string, string>;

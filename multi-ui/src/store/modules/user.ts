@@ -12,11 +12,11 @@ import { RouteRecordRaw } from 'vue-router';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 import { isArray } from '/@/utils/is';
 import { h } from 'vue';
-import { doLogout, getCodeImg, getEnterpriseInfo, getUserInfo, loginApi } from '/@/api/sys/login';
+import { doLogout, getCodeImg, getUserInfo, loginApi } from '/@/api/sys/login';
 import { EnterpriseIM, UserIM } from '/@/model/system';
 import { TenantTypeEnum, UserTypeEnum } from '/@/enums/appEnum';
 import { DicCommonPrivateEnum } from '/@/enums';
-import { GetEnterpriseIM, GetUserIM, LoginPM } from '/@/model/sys';
+import { GetUserIM, LoginPM } from '/@/model/sys';
 import { isMap } from '@vue/shared';
 import { MODULE_CACHE } from '/@/enums/system';
 
@@ -177,9 +177,6 @@ export const useUserStore = defineStore({
       // get user info
       const getInfo = await this.getUserInfoAction();
 
-      // get enterprise info
-      this.getEnterpriseInfoAction();
-
       const sessionTimeout = this.sessionTimeout;
       if (sessionTimeout) {
         this.setSessionTimeout(false);
@@ -201,7 +198,7 @@ export const useUserStore = defineStore({
     async getUserInfoAction(): Promise<GetUserIM | null> {
       if (!this.getToken) return null;
       const getInfo = await getUserInfo();
-      const { roles = [], permissions = [], routes, user } = getInfo;
+      const { roles = [], permissions = [], routes, user, enterprise } = getInfo;
       if (isArray(roles)) {
         const roleList = roles as string[];
         this.setRoleList(roleList);
@@ -221,16 +218,8 @@ export const useUserStore = defineStore({
         this.setRoutePathMap(routePathMap);
       }
       this.setUserInfo(user);
+      this.setEnterpriseInfo(enterprise);
       return getInfo;
-    },
-
-    /**
-     * @description: get enterprise info
-     */
-    async getEnterpriseInfoAction() {
-      if (!this.getToken) return null;
-      const enterpriseInfo = (await getEnterpriseInfo()) as GetEnterpriseIM;
-      this.setEnterpriseInfo(enterpriseInfo);
     },
 
     /**
