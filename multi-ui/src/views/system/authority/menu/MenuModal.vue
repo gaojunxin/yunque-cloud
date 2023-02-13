@@ -40,10 +40,10 @@
 
         if (unref(isUpdate)) {
           const menu = await getMenuApi(data.record.id);
+          setMenuTree(menu.id, menu.moduleId);
           setFieldsValue({
             ...menu,
           });
-          setMenuTree(menu.id, menu.moduleId);
         } else {
           setMenuTree(undefined, COMMON_MODULE);
         }

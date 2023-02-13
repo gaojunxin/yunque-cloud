@@ -249,18 +249,36 @@ export const formSchema: FormSchema[] = [
         labelField: 'name',
         valueField: 'id',
         onChange: async (e: any) => {
-          const treeData =
-            e === undefined
-              ? []
-              : formModel.id === undefined
-              ? await getMenuRouteListApi(e, MenuTypeEnum.DETAILS)
-              : await getMenuRouteListExNodesApi(formModel.id, e, MenuTypeEnum.DETAILS);
-          formModel.parentId = undefined;
-          const { updateSchema } = formActionType;
-          updateSchema({
-            field: 'parentId',
-            componentProps: { treeData },
-          });
+          if (formModel.moduleId !== e) {
+            const treeData =
+              e === undefined
+                ? []
+                : formModel.id === undefined
+                ? await getMenuRouteListApi(e, MenuTypeEnum.DETAILS)
+                : await getMenuRouteListExNodesApi(formModel.id, e, MenuTypeEnum.DETAILS);
+            formModel.parentId = searchTree(treeData, formModel.parentId);
+            const { updateSchema } = formActionType;
+            updateSchema({
+              field: 'parentId',
+              componentProps: { treeData },
+            });
+          }
+
+          function searchTree(nodes, searchKey) {
+            for (let _i = 0; _i < nodes.length; _i++) {
+              if (nodes[_i].id === searchKey) {
+                return nodes[_i].id;
+              } else {
+                if (nodes[_i].children && nodes[_i].children.length > 0) {
+                  const res = searchTree(nodes[_i].children, searchKey);
+                  if (res) {
+                    return res;
+                  }
+                }
+              }
+            }
+            return undefined;
+          }
         },
       };
     },
