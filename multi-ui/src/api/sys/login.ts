@@ -1,10 +1,12 @@
 import { CodeImgIM, GetEnterpriseIM, GetUserIM, LoginIM, LoginPM } from '/@/model/sys';
 import { defHttp } from '/@/utils/http/axios';
 import { ErrorMessageMode } from '/#/axios';
+import { ContentTypeEnum } from '/@/enums/httpEnum';
 
 enum Api {
   GetCodeImg = '/code',
   Login = '/auth/login',
+  OauthLogin = '/auth/oauth2/token',
   Logout = '/auth/logout',
   GetUserInfo = '/system/user/getInfo',
   GetEnterpriseInfo = '/system/enterprise/getInfo',
@@ -28,6 +30,29 @@ export function loginApi(params: LoginPM, mode: ErrorMessageMode = 'modal') {
     {
       url: Api.Login,
       params,
+    },
+    {
+      errorMessageMode: mode,
+      withToken: false,
+    },
+  );
+}
+
+/**
+ * @description: user oauth2 login api
+ */
+export function oauthLoginApi(params: LoginPM, mode: ErrorMessageMode = 'modal') {
+  params.grant_type = 'password';
+  params.scope = 'server';
+  const basicAuth = 'Basic ' + window.btoa('xueyi:xueyi');
+  return defHttp.post<LoginIM>(
+    {
+      headers: {
+        Authorization: basicAuth,
+        'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+      },
+      url: Api.OauthLogin,
+      data: params,
     },
     {
       errorMessageMode: mode,
