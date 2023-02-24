@@ -69,6 +69,7 @@
       }
 
       const { hasPermission } = usePermission();
+
       function isIfShow(action: ActionItem): boolean {
         const ifShow = action.ifShow;
 
@@ -91,7 +92,7 @@
           .map((action) => {
             const { popConfirm } = action;
             return {
-              getPopupContainer: () => unref((table as any)?.wrapRef.value) ?? document.body,
+              getPopupContainer: () => unref((table as any)?.wrapRef) ?? document.body,
               type: 'link',
               size: 'small',
               ...action,
