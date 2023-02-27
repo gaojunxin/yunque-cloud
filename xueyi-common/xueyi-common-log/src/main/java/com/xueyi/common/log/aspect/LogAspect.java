@@ -20,7 +20,9 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -44,11 +46,22 @@ public class LogAspect {
     /** 排除敏感属性字段 */
     public static final String[] EXCLUDE_PROPERTIES = {"password", "oldPassword", "newPassword", "confirmPassword"};
 
+    /** 计算操作消耗时间 */
+    private static final ThreadLocal<Long> TIME_THREADLOCAL = new NamedThreadLocal<>("Cost Time");
+
     @Autowired
     private AsyncLogService asyncLogService;
 
     @Autowired
     private TokenService tokenService;
+
+    /**
+     * 处理请求前执行
+     */
+    @Before(value = "@annotation(controllerLog)")
+    public void boBefore(JoinPoint joinPoint, Log controllerLog) {
+        TIME_THREADLOCAL.set(System.currentTimeMillis());
+    }
 
     /**
      * 处理完请求后执行
@@ -106,12 +119,16 @@ public class LogAspect {
             operateLog.setRequestMethod(ServletUtil.getRequest().getMethod());
             // 处理设置注解上的参数
             getControllerMethodDescription(joinPoint, controllerLog, operateLog, jsonResult);
+            // 设置消耗时间
+            operateLog.setCostTime(System.currentTimeMillis() - TIME_THREADLOCAL.get());
             // 保存数据库
             asyncLogService.saveOperateLog(operateLog);
         } catch (Exception exp) {
             // 记录本地异常日志
             log.error("异常信息:{}", exp.getMessage());
             exp.printStackTrace();
+        } finally {
+            TIME_THREADLOCAL.remove();
         }
     }
 
