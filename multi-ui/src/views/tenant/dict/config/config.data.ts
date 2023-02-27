@@ -5,7 +5,7 @@ import { dicDictList } from '/@/api/sys/dict';
 import { DicSortEnum, DicYesNoEnum } from '/@/enums/basic';
 import { ConfigIM } from '/@/model/tenant';
 import { dictConversion } from '/@/utils/xueyi';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 
 /** 字典查询 */
 export const dictMap = await dicDictList(['sys_yes_no']);
@@ -95,7 +95,7 @@ export const formSchema: FormSchema[] = [
     label: '参数编码',
     field: 'code',
     component: 'Input',
-    dynamicDisabled: ({ values }) => !isEmpty(values.id),
+    dynamicDisabled: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     required: true,
     colProps: { span: 12 },
   },
@@ -114,7 +114,7 @@ export const formSchema: FormSchema[] = [
     componentProps: {
       options: dict.DicYesNoOptions,
     },
-    dynamicDisabled: ({ values }) => !isEmpty(values.id),
+    dynamicDisabled: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     required: true,
     colProps: { span: 12 },
   },

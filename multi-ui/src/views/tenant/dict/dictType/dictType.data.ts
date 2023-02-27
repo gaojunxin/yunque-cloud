@@ -3,7 +3,7 @@ import { BasicColumn } from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import { dicDictList } from '/@/api/sys/dict';
 import { dictConversion } from '/@/utils/xueyi';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { DicSortEnum, DicStatusEnum } from '/@/enums/basic';
 import { DictTypeIM } from '/@/model/tenant';
 
@@ -90,7 +90,7 @@ export const formSchema: FormSchema[] = [
     label: '字典类型',
     field: 'code',
     component: 'Input',
-    dynamicDisabled: ({ values }) => !isEmpty(values.id),
+    dynamicDisabled: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     required: true,
     colProps: { span: 12 },
   },

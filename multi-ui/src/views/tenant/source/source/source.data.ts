@@ -3,7 +3,7 @@ import { BasicColumn } from '/@/components/Table';
 import { DescItem } from '/@/components/Description';
 import { dicDictList } from '/@/api/sys/dict';
 import { dictConversion } from '/@/utils/xueyi';
-import { isEmpty } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash-es';
 import { DicSortEnum, DicStatusEnum } from '/@/enums/basic';
 import { SourceIM } from '/@/model/tenant';
 import { DRIVER_CLASSNAME, URL_APPEND, URL_PREPEND } from '/@/enums/tenant';
@@ -102,7 +102,7 @@ export const formSchema: FormSchema[] = [
     label: '数据源编码',
     field: 'slave',
     component: 'Input',
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     dynamicDisabled: true,
     colProps: { span: 12 },
   },

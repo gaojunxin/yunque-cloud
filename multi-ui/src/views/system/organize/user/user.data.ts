@@ -6,7 +6,7 @@ import { DicSortEnum, DicStatusEnum } from '/@/enums/basic';
 import { UserIM } from '/@/model/system';
 import { DefaultPassword, OrganizeTypeEnum, SexEnum } from '/@/enums/system';
 import { organizeOptionApi } from '/@/api/system/organize/organize';
-import { isEmpty, isEqual, pull } from 'lodash-es';
+import { isEmpty, isEqual, isNil, pull } from 'lodash-es';
 import { dictConversion } from '/@/utils/xueyi';
 
 /** 字典查询 */
@@ -149,7 +149,7 @@ export const formSchema: FormSchema[] = [
     label: '用户账号',
     field: 'userName',
     component: 'Input',
-    dynamicDisabled: ({ values }) => !isEmpty(values.id),
+    dynamicDisabled: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     required: true,
     colProps: { span: 24 },
   },

@@ -7,7 +7,7 @@ import { Tinymce } from '/@/components/Tinymce';
 import { NoticeIM } from '/@/model/system';
 import { NoticeTypeEnum } from '/@/enums/system';
 import { dictConversion } from '/@/utils/xueyi';
-import { isEmpty } from '/@/utils/is';
+import { isEmpty, isNil } from 'lodash-es';
 
 /** 字典查询 */
 export const dictMap = await dicDictList(['sys_notice_type', 'sys_notice_status']);
@@ -137,7 +137,7 @@ export const formSchema: FormSchema[] = [
       optionFilterProp: 'label',
     },
     dynamicDisabled: true,
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     colProps: { span: 12 },
   },
   {

@@ -5,8 +5,8 @@ import { dicDictList } from '/@/api/sys/dict';
 import { DicSortEnum, DicStatusEnum } from '/@/enums/basic';
 import { RoleIM } from '/@/model/system';
 import { dictConversion } from '/@/utils/xueyi';
-import { isEmpty } from '/@/utils/is';
 import { DataScopeEnum } from '/@/enums/system';
+import { isEmpty, isNil } from 'lodash-es';
 
 /** 字典查询 */
 export const dictMap = await dicDictList(['sys_normal_disable', 'auth_data_scope']);
@@ -164,7 +164,7 @@ export const authFormSchema: FormSchema[] = [
     field: 'code',
     component: 'Input',
     dynamicDisabled: true,
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     colProps: { span: 12 },
   },
   {
@@ -172,7 +172,7 @@ export const authFormSchema: FormSchema[] = [
     field: 'name',
     component: 'Input',
     dynamicDisabled: true,
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     colProps: { span: 12 },
   },
   {
@@ -198,7 +198,7 @@ export const organizeFormSchema: FormSchema[] = [
     field: 'code',
     component: 'Input',
     dynamicDisabled: true,
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     colProps: { span: 12 },
   },
   {
@@ -206,7 +206,7 @@ export const organizeFormSchema: FormSchema[] = [
     field: 'name',
     component: 'Input',
     dynamicDisabled: true,
-    ifShow: ({ values }) => !isEmpty(values.id),
+    ifShow: ({ values }) => !isNil(values.id) && !isEmpty(values.id),
     colProps: { span: 12 },
   },
   {
