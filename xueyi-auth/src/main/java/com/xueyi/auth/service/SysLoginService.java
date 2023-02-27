@@ -1,9 +1,12 @@
 package com.xueyi.auth.service;
 
 import com.xueyi.auth.form.RegisterBody;
-import com.xueyi.common.core.constant.basic.*;
+import com.xueyi.common.core.constant.basic.BaseConstants;
+import com.xueyi.common.core.constant.basic.Constants;
+import com.xueyi.common.core.constant.basic.DictConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.core.constant.system.OrganizeConstants;
-import com.xueyi.common.core.utils.ServletUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.utils.ip.IpUtil;
@@ -152,7 +155,7 @@ public class SysLoginService {
         loginInfo.setUserId(userId);
         loginInfo.setUserName(userName);
         loginInfo.setUserNick(userNick);
-        loginInfo.setIpaddr(IpUtil.getIpAddr(ServletUtil.getRequest()));
+        loginInfo.setIpaddr(IpUtil.getIpAddr());
         loginInfo.setMsg(message);
         // 日志状态
         if (StrUtil.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {

@@ -74,7 +74,7 @@ public class BaseTokenService<User, LoginUser extends BaseLoginUser<User>> {
         loginUser.setUserName(userName);
         loginUser.setNickName(nickName);
         loginUser.setSourceName(sourceName);
-        loginUser.setIpaddr(IpUtil.getIpAddr(ServletUtil.getRequest()));
+        loginUser.setIpaddr(IpUtil.getIpAddr());
 
         loginUser.setLoginTime(System.currentTimeMillis());
 
