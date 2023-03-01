@@ -6,6 +6,20 @@ import { deepMerge } from '/@/utils/index';
 import { cloneDeep } from 'lodash-es';
 
 /** 字典转换 */
+export function dictConvert(dictOptions: DictLM, val: string): string {
+  if (!dictOptions) {
+    console.error('字典不存在');
+    return val;
+  }
+  const dict = dictOptions.find((dict) => dict.value === val);
+  if (dict === undefined) {
+    console.error('字典对应值不存在');
+    return val;
+  }
+  return dict.label;
+}
+
+/** 字典转换 */
 export function dictConversion(dictOptions: DictLM, val: string) {
   if (!dictOptions) {
     console.error('字典不存在');
