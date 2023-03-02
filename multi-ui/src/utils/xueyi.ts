@@ -3,7 +3,7 @@ import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { isArray } from './is';
 import { deepMerge } from '/@/utils/index';
-import { cloneDeep } from 'lodash-es';
+import { cloneDeep, isNil } from 'lodash-es';
 
 /** 字典转换 */
 export function dictConvert(dictOptions: DictLM, val: string): string {
@@ -20,7 +20,8 @@ export function dictConvert(dictOptions: DictLM, val: string): string {
 }
 
 /** 字典转换 */
-export function dictConversion(dictOptions: DictLM, val: string) {
+export function dictConversion(dictOptions: DictLM, val?: string) {
+  if (isNil(val)) return undefined;
   if (!dictOptions) {
     console.error('字典不存在');
     return val;
