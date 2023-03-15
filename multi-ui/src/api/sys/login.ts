@@ -42,8 +42,8 @@ export function loginApi(params: LoginPM, mode: ErrorMessageMode = 'modal') {
  * @description: user oauth2 login api
  */
 export function oauthLoginApi(params: LoginPM, mode: ErrorMessageMode = 'modal') {
-  params.grantType = 'password';
-  params.accountType = 'admin';
+  params.grant_type = 'password';
+  params.account_type = 'admin';
   params.scope = 'server';
   const basicAuth = 'Basic ' + window.btoa('xueyi:xueyi');
   return defHttp.post<LoginIM>(
