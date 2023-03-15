@@ -9,7 +9,8 @@ export interface LoginPM {
   password: string;
   code: string;
   uuid: string;
-  grant_type?: string;
+  grantType?: string;
+  accountType?: string;
   scope?: string;
 }
 
