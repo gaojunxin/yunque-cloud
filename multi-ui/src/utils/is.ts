@@ -93,6 +93,7 @@ export const isServer = typeof window === 'undefined';
 export const isClient = !isServer;
 
 export function isUrl(path: string): boolean {
-  const reg = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+  //const reg = /^(\/)?http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+  const reg = /^(\/)?http(s)?:\/\//;
   return reg.test(path);
 }
