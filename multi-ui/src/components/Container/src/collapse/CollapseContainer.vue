@@ -73,7 +73,9 @@
               {props.loading ? (
                 <Skeleton active={props.loading} />
               ) : (
-                show.value && <div class={`${prefixCls}__body`}>{slots.default?.()}</div>
+                <div className={`${prefixCls}__body`} v-show={show.value}>
+                  {slots.default?.()}
+                </div>
               )}
             </CollapseTransition>
           </div>
