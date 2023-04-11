@@ -51,10 +51,8 @@
               />
             </div>
           </div>
-          <template v-else>
-            <div class="p-5">
-              <a-empty />
-            </div>
+          <template v-else
+            ><div class="p-5"><a-empty /></div>
           </template>
         </template>
 
@@ -71,7 +69,7 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { ScrollContainer } from '/@/components/Container';
   import { Input, Popover, Pagination, Empty } from 'ant-design-vue';
-  import Icon from './Icon.vue';
+  import Icon from '../Icon.vue';
   import SvgIcon from './SvgIcon.vue';
 
   import iconsData from '../data/icons.data';
@@ -169,7 +167,7 @@
     }
   }
 
-  function handleSearchChange(e: ChangeEvent) {
+  function handleSearchChange(e: Event) {
     const value = e.target.value;
     if (!value) {
       setCurrentPage(1);

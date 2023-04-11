@@ -1,14 +1,11 @@
-import { MenuModeEnum } from '/@/enums/menuEnum';
-import type { Menu as MenuType } from '/@/router/types';
-import type { MenuState } from './types';
-
-import { computed, Ref, toRaw } from 'vue';
-
-import { unref } from 'vue';
-import { uniq } from 'lodash-es';
-import { useMenuSetting } from '/@/hooks/setting/useMenuSetting';
-import { getAllParentPath } from '/@/router/helper/menuHelper';
-import { useTimeoutFn } from '/@/hooks/core/useTimeout';
+import {MenuModeEnum} from '/@/enums/menuEnum';
+import type {Menu as MenuType} from '/@/router/types';
+import type {MenuState} from './types';
+import {computed, Ref, toRaw, unref} from 'vue';
+import {useTimeoutFn} from '@xueyi/hooks';
+import {uniq} from 'lodash-es';
+import {useMenuSetting} from '/@/hooks/setting/useMenuSetting';
+import {getAllParentPath} from '/@/router/helper/menuHelper';
 
 export function useOpenKeys(
   menuState: MenuState,
@@ -16,29 +13,30 @@ export function useOpenKeys(
   mode: Ref<MenuModeEnum>,
   accordion: Ref<boolean>,
 ) {
-  const { getCollapsed, getIsMixSidebar } = useMenuSetting();
+  const {getCollapsed, getIsMixSidebar} = useMenuSetting();
 
   async function setOpenKeys(path: string) {
     if (mode.value === MenuModeEnum.HORIZONTAL) {
       return;
     }
     const native = unref(getIsMixSidebar);
-    useTimeoutFn(
-      () => {
-        const menuList = toRaw(menus.value);
-        if (menuList?.length === 0) {
-          menuState.openKeys = [];
-          return;
-        }
-        if (!unref(accordion)) {
-          menuState.openKeys = uniq([...menuState.openKeys, ...getAllParentPath(menuList, path)]);
-        } else {
-          menuState.openKeys = getAllParentPath(menuList, path);
-        }
-      },
-      16,
-      !native,
-    );
+    const handle = () => {
+      const menuList = toRaw(menus.value);
+      if (menuList?.length === 0) {
+        menuState.openKeys = [];
+        return;
+      }
+      if (!unref(accordion)) {
+        menuState.openKeys = uniq([...menuState.openKeys, ...getAllParentPath(menuList, path)]);
+      } else {
+        menuState.openKeys = getAllParentPath(menuList, path);
+      }
+    };
+    if (native) {
+      handle();
+    } else {
+      useTimeoutFn(handle, 16);
+    }
   }
 
   const getOpenKeys = computed(() => {
@@ -62,7 +60,7 @@ export function useOpenKeys(
       // const menuList = toRaw(menus.value);
       // getAllParentPath(menuList, path);
       const rootSubMenuKeys: string[] = [];
-      for (const { children, path } of unref(menus)) {
+      for (const {children, path} of unref(menus)) {
         if (children && children.length > 0) {
           rootSubMenuKeys.push(path);
         }
@@ -79,5 +77,6 @@ export function useOpenKeys(
       }
     }
   }
-  return { setOpenKeys, resetKeys, getOpenKeys, handleOpenChange };
+
+  return {setOpenKeys, resetKeys, getOpenKeys, handleOpenChange};
 }

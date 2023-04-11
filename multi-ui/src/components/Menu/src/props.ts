@@ -6,10 +6,11 @@ import { ThemeEnum } from '/@/enums/appEnum';
 import { propTypes } from '/@/utils/propTypes';
 import type { MenuTheme } from 'ant-design-vue';
 import type { MenuMode } from 'ant-design-vue/lib/menu/src/interface';
+
 export const basicProps = {
   items: {
     type: Array as PropType<Menu[]>,
-    default: () => ({}),
+    default: () => [],
   },
   collapsedShowTitle: propTypes.bool,
   // 最好是4 倍数
@@ -41,7 +42,7 @@ export const basicProps = {
 export const itemProps = {
   item: {
     type: Object as PropType<Menu>,
-    default: {},
+    default: () => ({}),
   },
   level: propTypes.number,
   theme: propTypes.oneOf(['dark', 'light']),

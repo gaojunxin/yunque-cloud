@@ -129,7 +129,6 @@ export function useTree(treeDataRef: Ref<TreeDataItem[]>, getFieldNames: Compute
     });
     treeDataRef.value = treeData;
   }
-
   /**
    * 批量添加节点
    */
@@ -142,6 +141,8 @@ export function useTree(treeDataRef: Ref<TreeDataItem[]>, getFieldNames: Compute
       for (let i = 0; i < list.length; i++) {
         treeData[push](list[i]);
       }
+      treeDataRef.value = treeData;
+      return;
     } else {
       const { key: keyField, children: childrenField } = unref(getFieldNames);
       if (!childrenField || !keyField) return;
@@ -158,7 +159,6 @@ export function useTree(treeDataRef: Ref<TreeDataItem[]>, getFieldNames: Compute
       });
     }
   }
-
   // Delete node
   function deleteNodeByKey(key: string, list?: TreeDataItem[]) {
     if (!key) return;
@@ -197,7 +197,6 @@ export function useTree(treeDataRef: Ref<TreeDataItem[]>, getFieldNames: Compute
     });
     return selectedNode || null;
   }
-
   return {
     deleteNodeByKey,
     insertNodeByKey,

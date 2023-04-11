@@ -1,10 +1,9 @@
 import type { NamePath, RuleObject } from 'ant-design-vue/lib/form/interface';
-import type { VNode } from 'vue';
+import type { VNode, CSSProperties } from 'vue';
 import type { ButtonProps as AntdButtonProps } from '/@/components/Button';
 import type { FormItem } from './formItem';
 import type { ColEx, ComponentType } from './index';
 import type { TableActionType } from '/@/components/Table/src/types/table';
-import type { CSSProperties } from 'vue';
 import type { RowProps } from 'ant-design-vue/lib/grid/Row';
 
 export type FieldMapToTime = [string, [string, string], (string | [string, string])?][];
@@ -124,7 +123,6 @@ export interface FormProps {
   transformDateFunc?: (date: any) => string;
   colon?: boolean;
 }
-
 export interface FormSchema {
   // Field name
   field: string;
@@ -211,7 +209,6 @@ export interface FormSchema {
 
   dynamicRules?: (renderCallbackParams: RenderCallbackParams) => Rule[];
 }
-
 export interface HelpComponentProps {
   maxWidth: string;
   // Whether to display the serial number
