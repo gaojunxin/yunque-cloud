@@ -9,7 +9,7 @@
       @click="handleShowForm(false)"
       v-show="showDate"
     >
-      <LockOutlined />
+      <LockOutlined/>
       <span>{{ t('sys.lock.unlock') }}</span>
     </div>
 
@@ -28,9 +28,9 @@
       <div :class="`${prefixCls}-entry`" v-show="!showDate">
         <div :class="`${prefixCls}-entry-content`">
           <div :class="`${prefixCls}-entry__header enter-x`">
-            <img :src="userinfo.avatar || headerImg" :class="`${prefixCls}-entry__header-img`" />
+            <img :src="userinfo.avatar || headerImg" :class="`${prefixCls}-entry__header-img`"/>
             <p :class="`${prefixCls}-entry__header-name`">
-              {{ userinfo.realName }}
+              {{ userinfo.nickName }}
             </p>
           </div>
           <InputPassword
@@ -77,158 +77,160 @@
   </div>
 </template>
 <script lang="ts" setup>
-  import { ref, computed } from 'vue';
-  import { Input } from 'ant-design-vue';
-  import { useUserStore } from '/@/store/modules/user';
-  import { useLockStore } from '/@/store/modules/lock';
-  import { useI18n } from '/@/hooks/web/useI18n';
-  import { useNow } from './useNow';
-  import { useDesign } from '/@/hooks/web/useDesign';
-  import { LockOutlined } from '@ant-design/icons-vue';
-  import headerImg from '/@/assets/images/header.jpg';
+import {ref, computed} from 'vue';
+import {Input} from 'ant-design-vue';
+import {useUserStore} from '/@/store/modules/user';
+import {useLockStore} from '/@/store/modules/lock';
+import {useI18n} from '/@/hooks/web/useI18n';
+import {useNow} from './useNow';
+import {useDesign} from '/@/hooks/web/useDesign';
+import {LockOutlined} from '@ant-design/icons-vue';
+import headerImg from '/@/assets/images/header.jpg';
 
-  const InputPassword = Input.Password;
+const InputPassword = Input.Password;
 
-  const password = ref('');
-  const loading = ref(false);
-  const errMsg = ref(false);
-  const showDate = ref(true);
+const password = ref('');
+const loading = ref(false);
+const errMsg = ref(false);
+const showDate = ref(true);
 
-  const { prefixCls } = useDesign('lock-page');
-  const lockStore = useLockStore();
-  const userStore = useUserStore();
+const {prefixCls} = useDesign('lock-page');
+const lockStore = useLockStore();
+const userStore = useUserStore();
 
-  const { hour, month, minute, meridiem, year, day, week } = useNow(true);
+const {hour, month, minute, meridiem, year, day, week} = useNow(true);
 
-  const { t } = useI18n();
+const {t} = useI18n();
 
-  const userinfo = computed(() => {
-    return userStore.getUserInfo || {};
-  });
+const userinfo = computed(() => {
+  return userStore.getUserInfo || {};
+});
 
-  /**
-   * @description: unLock
-   */
-  async function unLock() {
-    if (!password.value) {
-      return;
-    }
-    let pwd = password.value;
-    try {
-      loading.value = true;
-      const res = await lockStore.unLock(pwd);
-      errMsg.value = !res;
-    } finally {
-      loading.value = false;
-    }
+/**
+ * @description: unLock
+ */
+async function unLock() {
+  if (!password.value) {
+    return;
   }
-
-  function goLogin() {
-    userStore.logout(true);
-    lockStore.resetLockInfo();
+  let pwd = password.value;
+  try {
+    loading.value = true;
+    const res = await lockStore.unLock(pwd);
+    errMsg.value = !res;
+  } finally {
+    loading.value = false;
   }
+}
 
-  function handleShowForm(show = false) {
-    showDate.value = show;
-  }
+function goLogin() {
+  userStore.logout(true);
+  lockStore.resetLockInfo();
+}
+
+function handleShowForm(show = false) {
+  showDate.value = show;
+}
 </script>
 <style lang="less" scoped>
-  @prefix-cls: ~'@{namespace}-lock-page';
+@prefix-cls: ~'@{namespace}-lock-page';
 
-  .@{prefix-cls} {
-    z-index: @lock-page-z-index;
+.@{prefix-cls} {
+  z-index: @lock-page-z-index;
 
-    &__unlock {
-      transform: translate(-50%, 0);
-    }
+  &__unlock {
+    transform: translate(-50%, 0);
+  }
 
-    &__hour,
-    &__minute {
-      display: flex;
-      font-weight: 700;
-      color: #bababa;
-      background-color: #141313;
-      border-radius: 30px;
-      justify-content: center;
-      align-items: center;
+  &__hour,
+  &__minute {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    background-color: #141313;
+    color: #bababa;
+    font-weight: 700;
 
-      @media screen and (max-width: @screen-md) {
-        span:not(.meridiem) {
-          font-size: 160px;
-        }
-      }
-
-      @media screen and (min-width: @screen-md) {
-        span:not(.meridiem) {
-          font-size: 160px;
-        }
-      }
-
-      @media screen and (max-width: @screen-sm) {
-        span:not(.meridiem) {
-          font-size: 90px;
-        }
-      }
-      @media screen and (min-width: @screen-lg) {
-        span:not(.meridiem) {
-          font-size: 220px;
-        }
-      }
-
-      @media screen and (min-width: @screen-xl) {
-        span:not(.meridiem) {
-          font-size: 260px;
-        }
-      }
-      @media screen and (min-width: @screen-2xl) {
-        span:not(.meridiem) {
-          font-size: 320px;
-        }
+    @media screen and (max-width: @screen-md) {
+      span:not(.meridiem) {
+        font-size: 160px;
       }
     }
 
-    &-entry {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      background-color: rgb(0 0 0 / 50%);
-      backdrop-filter: blur(8px);
-      justify-content: center;
-      align-items: center;
-
-      &-content {
-        width: 260px;
+    @media screen and (min-width: @screen-md) {
+      span:not(.meridiem) {
+        font-size: 160px;
       }
+    }
 
-      &__header {
-        text-align: center;
-
-        &-img {
-          width: 70px;
-          margin: 0 auto;
-          border-radius: 50%;
-        }
-
-        &-name {
-          margin-top: 5px;
-          font-weight: 500;
-          color: #bababa;
-        }
+    @media screen and (max-width: @screen-sm) {
+      span:not(.meridiem) {
+        font-size: 90px;
       }
+    }
 
-      &__err-msg {
-        display: inline-block;
-        margin-top: 10px;
-        color: @error-color;
+    @media screen and (min-width: @screen-lg) {
+      span:not(.meridiem) {
+        font-size: 220px;
       }
+    }
 
-      &__footer {
-        display: flex;
-        justify-content: space-between;
+    @media screen and (min-width: @screen-xl) {
+      span:not(.meridiem) {
+        font-size: 260px;
+      }
+    }
+
+    @media screen and (min-width: @screen-2xl) {
+      span:not(.meridiem) {
+        font-size: 320px;
       }
     }
   }
+
+  &-entry {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0 0 0 / 50%);
+    backdrop-filter: blur(8px);
+
+    &-content {
+      width: 260px;
+    }
+
+    &__header {
+      text-align: center;
+
+      &-img {
+        width: 70px;
+        margin: 0 auto;
+        border-radius: 50%;
+      }
+
+      &-name {
+        margin-top: 5px;
+        color: #bababa;
+        font-weight: 500;
+      }
+    }
+
+    &__err-msg {
+      display: inline-block;
+      margin-top: 10px;
+      color: @error-color;
+    }
+
+    &__footer {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
 </style>
