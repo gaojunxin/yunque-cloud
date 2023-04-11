@@ -1,12 +1,12 @@
 /**
  * Multi-language related operations
  */
-import type { LocaleType } from '/#/config';
+import type {LocaleType} from '/#/config';
 
-import { i18n } from './setupI18n';
-import { useLocaleStoreWithOut } from '/@/store/modules/locale';
-import { unref, computed } from 'vue';
-import { loadLocalePool, setHtmlPageLang } from './helper';
+import {i18n} from './setupI18n';
+import {useLocaleStoreWithOut} from '/@/store/modules/locale';
+import {unref, computed} from 'vue';
+import {loadLocalePool, setHtmlPageLang} from './helper';
 
 interface LangModule {
   message: Recordable;
@@ -22,7 +22,7 @@ function setI18nLanguage(locale: LocaleType) {
   } else {
     (i18n.global.locale as any).value = locale;
   }
-  localeStore.setLocaleInfo({ locale });
+  localeStore.setLocaleInfo({locale});
   setHtmlPageLang(locale);
 }
 
@@ -32,6 +32,7 @@ export function useLocale() {
   const getShowLocalePicker = computed(() => localeStore.getShowPicker);
 
   const getAntdLocale = computed((): any => {
+    // @ts-ignore
     return i18n.global.getLocaleMessage(unref(getLocale))?.antdLocale ?? {};
   });
 
@@ -51,7 +52,7 @@ export function useLocale() {
     const langModule = ((await import(`./lang/${locale}.ts`)) as any).default as LangModule;
     if (!langModule) return;
 
-    const { message } = langModule;
+    const {message} = langModule;
 
     globalI18n.setLocaleMessage(locale, message);
     loadLocalePool.push(locale);
