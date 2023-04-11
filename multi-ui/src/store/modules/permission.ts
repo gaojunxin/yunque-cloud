@@ -50,23 +50,23 @@ export const usePermissionStore = defineStore({
     moduleId: sessionStorage.getItem(MODULE_CACHE) || COMMON_MODULE,
   }),
   getters: {
-    getPermCodeList(): string[] | number[] {
-      return this.permCodeList;
+    getPermCodeList(state): string[] | number[] {
+      return state.permCodeList;
     },
-    getAdminLessor(): boolean {
-      return this.isAdminLessor;
+    getAdminLessor(state): boolean {
+      return state.isAdminLessor;
     },
-    getMenuList(): Menu[] {
-      return this.menuList;
+    getMenuList(state): Menu[] {
+      return state.menuList;
     },
-    getLastBuildMenuTime(): number {
-      return this.lastBuildMenuTime;
+    getLastBuildMenuTime(state): number {
+      return state.lastBuildMenuTime;
     },
-    getIsDynamicAddedRoute(): boolean {
-      return this.isDynamicAddedRoute;
+    getIsDynamicAddedRoute(state): boolean {
+      return state.isDynamicAddedRoute;
     },
-    getModuleId(): string {
-      return this.moduleId;
+    getModuleId(state): string {
+      return state.moduleId;
     },
   },
   actions: {
