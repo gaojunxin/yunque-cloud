@@ -52,12 +52,12 @@ declare global {
   declare interface WheelEvent {
     path?: EventTarget[];
   }
+
   interface ImportMetaEnv extends ViteEnv {
     __: unknown;
   }
 
   declare interface ViteEnv {
-    VITE_PORT: number;
     VITE_USE_MOCK: boolean;
     VITE_USE_PWA: boolean;
     VITE_PUBLIC_PATH: string;
@@ -82,12 +82,15 @@ declare global {
     type Element = VNode;
     // tslint:disable no-empty-interface
     type ElementClass = ComponentRenderProxy;
+
     interface ElementAttributesProperty {
       $props: any;
     }
+
     interface IntrinsicElements {
       [elem: string]: any;
     }
+
     interface IntrinsicAttributes {
       [elem: string]: any;
     }
