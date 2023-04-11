@@ -27,7 +27,6 @@ interface UseFormActionContext {
   schemaRef: Ref<FormSchema[]>;
   handleFormValues: Fn;
 }
-
 export function useFormEvents({
   emit,
   getProps,
@@ -113,7 +112,7 @@ export function useFormEvents({
           } catch (e) {
             // key not exist
             if (isDef(defaultValueRef.value[nestKey])) {
-              formModel[nestKey] = cloneDeep(defaultValueRef.value[nestKey]);
+              unref(formModel)[nestKey] = cloneDeep(unref(defaultValueRef.value[nestKey]));
             }
           }
         });
@@ -121,7 +120,6 @@ export function useFormEvents({
     });
     validateFields(validKeys).catch((_) => {});
   }
-
   /**
    * @description: Delete based on field name
    */
@@ -136,7 +134,7 @@ export function useFormEvents({
       fieldList = [fields];
     }
     for (const field of fieldList) {
-      _removeSchemaByField(field, schemaList);
+      _removeSchemaByFeild(field, schemaList);
     }
     schemaRef.value = schemaList;
   }
@@ -144,7 +142,7 @@ export function useFormEvents({
   /**
    * @description: Delete based on field name
    */
-  function _removeSchemaByField(field: string, schemaList: FormSchema[]): void {
+  function _removeSchemaByFeild(field: string, schemaList: FormSchema[]): void {
     if (isString(field)) {
       const index = schemaList.findIndex((schema) => schema.field === field);
       if (index !== -1) {
@@ -166,7 +164,6 @@ export function useFormEvents({
 
     const index = schemaList.findIndex((schema) => schema.field === prefixField);
     const _schemaList = isObject(schema) ? [schema as FormSchema] : (schema as FormSchema[]);
-
     if (!prefixField || index === -1 || first) {
       first ? schemaList.unshift(..._schemaList) : schemaList.push(..._schemaList);
       schemaRef.value = schemaList;
