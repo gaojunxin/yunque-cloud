@@ -30,7 +30,8 @@
             {slots.title?.() || props.title}
           </BasicTitle>
 
-          <div class={`${unref(_prefixCls)}__action`}>
+          <div className={`${unref(_prefixCls)}__action`}>
+            {slots.action ? slots.action() : null}
             {props.canExpan && <BasicArrow up expand={props.show} onClick={() => emit('expand')} />}
           </div>
         </div>
