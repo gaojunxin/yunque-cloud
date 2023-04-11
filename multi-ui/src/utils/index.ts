@@ -1,8 +1,9 @@
 import type { RouteLocationNormalized, RouteRecordNormalized } from 'vue-router';
 import type { App, Component } from 'vue';
-import { isArray, isObject } from '/@/utils/is';
-import { cloneDeep, mergeWith } from 'lodash-es';
+
 import { unref } from 'vue';
+import { isArray, isObject } from '/@/utils/is';
+import { cloneDeep, isEqual, mergeWith, unionWith } from 'lodash-es';
 
 export const noop = () => {};
 
@@ -47,7 +48,8 @@ export function deepMerge<T extends object | null | undefined, U extends object 
   return mergeWith(cloneDeep(target), source, (objValue, srcValue) => {
     if (isObject(objValue) && isObject(srcValue)) {
       return mergeWith(cloneDeep(objValue), srcValue, (prevValue, nextValue) => {
-        return isArray(prevValue) ? prevValue.concat(nextValue) : undefined;
+        // 如果是数组，合并数组(去重) If it is an array, merge the array (remove duplicates)
+        return isArray(prevValue) ? unionWith(prevValue, nextValue, isEqual) : undefined;
       });
     }
   });
@@ -92,6 +94,7 @@ export function getRawRoute(route: RouteLocationNormalized): RouteLocationNormal
   };
 }
 
+// https://github.com/vant-ui/vant/issues/8302
 type EventShim = {
   new (...args: any[]): {
     $props: {

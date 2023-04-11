@@ -1,14 +1,14 @@
-import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError } from 'axios';
-import type { RequestOptions, Result, UploadFileParams } from '/#/axios';
-import type { CreateAxiosOptions } from './axiosTransform';
+import type {AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError} from 'axios';
+import type {RequestOptions, Result, UploadFileParams} from '/#/axios';
+import type {CreateAxiosOptions} from './axiosTransform';
 import axios from 'axios';
 import qs from 'qs';
-import { AxiosCanceler } from './axiosCancel';
-import { isFunction } from '/@/utils/is';
-import { cloneDeep } from 'lodash-es';
-import { ContentTypeEnum } from '/@/enums/httpEnum';
-import { RequestEnum } from '/@/enums/httpEnum';
-import { downloadByData } from '/@/utils/file/download';
+import {AxiosCanceler} from './axiosCancel';
+import {isFunction} from '/@/utils/is';
+import {cloneDeep} from 'lodash-es';
+import {ContentTypeEnum} from '/@/enums/httpEnum';
+import {RequestEnum} from '/@/enums/httpEnum';
+import {downloadByData} from '/@/utils/file/download';
 
 export * from './axiosTransform';
 
@@ -33,7 +33,7 @@ export class VAxios {
   }
 
   private getTransform() {
-    const { transform } = this.options;
+    const {transform} = this.options;
     return transform;
   }
 
@@ -82,7 +82,7 @@ export class VAxios {
     this.axiosInstance.interceptors.request.use((config: AxiosRequestConfig) => {
       // If cancel repeat request is turned on, then cancel repeat request is prohibited
       // @ts-ignore
-      const { ignoreCancelToken } = config.requestOptions;
+      const {ignoreCancelToken} = config.requestOptions;
       const ignoreCancel =
         ignoreCancelToken !== undefined
           ? ignoreCancelToken
@@ -97,8 +97,8 @@ export class VAxios {
 
     // Request interceptor error capture
     requestInterceptorsCatch &&
-      isFunction(requestInterceptorsCatch) &&
-      this.axiosInstance.interceptors.request.use(undefined, requestInterceptorsCatch);
+    isFunction(requestInterceptorsCatch) &&
+    this.axiosInstance.interceptors.request.use(undefined, requestInterceptorsCatch);
 
     // Response result interceptor processing
     this.axiosInstance.interceptors.response.use((res: AxiosResponse<any>) => {
@@ -111,11 +111,11 @@ export class VAxios {
 
     // Response result interceptor error capture
     responseInterceptorsCatch &&
-      isFunction(responseInterceptorsCatch) &&
-      this.axiosInstance.interceptors.response.use(undefined, (error) => {
-        // @ts-ignore
-        return responseInterceptorsCatch(this.axiosInstance, error);
-      });
+    isFunction(responseInterceptorsCatch) &&
+    this.axiosInstance.interceptors.response.use(undefined, (error) => {
+      // @ts-ignore
+      return responseInterceptorsCatch(this.axiosInstance, error);
+    });
   }
 
   /**
@@ -172,24 +172,24 @@ export class VAxios {
 
     return {
       ...config,
-      data: qs.stringify(config.data, { arrayFormat: 'brackets' }),
+      data: qs.stringify(config.data, {arrayFormat: 'brackets'}),
     };
   }
 
   get<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    return this.request({ ...config, method: 'GET' }, options);
+    return this.request({...config, method: 'GET'}, options);
   }
 
   post<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    return this.request({ ...config, method: 'POST' }, options);
+    return this.request({...config, method: 'POST'}, options);
   }
 
   put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    return this.request({ ...config, method: 'PUT' }, options);
+    return this.request({...config, method: 'PUT'}, options);
   }
 
   delete<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
-    return this.request({ ...config, method: 'DELETE' }, options);
+    return this.request({...config, method: 'DELETE'}, options);
   }
 
   download<T = any>(
@@ -204,11 +204,11 @@ export class VAxios {
     });
     const transform = this.getTransform();
 
-    const { requestOptions } = this.options;
+    const {requestOptions} = this.options;
 
     const opt: RequestOptions = Object.assign({}, requestOptions, options);
 
-    const { beforeRequestHook, requestCatchHook } = transform || {};
+    const {beforeRequestHook, requestCatchHook} = transform || {};
 
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
@@ -248,11 +248,11 @@ export class VAxios {
     });
     const transform = this.getTransform();
 
-    const { requestOptions } = this.options;
+    const {requestOptions} = this.options;
 
     const opt: RequestOptions = Object.assign({}, requestOptions, options);
 
-    const { beforeRequestHook, requestCatchHook } = transform || {};
+    const {beforeRequestHook, requestCatchHook} = transform || {};
 
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
@@ -293,11 +293,11 @@ export class VAxios {
 
     const transform = this.getTransform();
 
-    const { requestOptions } = this.options;
+    const {requestOptions} = this.options;
 
     const opt: RequestOptions = Object.assign({}, requestOptions, options);
 
-    const { beforeRequestHook, requestCatchHook, transformResponseHook } = transform || {};
+    const {beforeRequestHook, requestCatchHook, transformResponseHook} = transform || {};
     if (beforeRequestHook && isFunction(beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
     }
