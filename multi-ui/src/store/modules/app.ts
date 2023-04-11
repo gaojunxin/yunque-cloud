@@ -26,7 +26,6 @@ interface AppState {
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState;
 }
-
 let timeId: TimeoutHandle;
 export const useAppStore = defineStore({
   id: 'app',
