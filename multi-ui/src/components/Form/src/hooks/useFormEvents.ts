@@ -27,6 +27,7 @@ interface UseFormActionContext {
   schemaRef: Ref<FormSchema[]>;
   handleFormValues: Fn;
 }
+
 export function useFormEvents({
   emit,
   getProps,
@@ -120,6 +121,7 @@ export function useFormEvents({
     });
     validateFields(validKeys).catch((_) => {});
   }
+
   /**
    * @description: Delete based on field name
    */
@@ -315,6 +317,9 @@ export function useFormEvents({
       const res = handleFormValues(values);
       emit('submit', res);
     } catch (error: any) {
+      if (error?.outOfDate === false && error?.errorFields) {
+        return;
+      }
       throw new Error(error);
     }
   }
