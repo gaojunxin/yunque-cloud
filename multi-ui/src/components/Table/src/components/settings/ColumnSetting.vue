@@ -183,8 +183,8 @@
       });
 
       watchEffect(() => {
+        const columns = table.getColumns();
         setTimeout(() => {
-          const columns = table.getColumns();
           if (columns.length && !state.isInit) {
             init();
           }
@@ -275,6 +275,7 @@
 
       let sortable: Sortable;
       let sortableOrder: string[] = [];
+
       // reset columns
       function reset() {
         state.checkedList = [...state.defaultCheckList];
