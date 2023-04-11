@@ -9,21 +9,31 @@ import { isString } from '/@/utils/is';
 
 export interface NotifyApi {
   info(config: NotificationArgsProps): void;
+
   success(config: NotificationArgsProps): void;
+
   error(config: NotificationArgsProps): void;
+
   warn(config: NotificationArgsProps): void;
+
   warning(config: NotificationArgsProps): void;
+
   open(args: NotificationArgsProps): void;
+
   close(key: String): void;
+
   config(options: ConfigProps): void;
+
   destroy(): void;
 }
 
 export declare type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
 export declare type IconType = 'success' | 'info' | 'error' | 'warning';
+
 export interface ModalOptionsEx extends Omit<ModalFuncProps, 'iconType'> {
   iconType: 'warning' | 'success' | 'error' | 'info';
 }
+
 export type ModalOptionsPartial = Partial<ModalOptionsEx> & Pick<ModalOptionsEx, 'content'>;
 
 interface ConfirmOptions {
@@ -91,7 +101,7 @@ function createSuccessModal(options: ModalOptionsPartial) {
 }
 
 function createErrorModal(options: ModalOptionsPartial) {
-  return Modal.error(createModalOptions(options, 'close'));
+  return Modal.error(createModalOptions(options, 'error'));
 }
 
 function createInfoModal(options: ModalOptionsPartial) {
