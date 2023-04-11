@@ -19,6 +19,7 @@
   import { propTypes } from '/@/utils/propTypes';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { TransferDirection, TransferItem } from 'ant-design-vue/lib/transfer';
+
   export default defineComponent({
     name: 'ApiTransfer',
     components: { Transfer },
@@ -78,6 +79,9 @@
         if (Array.isArray(props.value)) {
           return props.value;
         }
+        if (Array.isArray(props.targetKeys)) {
+          return props.targetKeys;
+        }
         return [];
       });
 
@@ -125,9 +129,11 @@
         } finally {
         }
       }
+
       function emitChange() {
         emit('options-change', unref(getdataSource));
       }
+
       return { getTargetKeys, getdataSource, t, getAttrs, handleChange };
     },
   });
