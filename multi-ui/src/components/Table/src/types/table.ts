@@ -6,6 +6,7 @@ import type { ColumnProps } from 'ant-design-vue/lib/table';
 
 import { ComponentType } from './componentType';
 import { VueNode } from '/@/utils/propTypes';
+import { RoleEnum } from '/@/enums/roleEnum';
 
 export declare type SortOrder = 'ascend' | 'descend';
 
@@ -48,7 +49,6 @@ export interface ExpandedRowRenderRecord<T> extends TableCustomRecord<T> {
   indent?: number;
   expanded?: boolean;
 }
-
 export interface ColumnFilterItem {
   text?: string;
   value?: string;
@@ -310,7 +310,7 @@ export interface BasicTableProps<T = any> {
    * you need to add style .ant-table td { white-space: nowrap; }.
    * @type object
    */
-  scroll?: { x?: number | true; y?: number };
+  scroll?: { x?: number | string | true; y?: number | string };
 
   /**
    * Whether to show table header
@@ -454,7 +454,7 @@ export interface BasicColumn extends ColumnProps<Recordable> {
   editValueMap?: (value: any) => string;
   onEditRow?: () => void;
   // 权限编码控制是否显示
-  auth?: string | string[];
+  auth?: RoleEnum | RoleEnum[] | string | string[];
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
   // 自定义修改后显示的内容

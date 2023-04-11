@@ -30,7 +30,6 @@ interface SearchState {
   sortInfo: Recordable;
   filterInfo: Record<string, string[]>;
 }
-
 export function useDataSource(
   propsRef: ComputedRef<BasicTableProps>,
   {
@@ -202,7 +201,6 @@ export function useDataSource(
       deleteRow(dataSourceRef.value, key);
       deleteRow(unref(propsRef).dataSource, key);
     }
-
     setPagination({
       total: unref(propsRef).dataSource?.length,
     });

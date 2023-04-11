@@ -69,7 +69,6 @@
       }
 
       const { hasPermission } = usePermission();
-
       function isIfShow(action: ActionItem): boolean {
         const ifShow = action.ifShow;
 
@@ -129,7 +128,7 @@
 
       function getTooltip(data: string | TooltipProps): TooltipProps {
         return {
-          getPopupContainer: () => unref((table as any)?.wrapRef.value) ?? document.body,
+          getPopupContainer: () => unref((table as any)?.wrapRef) ?? document.body,
           placement: 'bottom',
           ...(isString(data) ? { title: data } : data),
         };
