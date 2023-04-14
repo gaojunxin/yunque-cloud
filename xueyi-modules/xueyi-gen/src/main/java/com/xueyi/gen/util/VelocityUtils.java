@@ -67,11 +67,12 @@ public class VelocityUtils {
         velocityContext.put("ClASS_NAME", (StrUtil.toUnderlineCase(genTable.getClassName())).toUpperCase());
         // 实体类名称(首字母大写 | 无前缀)
 
-        if (genTable.getClassName().isEmpty()) {
-            velocityContext.put("ClassNameNoPrefix", genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY));
-            // 实体类名称(首字母小写 | 无前缀)
-            velocityContext.put("classNameNoPrefix", StrUtil.uncapitalize(genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY)));
-        }
+        String ClassNameNoPrefix = StrUtil.isNotBlank(genTable.getPrefix())
+                ? genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY)
+                : genTable.getClassName();
+        velocityContext.put("ClassNameNoPrefix", ClassNameNoPrefix);
+        // 实体类名称(首字母小写 | 无前缀)
+        velocityContext.put("classNameNoPrefix", StrUtil.uncapitalize(ClassNameNoPrefix));
 
         // 生成模块名
         velocityContext.put("moduleName", genTable.getModuleName());
