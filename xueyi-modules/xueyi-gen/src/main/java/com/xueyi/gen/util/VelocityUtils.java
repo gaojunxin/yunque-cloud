@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 public class VelocityUtils {
 
     /** 主目录 */
-    private static final String PROJECT_PATH = "main/java" ;
+    private static final String PROJECT_PATH = "main/java";
 
     /** 隐藏字段数组 */
-    private static final String HIDE = "hide" ;
+    private static final String HIDE = "hide";
 
     /** 覆写字段数组 */
-    private static final String COVER = "cover" ;
+    private static final String COVER = "cover";
 
     /**
      * 设置模板变量信息
@@ -42,7 +42,7 @@ public class VelocityUtils {
      * @return 模板列表
      */
     public static VelocityContext prepareContext(GenTableDto genTable) {
-        if(StrUtil.hasEmpty(genTable.getPackageName(), genTable.getModuleName(), genTable.getBusinessName(), genTable.getAuthorityName()))
+        if (StrUtil.hasEmpty(genTable.getPackageName(), genTable.getModuleName(), genTable.getBusinessName(), genTable.getAuthorityName()))
             throw new ServiceException("请先编辑完善信息！");
         String businessName = genTable.getBusinessName();
         String packageName = genTable.getPackageName();
@@ -61,13 +61,18 @@ public class VelocityUtils {
         // 实体类名称(首字母大写)
         velocityContext.put("ClassName", genTable.getClassName());
         // 实体类名称(首字母小写)
+
         velocityContext.put("className", StrUtil.uncapitalize(genTable.getClassName()));
         // 实体类名称(全大写 | _划分)
         velocityContext.put("ClASS_NAME", (StrUtil.toUnderlineCase(genTable.getClassName())).toUpperCase());
         // 实体类名称(首字母大写 | 无前缀)
-        velocityContext.put("ClassNameNoPrefix", genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY));
-        // 实体类名称(首字母小写 | 无前缀)
-        velocityContext.put("classNameNoPrefix", StrUtil.uncapitalize(genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY)));
+
+        if (genTable.getClassName().isEmpty()) {
+            velocityContext.put("ClassNameNoPrefix", genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY));
+            // 实体类名称(首字母小写 | 无前缀)
+            velocityContext.put("classNameNoPrefix", StrUtil.uncapitalize(genTable.getClassName().replaceFirst(genTable.getPrefix(), StrUtil.EMPTY)));
+        }
+
         // 生成模块名
         velocityContext.put("moduleName", genTable.getModuleName());
         // 生成模块名
@@ -316,18 +321,18 @@ public class VelocityUtils {
                 if (template.contains("api.ts.vm"))
                     return StrUtil.format("multi-ui/src/api/{}/{}/{}.ts", moduleName, authorityName, businessName);
                 else if (template.contains("infoModel.ts.vm")) {
-                    String prefixPath = "multi-ui/src/model" ;
-                    String suffixFile = "" ;
+                    String prefixPath = "multi-ui/src/model";
+                    String suffixFile = "";
                     initIndexFile(realPath, prefixPath, suffixFile, moduleName, authorityName, businessName);
                     return StrUtil.format("{}/{}/{}/{}.ts", prefixPath, moduleName, authorityName, businessName);
                 } else if (template.contains("auth.ts.vm")) {
-                    String prefixPath = "multi-ui/src/auth" ;
-                    String suffixFile = ".auth" ;
+                    String prefixPath = "multi-ui/src/auth";
+                    String suffixFile = ".auth";
                     initIndexFile(realPath, prefixPath, suffixFile, moduleName, authorityName, businessName);
                     return StrUtil.format("{}/{}/{}/{}{}.ts", prefixPath, moduleName, authorityName, businessName, suffixFile);
                 } else if (template.contains("enum.ts.vm")) {
-                    String prefixPath = "multi-ui/src/enums" ;
-                    String suffixFile = ".enum" ;
+                    String prefixPath = "multi-ui/src/enums";
+                    String suffixFile = ".enum";
                     initIndexFile(realPath, prefixPath, suffixFile, moduleName, authorityName, businessName);
                     return StrUtil.format("{}/{}/{}/{}{}.ts", prefixPath, moduleName, authorityName, businessName, suffixFile);
                 } else if (template.contains("data.ts.vm"))
@@ -343,7 +348,7 @@ public class VelocityUtils {
             }
         }
 
-        return "" ;
+        return "";
     }
 
     /**
@@ -625,8 +630,8 @@ public class VelocityUtils {
      */
     public static void initIndexFile(String realPath, String prefixPath, String suffixFile, String moduleName, String authorityName, String businessName) {
         if (StrUtil.isEmpty(realPath)) return;
-        String indexName = "index.ts" ;
-        String importSentence = "export * from './{}'" ;
+        String indexName = "index.ts";
+        String importSentence = "export * from './{}'";
         StringBuilder sb = new StringBuilder(realPath + prefixPath + File.separator + moduleName + File.separator);
         outIndexFile(sb + indexName, StrUtil.format(importSentence, authorityName));
         sb.append(authorityName).append(File.separator);
