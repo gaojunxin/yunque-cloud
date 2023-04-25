@@ -77,8 +77,9 @@ public class BaseHandleServiceImpl<Q extends BaseEntity, D extends BaseEntity, I
      */
     protected void refreshCache(OperateConstants.ServiceType operate, RedisConstants.OperateType operateCache, D dto, Collection<D> dtoList) {
         // 校验是否启动缓存管理
-        if (StrUtil.isEmpty(getCacheKey()))
+        if (StrUtil.isEmpty(getCacheKey())) {
             return;
+        }
         switch (operateCache) {
             case REFRESH_ALL -> {
                 List<D> allList = baseManager.selectList(null);
@@ -86,16 +87,18 @@ public class BaseHandleServiceImpl<Q extends BaseEntity, D extends BaseEntity, I
                 redisService.refreshMapCache(getCacheKey(), allList, D::getIdStr, D -> D);
             }
             case REFRESH -> {
-                if (operate.isSingle())
+                if (operate.isSingle()) {
                     redisService.refreshMapValueCache(getCacheKey(), dto::getIdStr, () -> dto);
-                else if (operate.isBatch())
+                } else if (operate.isBatch()) {
                     dtoList.forEach(item -> redisService.refreshMapValueCache(getCacheKey(), item::getIdStr, () -> item));
+                }
             }
             case REMOVE -> {
-                if (operate.isSingle())
+                if (operate.isSingle()) {
                     redisService.removeMapValueCache(getCacheKey(), dto.getId());
-                else if (operate.isBatch())
+                } else if (operate.isBatch()) {
                     redisService.removeMapValueCache(getCacheKey(), dtoList.stream().map(D::getIdStr).toArray(String[]::new));
+                }
             }
         }
     }

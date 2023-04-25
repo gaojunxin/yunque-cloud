@@ -165,8 +165,9 @@ public class TeSourceController extends BaseController<TeSourceQuery, TeSourceDt
     @Override
     protected void AEHandle(BaseConstants.Operate operate, TeSourceDto source) {
         DSUtil.testSlaveDs(source);
-        if (baseService.checkNameUnique(source.getId(), source.getName()))
+        if (baseService.checkNameUnique(source.getId(), source.getName())) {
             warn(StrUtil.format("{}{}{}失败，{}名称已存在", operate.getInfo(), getNodeName(), source.getName(), getNodeName()));
+        }
     }
 
     /**
@@ -176,10 +177,11 @@ public class TeSourceController extends BaseController<TeSourceQuery, TeSourceDt
     protected void RHandle(BaseConstants.Operate operate, List<Long> idList) {
         int size = idList.size();
         for (int i = idList.size() - 1; i >= 0; i--) {
-            if (strategyService.checkSourceExist(idList.get(i)))
+            if (strategyService.checkSourceExist(idList.get(i))) {
                 idList.remove(i);
-            else if (baseService.checkIsDefault(idList.get(i)))
+            } else if (baseService.checkIsDefault(idList.get(i))) {
                 idList.remove(i);
+            }
         }
         if (CollUtil.isEmpty(idList)) {
             warn(StrUtil.format("删除失败，默认{}及已被使用的{}不允许删除！", getNodeName(), getNodeName()));
