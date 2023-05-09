@@ -335,7 +335,8 @@ export function useFormEvents({
   }
 
   async function validate(nameList?: NamePath[] | undefined) {
-    return await unref(formElRef)?.validate(nameList);
+    const values = await unref(formElRef)?.validate(nameList);
+    return handleFormValues(values);
   }
 
   async function clearValidate(name?: string | string[]) {
@@ -360,8 +361,7 @@ export function useFormEvents({
     if (!formEl) return;
     try {
       const values = await validate();
-      const res = handleFormValues(values);
-      emit('submit', res);
+      emit('submit', values);
     } catch (error: any) {
       if (error?.outOfDate === false && error?.errorFields) {
         return;
