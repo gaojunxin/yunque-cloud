@@ -3,7 +3,7 @@ import { dateUtil } from '/@/utils/dateUtil';
 import { unref } from 'vue';
 import type { Ref, ComputedRef } from 'vue';
 import type { FormProps, FormSchema } from '../types/form';
-import { cloneDeep, set } from 'lodash-es';
+import { cloneDeep, get, set, unset } from 'lodash-es';
 
 interface UseFormValuesContext {
   defaultValueRef: Ref<any>;
@@ -106,18 +106,18 @@ export function useFormValues({
         continue;
       }
       // If the value to be converted is empty, remove the field
-      if (!values[field]) {
-        Reflect.deleteProperty(values, field);
+      if (!get(values, field)) {
+        unset(values, field);
         continue;
       }
 
-      const [startTime, endTime]: string[] = values[field];
+      const [startTime, endTime]: string[] = get(values, field);
 
       const [startTimeFormat, endTimeFormat] = Array.isArray(format) ? format : [format, format];
 
-      values[startTimeKey] = dateUtil(startTime).format(startTimeFormat);
-      values[endTimeKey] = dateUtil(endTime).format(endTimeFormat);
-      Reflect.deleteProperty(values, field);
+      set(values, startTimeKey, dateUtil(startTime).format(startTimeFormat));
+      set(values, endTimeKey, dateUtil(endTime).format(endTimeFormat));
+      unset(values, field);
     }
 
     return values;
