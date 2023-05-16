@@ -65,8 +65,8 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
       },
       define: defineData,
       build: {
-        target: 'es2015',
-        cssTarget: 'chrome80',
+        target: ['edge90', 'chrome90', 'firefox90', 'safari15'],
+        cssTarget: 'chrome90',
         rollupOptions: {
           output: {
             manualChunks: {
