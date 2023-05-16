@@ -1,5 +1,5 @@
-import type {BasicTableProps, FetchParams, SorterResult} from '../types/table';
-import type {PaginationProps} from '../types/pagination';
+import type { BasicTableProps, FetchParams, SorterResult } from '../types/table';
+import type { PaginationProps } from '../types/pagination';
 import {
   ref,
   unref,
@@ -11,11 +11,11 @@ import {
   Ref,
   watchEffect,
 } from 'vue';
-import {useTimeoutFn} from '@xueyi/hooks';
-import {buildUUID} from '/@/utils/uuid';
-import {isFunction, isBoolean, isObject} from '/@/utils/is';
-import {get, cloneDeep, merge} from 'lodash-es';
-import {FETCH_SETTING, ROW_KEY, PAGE_SIZE} from '../const';
+import { useTimeoutFn } from '@xueyi/hooks';
+import { buildUUID } from '/@/utils/uuid';
+import { isFunction, isBoolean, isObject } from '/@/utils/is';
+import { get, cloneDeep, merge } from 'lodash-es';
+import { FETCH_SETTING, ROW_KEY, PAGE_SIZE } from '../const';
 
 interface ActionType {
   getPaginationInfo: ComputedRef<boolean | PaginationProps>;
@@ -57,7 +57,7 @@ export function useDataSource(
   watch(
     () => unref(propsRef).dataSource,
     () => {
-      const {dataSource, api} = unref(propsRef);
+      const { dataSource, api } = unref(propsRef);
       !api && dataSource && (dataSourceRef.value = dataSource);
     },
     {
@@ -70,7 +70,7 @@ export function useDataSource(
     filters: Partial<Recordable<string[]>>,
     sorter: SorterResult,
   ) {
-    const {clearSelectOnPageChange, sortFn, filterFn} = unref(propsRef);
+    const { clearSelectOnPageChange, sortFn, filterFn } = unref(propsRef);
     if (clearSelectOnPageChange) {
       clearSelectedRowKeys();
     }
@@ -108,7 +108,7 @@ export function useDataSource(
   });
 
   const getRowKey = computed(() => {
-    const {rowKey} = unref(propsRef);
+    const { rowKey } = unref(propsRef);
     return unref(getAutoCreateKey) ? ROW_KEY : rowKey;
   });
 
@@ -185,7 +185,7 @@ export function useDataSource(
             targetKeyName = rowKeyName(row);
           }
           if (row[targetKeyName] === key) {
-            return {index: i, data};
+            return { index: i, data };
           }
           if (row.children?.length > 0) {
             const result = findRow(row.children, key);
@@ -224,7 +224,7 @@ export function useDataSource(
     const rowKeyName = unref(getRowKey);
     if (!rowKeyName) return;
 
-    const {childrenColumnName = 'children'} = unref(propsRef);
+    const { childrenColumnName = 'children' } = unref(propsRef);
 
     const findRow = (array: any[]) => {
       let ret;
@@ -269,14 +269,14 @@ export function useDataSource(
     if (!api || !isFunction(api)) return;
     try {
       setLoading(true);
-      const {pageField, sizeField, listField, totalField} = Object.assign(
+      const { pageField, sizeField, listField, totalField } = Object.assign(
         {},
         FETCH_SETTING,
         fetchSetting,
       );
       let pageParams: Recordable = {};
 
-      const {current = 1, pageSize = PAGE_SIZE} = unref(getPaginationInfo) as PaginationProps;
+      const { current = 1, pageSize = PAGE_SIZE } = unref(getPaginationInfo) as PaginationProps;
 
       if ((isBoolean(pagination) && !pagination) || isBoolean(getPaginationInfo)) {
         pageParams = {};
@@ -285,7 +285,7 @@ export function useDataSource(
         pageParams[sizeField] = pageSize;
       }
 
-      const {sortInfo = {}, filterInfo} = searchState;
+      const { sortInfo = {}, filterInfo } = searchState;
 
       let params: Recordable = merge(
         pageParams,
@@ -350,6 +350,7 @@ export function useDataSource(
   }
 
   function setTableData<T = Recordable>(values: T[]) {
+    // @ts-ignore
     dataSourceRef.value = values;
   }
 

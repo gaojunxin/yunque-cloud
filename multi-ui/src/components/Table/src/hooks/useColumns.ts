@@ -15,6 +15,7 @@ function handleItem(item: BasicColumn, ellipsis: boolean) {
   item.align = item.align || DEFAULT_ALIGN;
   if (ellipsis) {
     if (!key) {
+      // @ts-ignore
       item.key = dataIndex;
     }
     if (!isBoolean(item.ellipsis)) {
@@ -141,6 +142,7 @@ export function useColumns(
     }
     return isIfShow;
   }
+
   const { hasPermission } = usePermission();
 
   const getViewColumns = computed(() => {
@@ -200,6 +202,7 @@ export function useColumns(
       }
     });
   }
+
   /**
    * set columns
    * @param columnList key｜column
@@ -257,8 +260,14 @@ export function useColumns(
 
     return columns;
   }
+
   function getCacheColumns() {
     return cacheColumns;
+  }
+
+  function setCacheColumns(columns: BasicColumn[]) {
+    if (!isArray(columns)) return;
+    cacheColumns = columns.filter((item) => !item.flag);
   }
 
   return {
@@ -268,6 +277,7 @@ export function useColumns(
     setColumns,
     getViewColumns,
     setCacheColumnsByField,
+    setCacheColumns,
   };
 }
 

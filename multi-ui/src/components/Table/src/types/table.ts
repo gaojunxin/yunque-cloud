@@ -6,7 +6,6 @@ import type { ColumnProps } from 'ant-design-vue/lib/table';
 
 import { ComponentType } from './componentType';
 import { VueNode } from '/@/utils/propTypes';
-import { RoleEnum } from '/@/enums/roleEnum';
 
 export declare type SortOrder = 'ascend' | 'descend';
 
@@ -14,6 +13,7 @@ export interface TableCurrentDataSource<T = Recordable> {
   currentDataSource: T[];
 }
 
+// @ts-ignore
 export interface TableRowSelection<T = any> extends ITableRowSelection {
   /**
    * Callback executed when selected rows change
@@ -49,6 +49,7 @@ export interface ExpandedRowRenderRecord<T> extends TableCustomRecord<T> {
   indent?: number;
   expanded?: boolean;
 }
+
 export interface ColumnFilterItem {
   text?: string;
   value?: string;
@@ -116,6 +117,7 @@ export interface TableActionType {
   setShowPagination: (show: boolean) => Promise<void>;
   getShowPagination: () => boolean;
   setCacheColumnsByField?: (dataIndex: string | undefined, value: BasicColumn) => void;
+  setCacheColumns?: (columns: BasicColumn[]) => void;
 }
 
 export interface FetchSetting {
@@ -454,7 +456,7 @@ export interface BasicColumn extends ColumnProps<Recordable> {
   editValueMap?: (value: any) => string;
   onEditRow?: () => void;
   // 权限编码控制是否显示
-  auth?: RoleEnum | RoleEnum[] | string | string[];
+  auth?: string | string[];
   // 业务控制是否显示
   ifShow?: boolean | ((column: BasicColumn) => boolean);
   // 自定义修改后显示的内容

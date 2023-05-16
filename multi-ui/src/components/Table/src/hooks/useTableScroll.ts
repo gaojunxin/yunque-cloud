@@ -1,10 +1,10 @@
-import type {BasicTableProps, TableRowSelection, BasicColumn} from '../types/table';
-import {Ref, ComputedRef, ref, computed, unref, nextTick, watch} from 'vue';
-import {getViewportOffset} from '/@/utils/domUtils';
-import {isBoolean} from '/@/utils/is';
-import {useWindowSizeFn, onMountedOrActivated} from '@xueyi/hooks';
-import {useModalContext} from '/@/components/Modal';
-import {useDebounceFn} from '@vueuse/core';
+import type { BasicTableProps, TableRowSelection, BasicColumn } from '../types/table';
+import { Ref, ComputedRef, ref, computed, unref, nextTick, watch } from 'vue';
+import { getViewportOffset } from '/@/utils/domUtils';
+import { isBoolean } from '/@/utils/is';
+import { useWindowSizeFn, onMountedOrActivated } from '@xueyi/hooks';
+import { useModalContext } from '/@/components/Modal';
+import { useDebounceFn } from '@vueuse/core';
 
 export function useTableScroll(
   propsRef: ComputedRef<BasicTableProps>,
@@ -22,7 +22,7 @@ export function useTableScroll(
   const debounceRedoHeight = useDebounceFn(redoHeight, 100);
 
   const getCanResize = computed(() => {
-    const {canResize, scroll} = unref(propsRef);
+    const { canResize, scroll } = unref(propsRef);
     return canResize && !(scroll || {}).y;
   });
 
@@ -54,7 +54,7 @@ export function useTableScroll(
   let bodyEl: HTMLElement | null;
 
   async function calcTableHeight() {
-    const {resizeHeightOffset, pagination, maxHeight, isCanResizeParent, useSearchForm} =
+    const { resizeHeightOffset, pagination, maxHeight, isCanResizeParent, useSearchForm } =
       unref(propsRef);
     const tableData = unref(getDataSourceRef);
 
@@ -74,14 +74,14 @@ export function useTableScroll(
 
     if (hasScrollBarY) {
       tableEl.classList.contains('hide-scrollbar-y') &&
-      tableEl.classList.remove('hide-scrollbar-y');
+        tableEl.classList.remove('hide-scrollbar-y');
     } else {
       !tableEl.classList.contains('hide-scrollbar-y') && tableEl.classList.add('hide-scrollbar-y');
     }
 
     if (hasScrollBarX) {
       tableEl.classList.contains('hide-scrollbar-x') &&
-      tableEl.classList.remove('hide-scrollbar-x');
+        tableEl.classList.remove('hide-scrollbar-x');
     } else {
       !tableEl.classList.contains('hide-scrollbar-x') && tableEl.classList.add('hide-scrollbar-x');
     }
@@ -171,7 +171,7 @@ export function useTableScroll(
     bodyEl!.style.height = `${height}px`;
   }
 
-  useWindowSizeFn(calcTableHeight, {wait: 280});
+  useWindowSizeFn(calcTableHeight, { wait: 280 });
   onMountedOrActivated(() => {
     calcTableHeight();
     nextTick(() => {
@@ -206,7 +206,7 @@ export function useTableScroll(
 
   const getScrollRef = computed(() => {
     const tableHeight = unref(tableHeightRef);
-    const {canResize, scroll} = unref(propsRef);
+    const { canResize, scroll } = unref(propsRef);
     return {
       x: unref(getScrollX),
       y: canResize ? tableHeight : null,
@@ -215,5 +215,5 @@ export function useTableScroll(
     };
   });
 
-  return {getScrollRef, redoHeight};
+  return { getScrollRef, redoHeight };
 }
