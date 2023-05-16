@@ -1,13 +1,13 @@
-import { ComponentOptions, h } from 'vue';
+import {ComponentOptions, h} from 'vue';
 import {
   FormItemContentRenderParams,
   FormItemRenderOptions,
   VxeGlobalRendererHandles,
 } from 'vxe-table';
 import XEUtils from 'xe-utils';
-import { componentMap } from '../componentMap';
-import { ComponentType } from '../componentType';
-import { createPlaceholderMessage } from '../helper';
+import {componentMap} from '../componentMap';
+import {ComponentType} from '../componentType';
+import {createPlaceholderMessage} from '../helper';
 
 /**
  * @description: 获取组件

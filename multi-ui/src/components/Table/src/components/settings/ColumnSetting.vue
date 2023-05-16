@@ -101,18 +101,18 @@
 <script lang="ts">
   import type { BasicColumn, BasicTableProps, ColumnChangeParam } from '../../types/table';
   import {
-    defineComponent,
-    ref,
-    reactive,
-    toRefs,
-    watchEffect,
-    nextTick,
-    unref,
     computed,
+    defineComponent,
+    nextTick,
+    reactive,
+    ref,
+    toRefs,
+    unref,
+    watchEffect,
   } from 'vue';
-  import { Tooltip, Popover, Checkbox, Divider } from 'ant-design-vue';
+  import { Checkbox, Divider, Popover, Tooltip } from 'ant-design-vue';
   import type { CheckboxChangeEvent } from 'ant-design-vue/lib/checkbox/interface';
-  import { SettingOutlined, DragOutlined } from '@ant-design/icons-vue';
+  import { DragOutlined, SettingOutlined } from '@ant-design/icons-vue';
   import Icon from '@/components/Icon/Icon.vue';
   import { ScrollContainer } from '/@/components/Container';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -122,8 +122,8 @@
   import { isFunction, isNullAndUnDef } from '/@/utils/is';
   import { getPopupContainer as getParentContainer } from '/@/utils';
   import { cloneDeep, omit } from 'lodash-es';
-  import Sortablejs from 'sortablejs';
   import type Sortable from 'sortablejs';
+  import Sortablejs from 'sortablejs';
 
   interface State {
     checkAll: boolean;

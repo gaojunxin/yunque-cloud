@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, computed, ref, watch, unref, watchEffect } from 'vue';
+  import { computed, defineComponent, ref, unref, watch, watchEffect } from 'vue';
   import { Input } from 'ant-design-vue';
   import { zxcvbn } from '@zxcvbn-ts/core';
   import { useDesign } from '/@/hooks/web/useDesign';

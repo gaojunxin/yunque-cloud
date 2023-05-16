@@ -17,7 +17,7 @@
 </template>
 <script lang="ts">
   import type { Menu as MenuType } from '/@/router/types';
-  import { defineComponent, computed } from 'vue';
+  import { computed, defineComponent } from 'vue';
   import { Menu } from 'ant-design-vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { itemProps } from '../props';

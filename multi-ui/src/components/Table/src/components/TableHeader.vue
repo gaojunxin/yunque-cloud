@@ -23,7 +23,7 @@
   </div>
 </template>
 <script lang="ts">
-  import type { TableSetting, ColumnChangeParam } from '../types/table';
+  import type { ColumnChangeParam, TableSetting } from '../types/table';
   import type { PropType } from 'vue';
   import { defineComponent } from 'vue';
   import { Divider } from 'ant-design-vue';

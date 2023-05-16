@@ -34,14 +34,14 @@
 </template>
 <script lang="ts">
   import {
+    computed,
     CSSProperties,
+    defineComponent,
     PropType,
     provide,
-    defineComponent,
-    computed,
-    watch,
     ref,
     unref,
+    watch,
   } from 'vue';
 
   import PageFooter from './PageFooter.vue';

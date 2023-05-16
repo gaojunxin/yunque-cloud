@@ -21,13 +21,13 @@
   import componentSetting from '/@/settings/componentSetting';
   import { toObject } from './util';
   import {
-    defineComponent,
-    ref,
-    onMounted,
-    onBeforeUnmount,
-    nextTick,
-    provide,
     computed,
+    defineComponent,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    provide,
+    ref,
     unref,
   } from 'vue';
   import Bar from './bar';

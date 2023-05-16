@@ -1,4 +1,4 @@
-import type { VNode, FunctionalComponent } from 'vue';
+import type { FunctionalComponent, VNode } from 'vue';
 import { h } from 'vue';
 import { isString } from 'lodash-es';
 import Icon from '@/components/Icon/Icon.vue';

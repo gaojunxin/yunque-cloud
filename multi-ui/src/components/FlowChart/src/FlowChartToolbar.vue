@@ -17,7 +17,7 @@
 <script lang="ts">
   import type { ToolbarConfig } from './types';
 
-  import { defineComponent, ref, onUnmounted, unref, nextTick, watchEffect } from 'vue';
+  import { defineComponent, nextTick, onUnmounted, ref, unref, watchEffect } from 'vue';
   import { Divider, Tooltip } from 'ant-design-vue';
   import Icon from '@/components/Icon/Icon.vue';
 
@@ -140,6 +140,7 @@
       background: #080808;
     }
   }
+
   .@{prefix-cls} {
     height: 36px;
     border-bottom: 1px solid @border-color-base;

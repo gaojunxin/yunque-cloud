@@ -1,5 +1,5 @@
-import {Ref, unref, watchEffect} from 'vue';
-import {useTimeoutFn} from '@xueyi/hooks';
+import { Ref, unref, watchEffect } from 'vue';
+import { useTimeoutFn } from '@xueyi/hooks';
 
 export interface UseModalDragMoveContext {
   draggable: Ref<boolean>;

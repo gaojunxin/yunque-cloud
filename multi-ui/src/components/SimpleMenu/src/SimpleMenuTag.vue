@@ -4,7 +4,7 @@
 <script lang="ts">
   import type { Menu } from '/@/router/types';
 
-  import { defineComponent, computed } from 'vue';
+  import { computed, defineComponent } from 'vue';
 
   import { useDesign } from '/@/hooks/web/useDesign';
   import { propTypes } from '/@/utils/propTypes';

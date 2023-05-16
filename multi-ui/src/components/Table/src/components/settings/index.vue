@@ -12,8 +12,8 @@
 </template>
 <script lang="ts">
   import type { PropType } from 'vue';
-  import type { TableSetting, ColumnChangeParam } from '../../types/table';
-  import { defineComponent, computed, unref } from 'vue';
+  import { computed, defineComponent, unref } from 'vue';
+  import type { ColumnChangeParam, TableSetting } from '../../types/table';
   import ColumnSetting from './ColumnSetting.vue';
   import SizeSetting from './SizeSetting.vue';
   import RedoSetting from './RedoSetting.vue';

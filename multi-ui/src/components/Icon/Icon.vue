@@ -16,14 +16,14 @@
 <script lang="ts">
   import type { PropType } from 'vue';
   import {
-    defineComponent,
-    ref,
-    watch,
-    onMounted,
-    nextTick,
-    unref,
     computed,
     CSSProperties,
+    defineComponent,
+    nextTick,
+    onMounted,
+    ref,
+    unref,
+    watch,
   } from 'vue';
   import SvgIcon from './src/SvgIcon.vue';
   import Iconify from '@purge-icons/generated';

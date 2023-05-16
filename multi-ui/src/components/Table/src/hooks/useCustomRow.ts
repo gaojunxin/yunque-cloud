@@ -1,8 +1,8 @@
 import type { ComputedRef } from 'vue';
-import type { BasicTableProps } from '../types/table';
 import { unref } from 'vue';
+import type { BasicTableProps } from '../types/table';
 import { ROW_KEY } from '../const';
-import { isString, isFunction } from '/@/utils/is';
+import { isFunction, isString } from '/@/utils/is';
 
 interface Options {
   setSelectedRowKeys: (keys: string[]) => void;

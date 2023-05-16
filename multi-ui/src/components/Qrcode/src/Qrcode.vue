@@ -4,8 +4,8 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, watch, PropType, ref, unref, onMounted } from 'vue';
-  import { toCanvas, QRCodeRenderersOptions, LogoType } from './qrcodePlus';
+  import { defineComponent, onMounted, PropType, ref, unref, watch } from 'vue';
+  import { LogoType, QRCodeRenderersOptions, toCanvas } from './qrcodePlus';
   import { toDataURL } from 'qrcode';
   import { downloadByUrl } from '/@/utils/file/download';
   import { QrcodeDoneEventParams } from './typing';

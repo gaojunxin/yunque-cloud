@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, watch, ref, unref, watchEffect, PropType } from 'vue';
+  import { computed, defineComponent, PropType, ref, unref, watch, watchEffect } from 'vue';
   import { Transfer } from 'ant-design-vue';
   import { isFunction } from '/@/utils/is';
   import { get, omit } from 'lodash-es';

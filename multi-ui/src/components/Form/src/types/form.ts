@@ -1,5 +1,5 @@
 import type { NamePath, RuleObject } from 'ant-design-vue/lib/form/interface';
-import type { VNode, CSSProperties } from 'vue';
+import type { CSSProperties, VNode } from 'vue';
 import type { ButtonProps as AntdButtonProps } from '/@/components/Button';
 import type { FormItem } from './formItem';
 import type { ColEx, ComponentType } from './index';

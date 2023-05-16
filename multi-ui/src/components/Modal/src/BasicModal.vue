@@ -49,18 +49,18 @@
   </Modal>
 </template>
 <script lang="ts">
-  import type { ModalProps, ModalMethods } from './typing';
+  import type { ModalMethods, ModalProps } from './typing';
 
   import {
-    defineComponent,
     computed,
-    ref,
-    watch,
-    unref,
-    watchEffect,
-    toRef,
+    defineComponent,
     getCurrentInstance,
     nextTick,
+    ref,
+    toRef,
+    unref,
+    watch,
+    watchEffect,
   } from 'vue';
   import Modal from './components/Modal';
   import ModalWrapper from './components/ModalWrapper.vue';

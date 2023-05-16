@@ -9,7 +9,7 @@
   </section>
 </template>
 <script lang="ts">
-  import { PropType, defineComponent } from 'vue';
+  import { defineComponent, PropType } from 'vue';
   import { Spin } from 'ant-design-vue';
   import { SizeEnum } from '/@/enums/sizeEnum';
 

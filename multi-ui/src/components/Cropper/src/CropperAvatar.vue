@@ -30,14 +30,14 @@
 </template>
 <script lang="ts">
   import {
-    defineComponent,
     computed,
     CSSProperties,
-    unref,
-    ref,
-    watchEffect,
-    watch,
+    defineComponent,
     PropType,
+    ref,
+    unref,
+    watch,
+    watchEffect,
   } from 'vue';
   import CopperModal from './CopperModal.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
