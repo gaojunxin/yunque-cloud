@@ -25,6 +25,14 @@ public interface IBaseManager<Q extends BaseEntity, D extends BaseEntity> {
     List<D> selectList(Q query);
 
     /**
+     * 根据动态SQL控制对象查询数据对象集合
+     *
+     * @param field 动态SQL控制对象
+     * @return 数据对象集合
+     */
+    List<D> selectListByField(com.xueyi.common.web.correlate.domain.SqlField... field);
+
+    /**
      * 根据Id集合查询数据对象列表
      *
      * @param idList Id集合
