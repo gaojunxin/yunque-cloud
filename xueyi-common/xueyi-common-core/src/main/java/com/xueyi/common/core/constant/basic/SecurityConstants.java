@@ -37,6 +37,9 @@ public class SecurityConstants {
     /** 内部请求 */
     public static final String INNER = "inner";
 
+    /** 请求来源 */
+    public static final String FROM_SOURCE_INNER = FROM_SOURCE + "=" + INNER;
+
     /** 数据权限 - 创建者 */
     public static final String CREATE_BY = "create_by";
 

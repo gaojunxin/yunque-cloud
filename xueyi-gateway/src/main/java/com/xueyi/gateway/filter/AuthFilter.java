@@ -4,6 +4,7 @@ import com.xueyi.common.core.constant.basic.*;
 import com.xueyi.common.core.utils.JwtUtil;
 import com.xueyi.common.core.utils.ServletUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
+import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.gateway.config.properties.IgnoreWhiteProperties;
 import io.jsonwebtoken.Claims;
@@ -40,7 +41,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         String url = request.getURI().getPath();
         // 跳过不需要验证的路径
-        if (StrUtil.matches(url, ignoreWhite.getWhites())) {
+        if (StrUtil.matches(url, ignoreWhite.getWhites().toArray(String[]::new))) {
             return chain.filter(exchange);
         }
         String token = getToken(request);
@@ -105,7 +106,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
      * 获取缓存key
      */
     private String getTokenKey(String token, String accountType) {
-        return TenantConstants.AccountType.isAdmin(accountType) ? CacheConstants.LoginTokenType.ADMIN.getCode() + token : StrUtil.EMPTY;
+        return TenantConstants.AccountType.isAdmin(accountType) ? RedisConstants.LoginTokenType.ADMIN.getCode() + token : StrUtil.EMPTY;
     }
 
     /**

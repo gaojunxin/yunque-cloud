@@ -2,8 +2,7 @@ package com.xueyi.common.core.utils.core;
 
 import cn.hutool.core.text.AntPathMatcher;
 import com.xueyi.common.core.utils.core.pool.StrPool;
-
-import java.util.List;
+import org.springframework.lang.Nullable;
 
 /**
  * 字符串工具类
@@ -143,8 +142,8 @@ public class StrUtil extends cn.hutool.core.util.StrUtil implements StrPool {
      * @param strList 需要检查的字符串数组
      * @return 是否匹配
      */
-    public static boolean matches(String str, List<String> strList) {
-        if (isEmpty(str) || CollUtil.isEmpty(strList))
+    public static boolean matches(String str, String... strList) {
+        if (isEmpty(str) || ArrayUtil.isEmpty(strList))
             return false;
         for (String pattern : strList)
             if (isMatch(pattern, str))
@@ -167,4 +166,19 @@ public class StrUtil extends cn.hutool.core.util.StrUtil implements StrPool {
         return matcher.match(pattern, url);
     }
 
+    public static boolean hasText(@Nullable CharSequence str) {
+        return str != null && str.length() > 0 && containsText(str);
+    }
+
+    public static boolean hasText(@Nullable String str) {
+        return str != null && !str.isEmpty() && containsText(str);
+    }
+
+    private static boolean containsText(CharSequence str) {
+        int strLen = str.length();
+        for (int i = 0; i < strLen; ++i)
+            if (!Character.isWhitespace(str.charAt(i)))
+                return true;
+        return false;
+    }
 }

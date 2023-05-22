@@ -1,6 +1,6 @@
 package com.xueyi.common.security.service;
 
-import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.utils.JwtUtil;
 import com.xueyi.common.core.utils.ServletUtil;
@@ -25,17 +25,17 @@ public class TokenService extends BaseTokenService<SysUserDto, LoginUser>{
 
     @Override
     protected String getAccessToken() {
-        return CacheConstants.LoginTokenType.ADMIN.getCode();
+        return RedisConstants.LoginTokenType.ADMIN.getCode();
     }
 
     @Override
     protected long getTacitExpireTime() {
-        return CacheConstants.EXPIRATION;
+        return RedisConstants.EXPIRATION;
     }
 
     @Override
     protected Long getMillisMinuteTen() {
-        return CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
+        return RedisConstants.REFRESH_TIME * MILLIS_MINUTE;
     }
 
     /**

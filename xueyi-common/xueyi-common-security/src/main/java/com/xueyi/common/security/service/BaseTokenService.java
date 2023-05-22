@@ -1,6 +1,6 @@
 package com.xueyi.common.security.service;
 
-import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.core.utils.JwtUtil;
@@ -37,15 +37,15 @@ public class BaseTokenService<User, LoginUser extends BaseLoginUser<User>> {
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
 
     protected String getAccessToken() {
-        return CacheConstants.LoginTokenType.ADMIN.getCode();
+        return RedisConstants.LoginTokenType.ADMIN.getCode();
     }
 
     protected long getTacitExpireTime() {
-        return CacheConstants.EXPIRATION;
+        return RedisConstants.EXPIRATION;
     }
 
     protected Long getMillisMinuteTen() {
-        return CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
+        return RedisConstants.REFRESH_TIME * MILLIS_MINUTE;
     }
 
     /**

@@ -2,7 +2,7 @@ package com.xueyi.gateway.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import com.google.code.kaptcha.Producer;
-import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.core.constant.basic.Constants;
 import com.xueyi.common.core.exception.CaptchaException;
 import com.xueyi.common.core.utils.core.IdUtil;
@@ -56,7 +56,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
 
         // 保存验证码信息
         String uuid = IdUtil.simpleUUID();
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = RedisConstants.CacheKey.CAPTCHA_CODE_KEY.getCode() + uuid;
 
         String capStr = null, code = null;
         BufferedImage image = null;
@@ -97,7 +97,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (StrUtil.isEmpty(uuid)) {
             throw new CaptchaException("验证码已失效");
         }
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = RedisConstants.CacheKey.CAPTCHA_CODE_KEY.getCode() + uuid;
         String captcha = redisService.getCacheObject(verifyKey);
         redisService.deleteObject(verifyKey);
 
