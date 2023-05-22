@@ -28,17 +28,6 @@ import java.util.stream.Collectors;
 public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG extends IBaseManager<Q, D>> extends BaseHandleServiceImpl<Q, D, IDG> implements IBaseService<Q, D> {
 
     /**
-     * 查询数据对象列表
-     *
-     * @param query 数据查询对象
-     * @return 数据对象集合
-     */
-    @Override
-    public List<D> selectList(Q query) {
-        return baseManager.selectList(query);
-    }
-
-    /**
      * 查询数据对象列表 | 数据权限 | 附加数据
      *
      * @param query 数据查询对象
@@ -46,7 +35,19 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public List<D> selectListScope(Q query) {
-        return baseManager.selectList(query);
+        return selectList(query);
+    }
+
+    /**
+     * 查询数据对象列表
+     *
+     * @param query 数据查询对象
+     * @return 数据对象集合
+     */
+    @Override
+    public List<D> selectList(Q query) {
+        List<D> dtoList = baseManager.selectList(query);
+         return subCorrelates(dtoList);
     }
 
     /**
@@ -57,7 +58,8 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public List<D> selectListByField(com.xueyi.common.web.correlate.domain.SqlField... field) {
-        return baseManager.selectListByField(field);
+        List<D> dtoList = baseManager.selectListByField(field);
+        return subCorrelates(dtoList);
     }
 
     /**
@@ -68,7 +70,8 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public List<D> selectListByIds(Collection<? extends Serializable> idList) {
-        return baseManager.selectListByIds(idList);
+        List<D> dtoList = baseManager.selectListByIds(idList);
+        return subCorrelates(dtoList);
     }
 
     /**
@@ -79,7 +82,8 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public D selectById(Serializable id) {
-        return baseManager.selectById(id);
+        D dto = baseManager.selectById(id);
+        return subCorrelates(dto);
     }
 
     /**
@@ -119,7 +123,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
     @Override
     @DSTransactional
     public int update(D dto) {
-        D originDto = baseManager.selectById(dto.getId());
+        D originDto = selectById(dto.getId());
         startHandle(OperateConstants.ServiceType.EDIT, originDto, dto);
         int row = baseManager.update(dto);
         endHandle(OperateConstants.ServiceType.EDIT, row, originDto, dto);
@@ -133,7 +137,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public int updateBatch(Collection<D> dtoList) {
-        List<D> originList = baseManager.selectListByIds(dtoList.stream().map(D::getId).collect(Collectors.toList()));
+        List<D> originList = selectListByIds(dtoList.stream().map(D::getId).collect(Collectors.toList()));
         startBatchHandle(OperateConstants.ServiceType.BATCH_EDIT, originList, dtoList);
         int rows = baseManager.updateBatch(dtoList);
         endBatchHandle(OperateConstants.ServiceType.BATCH_EDIT, rows, originList, dtoList);
@@ -149,7 +153,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
     @Override
     @DSTransactional
     public int updateStatus(D dto) {
-        D originDto = baseManager.selectById(dto.getId());
+        D originDto = selectById(dto.getId());
         startHandle(OperateConstants.ServiceType.EDIT_STATUS, originDto, dto);
         int row = baseManager.updateStatus(dto);
         endHandle(OperateConstants.ServiceType.EDIT_STATUS, row, originDto, dto);
@@ -165,7 +169,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
     @Override
     @DSTransactional
     public int deleteById(Serializable id) {
-        D originDto = baseManager.selectById(id);
+        D originDto = selectById(id);
         startHandle(OperateConstants.ServiceType.DELETE, originDto, null);
         int row = baseManager.deleteById(id);
         endHandle(OperateConstants.ServiceType.DELETE, row, originDto, null);
@@ -181,7 +185,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
     @Override
     @DSTransactional
     public int deleteByIds(Collection<? extends Serializable> idList) {
-        List<D> originList = baseManager.selectListByIds(idList);
+        List<D> originList = selectListByIds(idList);
         startBatchHandle(OperateConstants.ServiceType.BATCH_DELETE, originList, null);
         int rows = baseManager.deleteByIds(idList);
         endBatchHandle(OperateConstants.ServiceType.BATCH_DELETE, rows, originList, null);
@@ -221,8 +225,9 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, IDG ext
      */
     @Override
     public void refreshCache() {
-        if (StrUtil.isEmpty(getCacheKey()))
+        if (StrUtil.isBlank(getCacheKey())) {
             throw new UtilException("未正常配置缓存，无法使用!");
+        }
         refreshCache(null, RedisConstants.OperateType.REFRESH_ALL, null, null);
     }
 }
