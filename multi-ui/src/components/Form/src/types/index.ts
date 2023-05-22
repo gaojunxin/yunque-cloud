@@ -1,4 +1,5 @@
 type ColSpanType = number | string;
+
 export interface ColEx {
   style?: any;
   /**
@@ -109,6 +110,7 @@ export type ComponentType =
   | 'Switch'
   | 'StrengthMeter'
   | 'Upload'
+  | 'ImageUpload'
   | 'IconPicker'
   | 'Render'
   | 'Slider'
