@@ -7,6 +7,7 @@ import com.xueyi.common.core.utils.core.TypeUtil;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.web.correlate.service.CorrelateService;
 import com.xueyi.common.web.correlate.utils.CorrelateUtil;
 import com.xueyi.common.web.entity.manager.IBaseManager;
 import lombok.Getter;
@@ -49,7 +50,7 @@ public class BaseHandleServiceImpl<Q extends BaseEntity, D extends BaseEntity, I
     /**
      * 设置请求关联映射
      */
-    protected void startCorrelates(Enum<? extends Enum<?>> correlateEnum) {
+    protected <C extends Enum<? extends Enum<?>> & CorrelateService> void startCorrelates(C correlateEnum) {
         CorrelateUtil.startCorrelates(correlateEnum);
     }
 
