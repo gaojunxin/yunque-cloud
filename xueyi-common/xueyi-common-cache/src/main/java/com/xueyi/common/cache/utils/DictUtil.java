@@ -8,6 +8,7 @@ import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.exception.UtilException;
 import com.xueyi.common.core.utils.core.ClassUtil;
+import com.xueyi.common.core.utils.core.ConvertUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
@@ -83,7 +84,7 @@ public class DictUtil {
         } else {
             value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () -> getCacheService().getCacheObject(CacheConstants.CacheType.TE_CONFIG_KEY, code));
         }
-        Object obj = ClassUtil.isCollection(clazz) ? JSON.parseArray(value, clazz):JSON.parseObject(value, clazz);
+        Object obj = ClassUtil.isCollection(clazz) ? JSON.parseArray(value, clazz) : ClassUtil.isSimpleType(clazz) ? ConvertUtil.convert(clazz, value, defaultValue) : JSON.parseObject(value, clazz);
         return (T) (ObjectUtil.isNotNull(obj) ? obj : defaultValue);
     }
 
