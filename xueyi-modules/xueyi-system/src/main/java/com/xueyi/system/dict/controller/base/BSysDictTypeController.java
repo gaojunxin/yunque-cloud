@@ -12,6 +12,7 @@ import com.xueyi.system.api.dict.domain.query.SysDictTypeQuery;
 import com.xueyi.system.dict.service.ISysDictTypeService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 系统服务 | 字典模块 | 字典类型管理 | 通用 业务处理
@@ -51,8 +52,10 @@ public class BSysDictTypeController extends BaseController<SysDictTypeQuery, Sys
      */
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysDictTypeDto dictType) {
-        if (ObjectUtil.isNull(dictType.getTenantId()) && baseService.checkDictCodeUnique(dictType.getId(), dictType.getCode())) {
-            warn(StrUtil.format("{}{}{}失败，字典编码已存在", operate.getInfo(), getNodeName(), dictType.getName()));
+        if (Objects.requireNonNull(operate) == BaseConstants.Operate.ADD) {
+            if (ObjectUtil.isNull(dictType.getTenantId()) && baseService.checkDictCodeUnique(dictType.getId(), dictType.getCode())) {
+                warn(StrUtil.format("{}{}{}失败，字典编码已存在", operate.getInfo(), getNodeName(), dictType.getName()));
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ import com.xueyi.system.dict.service.ISysConfigService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 系统服务 | 字典模块 | 参数管理 | 通用 业务处理
@@ -69,8 +70,10 @@ public class BSysConfigController extends BaseController<SysConfigQuery, SysConf
      */
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysConfigDto config) {
-        if (ObjectUtil.isNull(config.getTenantId()) && baseService.checkConfigCodeUnique(config.getId(), config.getCode())) {
-            warn(StrUtil.format("{}{}{}失败，参数编码已存在", operate.getInfo(), getNodeName(), config.getName()));
+        if (Objects.requireNonNull(operate) == BaseConstants.Operate.ADD) {
+            if (ObjectUtil.isNull(config.getTenantId()) && baseService.checkConfigCodeUnique(config.getId(), config.getCode())) {
+                warn(StrUtil.format("{}{}{}失败，参数编码已存在", operate.getInfo(), getNodeName(), config.getName()));
+            }
         }
     }
 
