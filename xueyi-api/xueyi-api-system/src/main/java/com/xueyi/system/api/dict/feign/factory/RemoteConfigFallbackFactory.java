@@ -1,6 +1,7 @@
 package com.xueyi.system.api.dict.feign.factory;
 
 import com.xueyi.common.core.web.result.R;
+import com.xueyi.system.api.dict.domain.dto.SysConfigDto;
 import com.xueyi.system.api.dict.feign.RemoteConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -33,6 +34,16 @@ public class RemoteConfigFallbackFactory implements FallbackFactory<RemoteConfig
             @Override
             public R<Boolean> refreshCommonCacheInner() {
                 return R.fail("刷新参数缓存失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<SysConfigDto> getInfoInner(String code) {
+                return R.fail("查询参数详情失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> editInner(SysConfigDto config) {
+                return R.fail("修改参数缓存失败:" + throwable.getMessage());
             }
         };
     }

@@ -1,12 +1,13 @@
 package com.xueyi.common.cache.utils;
 
+import com.alibaba.fastjson2.JSON;
 import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.service.CacheService;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.exception.UtilException;
-import com.xueyi.common.core.utils.core.ConvertUtil;
+import com.xueyi.common.core.utils.core.ClassUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
@@ -70,7 +71,7 @@ public class DictUtil {
     public static <T> T getCusConfigCache(String code, Class<?> clazz, Object defaultValue) {
         SysConfigDto config = getCacheService().getCacheObject(CacheConstants.CacheType.ROUTE_CONFIG_KEY, code);
         if (ObjectUtil.isNull(config)) {
-            return null;
+            return (T) defaultValue;
         }
         String value;
         if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), config.getCacheType())) {
@@ -82,7 +83,8 @@ public class DictUtil {
         } else {
             value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () -> getCacheService().getCacheObject(CacheConstants.CacheType.TE_CONFIG_KEY, code));
         }
-        return (T) ConvertUtil.convert(clazz, value, defaultValue);
+        Object obj = ClassUtil.isCollection(clazz) ? JSON.parseArray(value, clazz):JSON.parseObject(value, clazz);
+        return (T) (ObjectUtil.isNotNull(obj) ? obj : defaultValue);
     }
 
     /**
