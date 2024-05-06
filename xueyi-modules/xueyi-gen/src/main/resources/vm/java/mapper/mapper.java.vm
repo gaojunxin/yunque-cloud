@@ -1,10 +1,10 @@
 package ${rdPackageName}.mapper;
 
-    #if($table.base)
-        #set($Entity="Base")
-    #elseif($table.tree)
-        #set($Entity="Tree")
-    #end
+#if($table.base)
+#set($Entity="Base")
+#elseif($table.tree)
+#set($Entity="Tree")
+#end
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.po.${ClassName}Po;

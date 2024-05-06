@@ -1,10 +1,10 @@
 package ${rdPackageName}.manager.impl;
 
-    #if($table.base)
-        #set($Entity="Base")
-    #elseif($table.tree)
-        #set($Entity="Tree")
-    #end
+#if($table.base)
+#set($Entity="Base")
+#elseif($table.tree)
+#set($Entity="Tree")
+#end
 import ${rdPackageName}.domain.po.${ClassName}Po;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;

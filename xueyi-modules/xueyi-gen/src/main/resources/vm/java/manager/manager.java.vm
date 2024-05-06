@@ -1,10 +1,10 @@
 package ${rdPackageName}.manager;
 
-    #if($table.base)
-        #set($Entity="Base")
-    #elseif($table.tree)
-        #set($Entity="Tree")
-    #end
+#if($table.base)
+#set($Entity="Base")
+#elseif($table.tree)
+#set($Entity="Tree")
+#end
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import com.xueyi.common.web.entity.manager.I${Entity}Manager;
