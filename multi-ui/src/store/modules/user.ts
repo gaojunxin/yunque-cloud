@@ -142,14 +142,14 @@ export const useUserStore = defineStore({
       this.setRoutePathMap(null);
       this.setExpiresIn(0);
     },
-    getRoutePath(name: string, param?: string) {
+    getRoutePath(name: string, ...params: string[]) {
       if (this.routePathMap == null) {
         const { createMessage } = useMessage();
         createMessage.warning('请先登录！');
       } else {
         const path = this.routePathMap.get(name);
         if (path !== undefined) {
-          param !== undefined ? router.push(path + param) : router.push(path);
+          params && params.length > 0 ? router.push(path + params.join('/')) : router.push(path);
         } else {
           const { createMessage } = useMessage();
           createMessage.warning('路由不存在！');
