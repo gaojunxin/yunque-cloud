@@ -27,6 +27,7 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <pagehelper.version>6.1.0</pagehelper.version>
         <knife-springdoc.version>4.5.0</knife-springdoc.version>
+        <knife-swagger.version>2.2.21</knife-swagger.version>
         <redisson.version>3.27.2</redisson.version>
         <tobato.version>1.27.2</tobato.version>
         <kaptcha.version>2.3.3</kaptcha.version>
@@ -178,18 +179,24 @@
                 <version>${mapstruct.version}</version>
             </dependency>
 
-            <!-- Swagger Webmvc 依赖配置 -->
+            <!-- Swagger-Knife4j -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife-springdoc.version}</version>
             </dependency>
 
-            <!-- Swagger Webflux 依赖配置 -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
                 <version>${knife-springdoc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core-jakarta</artifactId>
+                <version>${knife-swagger.version}</version>
+                <scope>compile</scope>
             </dependency>
 
             <!-- Minio -->

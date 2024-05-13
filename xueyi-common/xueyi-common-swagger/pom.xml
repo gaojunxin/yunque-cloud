@@ -23,7 +23,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- Swagger Webmvc 依赖配置 -->
+        <!-- Swagger-Knife4j Webmvc -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>

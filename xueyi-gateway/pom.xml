@@ -64,7 +64,7 @@
             <artifactId>xueyi-common-redis</artifactId>
         </dependency>
 
-        <!-- Swagger -->
+        <!-- Swagger-Knife4j Webflux -->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
