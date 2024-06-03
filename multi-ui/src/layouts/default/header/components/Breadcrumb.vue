@@ -128,7 +128,6 @@
   }
 
   function handleClick(route) {
-    console.log(route);
     const { children, redirect, meta } = route;
 
     if (children?.length && !redirect) {
