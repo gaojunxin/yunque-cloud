@@ -341,10 +341,7 @@
         .ant-form-item-children {
           display: flex;
         }
-      }
 
-      &.suffix-item,
-      &.prefix-item {
         .prefix {
           display: inline-flex;
           align-items: center;
