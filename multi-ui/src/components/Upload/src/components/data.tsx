@@ -5,6 +5,7 @@ import { Progress, Tag } from 'ant-design-vue';
 import TableAction from '@/components/Table/src/components/TableAction.vue';
 import ThumbUrl from './ThumbUrl.vue';
 import { useI18n } from '@/hooks/web/useI18n';
+import { previewColumnsFnType } from '../props';
 
 const { t } = useI18n();
 
@@ -82,7 +83,11 @@ export function createActionColumn(handleRemove: Function): BasicColumn {
         {
           label: t('component.upload.del'),
           color: 'error',
-          onClick: handleRemove.bind(null, record),
+          onClick: handleRemove.bind(null, {
+            record,
+            uidKey: 'uid',
+            valueKey: 'url',
+          }),
         },
       ];
       return <TableAction actions={actions} outside={true} />;
@@ -114,7 +119,7 @@ export function createPreviewActionColumn({
   handleRemove,
   handleDownload,
 }: {
-  handleRemove: Fn;
+  handleRemove: previewColumnsFnType['handleRemove'];
   handleDownload: Fn;
 }): BasicColumn {
   return {
@@ -127,7 +132,11 @@ export function createPreviewActionColumn({
         {
           label: t('component.upload.del'),
           color: 'error',
-          onClick: handleRemove.bind(null, record),
+          onClick: handleRemove.bind(null, {
+            record,
+            uidKey: 'uid',
+            valueKey: 'url',
+          }),
         },
         {
           label: t('component.upload.download'),

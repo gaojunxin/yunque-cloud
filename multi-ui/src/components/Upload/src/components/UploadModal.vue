@@ -73,7 +73,7 @@
   const props = defineProps({
     ...basicProps,
     previewFileList: {
-      type: Array as PropType<string[]>,
+      type: Array as PropType<string[] | any[]>,
       default: () => [],
     },
   });

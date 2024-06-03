@@ -1,9 +1,9 @@
 import type { PropType } from 'vue';
-import { FileBasicColumn } from './types/typing';
 import type { Options } from 'sortablejs';
 import { Merge } from '@/utils/types';
 import { fileUploadApi } from '@/api/sys/upload.api';
 import { propTypes } from '@/utils/propTypes';
+import { BaseFileItem, FileBasicColumn } from './types/typing';
 import { BasicColumn } from '@/components/Table';
 
 type SortableOptions = Merge<
@@ -14,9 +14,11 @@ type SortableOptions = Merge<
   }
 >;
 
-type previewColumnsFnType = {
-  handleRemove: (record: Record<string, any>, key: string) => any;
-  handleAdd: (record: Record<string, any>, key: string) => any;
+export type handleFnKey = 'record' | 'valueKey' | 'uidKey';
+
+export type previewColumnsFnType = {
+  handleRemove: (record: Record<handleFnKey, any>) => any;
+  handleAdd: (record: Record<handleFnKey, any>) => any;
 };
 
 export const previewType = {
@@ -27,7 +29,7 @@ export const previewType = {
     required: false,
   },
   beforePreviewData: {
-    type: Function as PropType<(arg: string[]) => Recordable<any>>,
+    type: Function as PropType<(arg: BaseFileItem[] | any) => Recordable<any>>,
     default: null,
     required: false,
   },
@@ -112,7 +114,7 @@ export const uploadContainerProps = {
 
 export const previewProps = {
   value: {
-    type: Array as PropType<string[]>,
+    type: Array as PropType<BaseFileItem[] | any[]>,
     default: () => [],
   },
   maxNumber: {
