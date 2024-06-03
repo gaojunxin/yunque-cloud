@@ -1,5 +1,4 @@
 import { defineApplicationConfig } from '@xueyi/vite-config';
-import Inspector from 'vite-plugin-vue-inspector';
 
 export default defineApplicationConfig({
   overrides: {
@@ -32,10 +31,5 @@ export default defineApplicationConfig({
         clientFiles: ['./index.html', './src/{views,components}/*'],
       },
     },
-    plugins: [
-      Inspector({
-        openInEditorHost: 'http://localhost:5173',
-      }),
-    ],
   },
 });
