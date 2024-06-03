@@ -111,7 +111,7 @@ export function useFormEvents({
       // Adapt date component
       if (itemIsDateComponent(schema?.component)) {
         constructValue = tryConstructArray(key, values);
-        if (!!constructValue) {
+        if (constructValue) {
           const fieldValue = constructValue || value;
           if (Array.isArray(fieldValue)) {
             const arr: any[] = [];
@@ -155,7 +155,7 @@ export function useFormEvents({
       return;
     }
     const validKeys: string[] = [];
-    let keys = Object.keys(unref(formModel));
+    const keys = Object.keys(unref(formModel));
     if (!keys) {
       return;
     }
@@ -177,9 +177,9 @@ export function useFormEvents({
       return;
     }
 
-    let fieldList: string[] = isString(fields) ? [fields] : fields;
+    let fieldList = (isString(fields) ? [fields] : fields) as string[];
     if (isString(fields)) {
-      fieldList = [fields];
+      fieldList = [fields as string];
     }
     for (const field of fieldList) {
       _removeSchemaByField(field, schemaList);
@@ -418,7 +418,7 @@ function getDefaultValue(
   let defaultValue = cloneDeep(defaultValueRef.value[key]);
   const isInput = checkIsInput(schema);
   if (isInput) {
-    return defaultValue || undefined;
+    return !isNil(defaultValue) ? defaultValue : undefined;
   }
   if (!defaultValue && schema && checkIsRangeSlider(schema)) {
     defaultValue = [0, 0];
