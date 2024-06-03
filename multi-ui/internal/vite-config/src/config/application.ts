@@ -36,7 +36,6 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
     });
 
     const pathResolve = (pathname: string) => resolve(root, '.', pathname);
-    const timestamp = new Date().getTime();
     const applicationConfig: UserConfig = {
       base: VITE_PUBLIC_PATH,
       resolve: {
@@ -63,8 +62,8 @@ function defineApplicationConfig(defineOptions: DefineOptions = {}) {
         cssTarget: 'chrome90',
         rollupOptions: {
           output: {
-            // 入口文件名
-            entryFileNames: `assets/entry/[name]-[hash]-${timestamp}.js`,
+            // 入口文件名（不能变，否则所有打包的 js hash 值全变了）
+            entryFileNames: 'index.js',
             manualChunks: {
               vue: ['vue', 'pinia', 'vue-router'],
               antd: ['ant-design-vue', '@ant-design/icons-vue'],
