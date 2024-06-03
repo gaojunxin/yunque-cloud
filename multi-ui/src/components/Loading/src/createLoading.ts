@@ -22,7 +22,7 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
   let container: Nullable<HTMLElement> = null;
   if (wait) {
     setTimeout(() => {
-      container && render(vm, (container = document.createElement('div')));
+      render(vm, (container = document.createElement('div')));
     }, 0);
   } else {
     render(vm, (container = document.createElement('div')));
