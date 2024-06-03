@@ -2,7 +2,7 @@ import type { ComputedRef, Ref } from 'vue';
 import { nextTick, toRaw, unref } from 'vue';
 import type { FormActionType, FormProps, FormSchemaInner as FormSchema } from '../types/form';
 import type { NamePath } from 'ant-design-vue/lib/form/interface';
-import { isArray, isDef, isFunction, isNil, isObject, isString } from '@/utils/core/ObjectUtil';
+import { isArray, isFunction, isNil, isObject, isString } from '@/utils/core/ObjectUtil';
 import { deepMerge } from '@/utils';
 import { dateItemType, defaultValueComponents, isIncludeSimpleComponents } from '../helper';
 import { dateUtil } from '@/utils/core/DateUtil';
@@ -114,9 +114,31 @@ export function useFormEvents({
         validKeys.push(key);
       } else {
         // key not exist
-        if (isDef(get(defaultValueRef.value, key))) {
-          unref(formModel)[key] = cloneDeep(unref(get(defaultValueRef.value, key)));
-        }
+        // refer:https://github.com/vbenjs/vue-vben-admin/issues/3795
+      }
+    });
+    validateFields(validKeys).catch((_) => {});
+  }
+
+  /**
+   * @description: Set form default value
+   */
+  function resetDefaultField(nameList?: NamePath[]) {
+    if (!Array.isArray(nameList)) {
+      return;
+    }
+    if (Array.isArray(nameList) && nameList.length === 0) {
+      return;
+    }
+    const validKeys: string[] = [];
+    let keys = Object.keys(unref(formModel));
+    if (!keys) {
+      return;
+    }
+    nameList.forEach((key: any) => {
+      if (keys.includes(key)) {
+        validKeys.push(key);
+        unref(formModel)[key] = cloneDeep(unref(get(defaultValueRef.value, key)));
       }
     });
     validateFields(validKeys).catch((_) => {});
@@ -362,6 +384,7 @@ export function useFormEvents({
     resetFields,
     setFieldsValue,
     scrollToField,
+    resetDefaultField,
   };
 }
 

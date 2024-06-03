@@ -203,6 +203,7 @@
     removeSchemaByField,
     resetFields,
     scrollToField,
+    resetDefaultField,
   } = useFormEvents({
     emit,
     getProps,
@@ -301,6 +302,7 @@
     validate,
     submit: handleSubmit,
     scrollToField: scrollToField,
+    resetDefaultField,
   };
 
   const getFormActionBindProps = computed(
@@ -316,6 +318,7 @@
     emit('register', formActionType);
   });
 </script>
+
 <style lang="less">
   @prefix-cls: ~'@{namespace}-basic-form';
 
