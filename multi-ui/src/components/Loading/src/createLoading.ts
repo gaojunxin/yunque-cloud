@@ -19,12 +19,13 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
 
   vm = createVNode(LoadingWrap);
 
+  let container: Nullable<HTMLElement> = null;
   if (wait) {
     setTimeout(() => {
-      render(vm, document.createElement('div'));
+      container && render(vm, (container = document.createElement('div')));
     }, 0);
   } else {
-    render(vm, document.createElement('div'));
+    render(vm, (container = document.createElement('div')));
   }
 
   function close() {
@@ -40,6 +41,11 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
     target.appendChild(vm.el as HTMLElement);
   }
 
+  function destroy() {
+    container && render(null, container);
+    container = vm = null;
+  }
+
   if (target) {
     open(target);
   }
@@ -47,6 +53,7 @@ export function createLoading(props?: Partial<LoadingProps>, target?: HTMLElemen
     vm,
     close,
     open,
+    destroy,
     setTip: (tip: string) => {
       data.tip = tip;
     },
