@@ -51,7 +51,7 @@
   import { deepMerge } from '@/utils';
   import { useFormValues } from './hooks/useFormValues';
   import useAdvanced from './hooks/useAdvanced';
-  import { useFormEvents } from './hooks/useFormEvents';
+  import { itemIsUploadComponent, useFormEvents } from './hooks/useFormEvents';
   import { createFormContext } from './hooks/useFormContext';
   import { useAutoFocus } from './hooks/useAutoFocus';
   import { useModalContext } from '@/components/Modal';
@@ -60,7 +60,7 @@
   import { useDesign } from '@/hooks/web/useDesign';
   import { cloneDeep } from 'lodash-es';
   import { TableActionType } from '@/components/Table';
-  import { isFunction } from '@/utils/core/ObjectUtil';
+  import { isArray, isFunction } from '@/utils/core/ObjectUtil';
 
   defineOptions({ name: 'BasicForm' });
 
@@ -159,6 +159,15 @@
             def.push(valueFormat ? dateUtil(item).format(valueFormat) : dateUtil(item));
           });
           schema.defaultValue = def;
+        }
+      }
+
+      // handle upload type
+      if (defaultValue && itemIsUploadComponent(schema?.component)) {
+        if (isArray(defaultValue)) {
+          schema.defaultValue = defaultValue;
+        } else if (typeof defaultValue == 'string') {
+          schema.defaultValue = [defaultValue];
         }
       }
 

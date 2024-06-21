@@ -63,6 +63,7 @@
   const fileList = ref<UploadProps['fileList']>([]);
   const isLtMsg = ref<boolean>(true);
   const isActMsg = ref<boolean>(true);
+  const isFirstRender = ref<boolean>(true);
 
   watch(
     () => props.value,
@@ -92,6 +93,9 @@
             return;
           }
         }) as UploadProps['fileList'];
+      }
+      if (!isFirstRender.value) {
+        isFirstRender.value = false;
       }
     },
     {
