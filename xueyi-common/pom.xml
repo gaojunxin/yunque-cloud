@@ -23,6 +23,7 @@
         <module>xueyi-common-dependency</module>
         <module>xueyi-common-sms</module>
         <module>xueyi-common-mail</module>
+        <module>xueyi-common-mq</module>
     </modules>
 
     <artifactId>xueyi-common</artifactId>

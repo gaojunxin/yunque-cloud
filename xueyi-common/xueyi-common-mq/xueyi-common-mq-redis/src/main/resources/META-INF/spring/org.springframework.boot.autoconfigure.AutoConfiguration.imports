@@ -1,0 +1,2 @@
+com.xueyi.common.mq.redis.config.RedisMQProduceConfiguration
+com.xueyi.common.mq.redis.config.RedisMQConsumerConfiguration

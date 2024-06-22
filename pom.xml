@@ -28,6 +28,7 @@
         <pagehelper.version>6.1.0</pagehelper.version>
         <knife-springdoc.version>4.5.0</knife-springdoc.version>
         <knife-swagger.version>2.2.21</knife-swagger.version>
+        <rocket-mq.version>2.2.3</rocket-mq.version>
         <redisson.version>3.27.2</redisson.version>
         <tobato.version>1.27.2</tobato.version>
         <kaptcha.version>2.3.3</kaptcha.version>
@@ -94,6 +95,13 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- 消息队列 - RocketMQ -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocket-mq.version}</version>
             </dependency>
 
             <!-- Redisson -->

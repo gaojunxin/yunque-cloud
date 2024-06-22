@@ -117,6 +117,40 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
+            <!-- MQ模块 - MQTT -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-mq-mqtt</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Redis -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-mq-redis</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Rabbit -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-mq-rabbit</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Rocket -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-mq-rocket</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Kafka -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-mq-kafka</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
