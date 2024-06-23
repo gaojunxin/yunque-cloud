@@ -16,7 +16,7 @@
         <revision>${xueyi.version}</revision>
         <xueyi.version>3.0.3</xueyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <java.version>17</java.version>
         <spring-boot.version>3.3.1</spring-boot.version>
