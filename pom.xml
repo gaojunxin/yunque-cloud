@@ -32,7 +32,7 @@
         <redisson.version>3.27.2</redisson.version>
         <tobato.version>1.27.2</tobato.version>
         <kaptcha.version>2.3.3</kaptcha.version>
-        <dynamic-ds.version>4.3.0</dynamic-ds.version>
+        <dynamic-ds.version>4.3.1</dynamic-ds.version>
         <commons.io.version>2.16.1</commons.io.version>
         <velocity.version>2.3</velocity.version>
         <fastjson2.version>2.0.51</fastjson2.version>
