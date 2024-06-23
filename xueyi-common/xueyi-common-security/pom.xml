@@ -33,6 +33,12 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <!-- Spring Aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
         <!-- XueYi Common Cache-->
         <dependency>
             <groupId>com.xueyi</groupId>

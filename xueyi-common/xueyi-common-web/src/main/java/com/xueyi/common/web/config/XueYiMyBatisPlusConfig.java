@@ -63,7 +63,7 @@ public class XueYiMyBatisPlusConfig {
         // 数据权限插件
         interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataScopeAspect));
         // 租户控制插件
-        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(tenantLineHandler));
+        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor<>(tenantLineHandler));
         // 禁全表更删插件
         interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
         return interceptor;

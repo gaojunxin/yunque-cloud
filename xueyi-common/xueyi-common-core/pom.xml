@@ -53,6 +53,20 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
+        <!-- Spring Aop -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- aspectjweaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- mapstruct 转换器 -->
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -75,12 +89,6 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
-        </dependency>
-
-        <!-- Mybatis-Plus && PageHelper版本冲突临时解决方案 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>sqlparser4.5</artifactId>
         </dependency>
 
         <!-- Hibernate Validator -->

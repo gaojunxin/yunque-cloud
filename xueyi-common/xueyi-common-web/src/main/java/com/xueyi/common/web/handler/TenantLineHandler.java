@@ -14,6 +14,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * 租户处理器
  *
@@ -41,9 +43,7 @@ public class TenantLineHandler implements BasicLineHandler {
      */
     @Before("@annotation(controllerTenantIgnore)")
     private void doBefore(TenantIgnore controllerTenantIgnore) {
-        // 获得注解
-        if (controllerTenantIgnore != null)
-            threadLocal.set(controllerTenantIgnore);
+        Optional.ofNullable(controllerTenantIgnore).ifPresent(threadLocal::set);
     }
 
     /**

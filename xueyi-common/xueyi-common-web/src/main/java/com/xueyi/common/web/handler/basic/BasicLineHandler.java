@@ -1,5 +1,6 @@
 package com.xueyi.common.web.handler.basic;
 
+import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
@@ -8,16 +9,12 @@ import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.config.properties.TenantProperties;
-import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.HexValue;
 import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.Parenthesis;
 import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.WhenClause;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
 import net.sf.jsqlparser.schema.Column;
@@ -32,7 +29,7 @@ import java.util.List;
  *
  * @author xueyi
  */
-public interface BasicLineHandler {
+public interface BasicLineHandler extends TenantLineHandler {
 
     /**
      * 获取租户字段名
@@ -141,7 +138,7 @@ public interface BasicLineHandler {
     }
 
     /**
-     * 构造更新、删除租户表达式 | delete/update -> where
+     * 构造更新、删除租户表达式 | select/delete/update -> where
      *
      * @param table 表对象
      * @param where 表达式条件对象
@@ -162,27 +159,14 @@ public interface BasicLineHandler {
     }
 
     /**
-     * 租户表达式 | insert -> insert
-     *
-     * @param tableName 表名
-     * @return EqualsTo
-     */
-    default EqualsTo getInsertTenantEqualsTo(String tableName) {
-        return new EqualsTo(new StringValue(getTenantIdColumn()), getInsertTenantId(tableName));
-    }
-
-    /**
      * 租户表达式 | delete/update -> where
      *
      * @param table 表对象
      * @param where 表达式条件对象
      * @return Expression
      */
-    default BinaryExpression andExpression(Table table, Expression where) {
-        EqualsTo equalsTo = new EqualsTo(getAliasColumn(table), getTenantId());
-        return ObjectUtil.isNotNull(where)
-                ? where instanceof OrExpression ? new AndExpression(new Parenthesis(where), equalsTo) : new AndExpression(where, equalsTo)
-                : equalsTo;
+    default Expression andExpression(Table table, Expression where) {
+        return new EqualsTo(getAliasColumn(table), getTenantId());
     }
 
     /**
@@ -196,9 +180,7 @@ public interface BasicLineHandler {
         InExpression inExpression = new InExpression();
         inExpression.setLeftExpression(getAliasColumn(table));
         inExpression.setRightExpression(getCommonTenantId());
-        return ObjectUtil.isNotNull(where)
-                ? where instanceof OrExpression ? new AndExpression(new Parenthesis(where), inExpression) : new AndExpression(where, inExpression)
-                : inExpression;
+        return inExpression;
     }
 
     /**
@@ -208,8 +190,11 @@ public interface BasicLineHandler {
      * @return 租户别名列
      */
     default Column getAliasColumn(Table table) {
-        String column = (ObjectUtil.isNotNull(table.getAlias()) ? table.getAlias().getName() : table.getName()) +
-                StrUtil.DOT + getTenantIdColumn();
-        return new Column(column);
+        StringBuilder column = new StringBuilder();
+        if (table.getAlias() != null) {
+            column.append(table.getAlias().getName()).append(StrUtil.DOT);
+        }
+        column.append(getTenantIdColumn());
+        return new Column(column.toString());
     }
 }

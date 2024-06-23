@@ -26,7 +26,8 @@ public class SysClientManagerImpl extends BaseManagerImpl<SysClientQuery, SysCli
      */
     @Override
     public SysClientDto selectByClientId(String clientId) {
-        SysClientPo po = baseMapper.selectOne(Wrappers.<SysClientPo>query().lambda().eq(SysClientPo::getClientId, clientId));
+        SysClientPo po = baseMapper.selectOne(Wrappers.<SysClientPo>lambdaQuery()
+                .eq(SysClientPo::getClientId, clientId));
         return mapperDto(po);
     }
 }

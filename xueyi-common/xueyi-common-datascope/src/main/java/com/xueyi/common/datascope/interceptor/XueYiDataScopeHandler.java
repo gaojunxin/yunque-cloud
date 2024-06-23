@@ -15,7 +15,6 @@ import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.ExpressionList;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
-import net.sf.jsqlparser.expression.operators.relational.ItemsList;
 import net.sf.jsqlparser.schema.Column;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -86,20 +85,17 @@ public class XueYiDataScopeHandler implements DataPermissionHandler {
                 if (StrUtil.isNotEmpty(dataScope.userAlias())) {
                     Set<Long> userScope = scope.getUserScope();
                     if (ArrayUtil.isEmpty(userScope)) break;
-                    ItemsList itemsList = new ExpressionList(userScope.stream().map(LongValue::new).collect(Collectors.toList()));
-                    InExpression userInExpression = new InExpression(new Column(dataScope.userAlias()), itemsList);
+                    InExpression userInExpression = new InExpression(new Column(dataScope.userAlias()), new ExpressionList<>(userScope.stream().map(LongValue::new).collect(Collectors.toList())));
                     return new AndExpression(where, userInExpression);
                 } else if (StrUtil.isNotEmpty(dataScope.postAlias())) {
                     Set<Long> postScope = scope.getPostScope();
                     if (ArrayUtil.isEmpty(postScope)) break;
-                    ItemsList itemsList = new ExpressionList(postScope.stream().map(LongValue::new).collect(Collectors.toList()));
-                    InExpression postInExpression = new InExpression(new Column(dataScope.postAlias()), itemsList);
+                    InExpression postInExpression = new InExpression(new Column(dataScope.postAlias()), new ExpressionList<>(postScope.stream().map(LongValue::new).collect(Collectors.toList())));
                     return new AndExpression(where, postInExpression);
                 } else if (StrUtil.isNotEmpty(dataScope.deptAlias())) {
                     Set<Long> deptScope = scope.getDeptScope();
                     if (ArrayUtil.isEmpty(deptScope)) break;
-                    ItemsList itemsList = new ExpressionList(deptScope.stream().map(LongValue::new).collect(Collectors.toList()));
-                    InExpression deptInExpression = new InExpression(new Column(dataScope.deptAlias()), itemsList);
+                    InExpression deptInExpression = new InExpression(new Column(dataScope.deptAlias()), new ExpressionList<>(deptScope.stream().map(LongValue::new).collect(Collectors.toList())));
                     return new AndExpression(where, deptInExpression);
                 }
             }
