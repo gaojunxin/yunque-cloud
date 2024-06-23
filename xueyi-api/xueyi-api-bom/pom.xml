@@ -13,7 +13,7 @@
 
     <properties>
         <revision>${xueyi.version}</revision>
-        <xueyi.version>3.0.3</xueyi.version>
+        <xueyi.version>3.3.4</xueyi.version>
     </properties>
 
     <dependencyManagement>

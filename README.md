@@ -2,7 +2,7 @@
 <h4 align="center">基于 Vue3/TypeScript/Ant-Design UI 和 Spring Cloud & Alibaba/Mybatis-Plus 的多租户SaaS开发框架。</h4>
 <p align="center">
     <a style="margin-right: 5px">
-       <img src="https://img.shields.io/badge/XueYi--MultiSaas-v3.0.2-brightgreen" alt="xueYi-MultiSaas">
+       <img src="https://img.shields.io/badge/XueYi--MultiSaas-v3.3.4-brightgreen" alt="xueYi-MultiSaas">
     </a>
     <a style="margin-right: 5px">
        <img src="https://gitee.com/xueyitiantang/XueYi-MultiSaas/badge/star.svg?theme=dark" alt="xueYi-MultiSaas">
@@ -79,6 +79,12 @@ com.xueyi
 │       ├── xueyi-common-redis                        // 缓存服务
 │       ├── xueyi-common-mail                         // 邮件模块
 │       ├── xueyi-common-seata                        // 事务模块
+│       ├── xueyi-common-mq                           // 消息队列
+│               ├── xueyi-common-mq-redis             // 消息队列 - Redis
+│               ├── xueyi-common-mq-mqtt              // 消息队列 - EMQ-X
+│               ├── xueyi-common-mq-rabbit            // 消息队列 - RabbitMQ
+│               ├── xueyi-common-mq-rocket            // 消息队列 - RocketMQ
+│               └── xueyi-common-mq-kafka             // 消息队列 - Kafka
 │       ├── xueyi-common-sms                          // 短信模块
 │       ├── xueyi-common-security                     // 安全模块
 │       ├── xueyi-common-swagger                      // 系统接口
