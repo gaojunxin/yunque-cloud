@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import ${rdPackageName}.controller.base.B${ClassName}Controller;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;
+import io.swagger.v3.oas.annotations.Operation;
 import com.xueyi.common.security.annotation.AdminAuth;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,28 +35,24 @@ import java.util.List;
 public class A${ClassName}Controller extends B${ClassName}Controller {
 #if($api.cache)
 
-    /**
-     * 刷新${functionName}缓存
-     */
     @Override
+    @GetMapping("/refresh")
+    @Operation(summary = "刷新${functionName}缓存")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_CACHE)")
 #else
     @PreAuthorize("@ss.hasAuthority('RD:${authorityName}:cache')")
 #end
     @Log(title = "${functionName}管理", businessType = BusinessType.REFRESH)
-    @GetMapping("/refresh")
     public AjaxResult refreshCache() {
         return super.refreshCache();
     }
 #end
 #if($api.list)
 
-    /**
-     * 查询${functionName}列表
-     */
     @Override
     @GetMapping("/list")
+    @Operation(summary = "查询${functionName}列表")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_LIST)")
 #else
@@ -67,11 +64,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.getInfo)
 
-    /**
-     * 查询${functionName}详细
-     */
     @Override
     @GetMapping(value = "/{id}")
+    @Operation(summary = "查询${functionName}详细")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_SINGLE)")
 #else
@@ -83,11 +78,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.export)
 
-    /**
-     * ${functionName}导出
-     */
     @Override
     @PostMapping("/export")
+    @Operation(summary = "${functionName}导出")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_EXPORT)")
 #else
@@ -100,11 +93,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.add)
 
-    /**
-     * ${functionName}新增
-     */
     @Override
     @PostMapping
+    @Operation(summary = "${functionName}新增")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_ADD)")
 #else
@@ -117,11 +108,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.edit)
 
-    /**
-     * ${functionName}修改
-     */
     @Override
     @PutMapping
+    @Operation(summary = "${functionName}修改")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_EDIT)")
 #else
@@ -134,11 +123,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.editStatus)
 
-    /**
-     * ${functionName}修改状态
-     */
     @Override
     @PutMapping("/status")
+    @Operation(summary = "${functionName}修改状态")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAnyAuthority(@Auth.${ClASS_NAME}_EDIT, @Auth.${ClASS_NAME}_ES)")
 #else
@@ -151,11 +138,9 @@ public class A${ClassName}Controller extends B${ClassName}Controller {
 #end
 #if($api.batchRemove)
 
-    /**
-     * ${functionName}批量删除
-     */
     @Override
     @DeleteMapping("/batch/{idList}")
+    @Operation(summary = "${functionName}批量删除")
 #if($isDependMode)
     @PreAuthorize("@ss.hasAuthority(@Auth.${ClASS_NAME}_DEL)")
 #else
