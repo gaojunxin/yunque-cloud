@@ -48,6 +48,7 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
 
     public AuthenticationProvider() {
         this.setPasswordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+        this.setHideUserNotFoundExceptions(false);
     }
 
     /** 密码校验 */

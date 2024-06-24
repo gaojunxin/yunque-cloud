@@ -23,7 +23,7 @@ public interface IUserDetailsService extends Ordered {
      * @param accountType 账户类型
      * @return 结果
      */
-    default boolean support(String clientId, String grantType, String accountType){
+    default boolean support(String clientId, String grantType, String accountType) {
         return support(grantType, accountType);
     }
 
@@ -68,6 +68,5 @@ public interface IUserDetailsService extends Ordered {
      * @return 用户信息
      */
     UserDetails loadUser(Object principal);
-
 }
 

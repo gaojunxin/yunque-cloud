@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
@@ -59,6 +62,7 @@ public class AdminDetailsPasswordProvider implements IUserDetailsService {
      * @param request 请求体
      */
     @Override
+    @SneakyThrows
     public void checkParams(HttpServletRequest request) {
         MultiValueMap<String, String> parameters = ServletUtil.getParameters(request);
 
@@ -70,28 +74,28 @@ public class AdminDetailsPasswordProvider implements IUserDetailsService {
         // 企业账号||员工账号||密码为空 错误
         if (StrUtil.isBlank(enterpriseName) || StrUtil.isBlank(userName) || StrUtil.isBlank(password)) {
             SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "企业账号/员工账号/密码必须填写");
-            throw new UsernameNotFoundException("企业账号/员工账号/密码必须填写");
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "企业账号/员工账号/密码必须填写", null));
         }
 
         // 企业账号不在指定范围内 错误
         if (enterpriseName.length() < OrganizeConstants.ENTERPRISE_NAME_MIN_LENGTH
                 || enterpriseName.length() > OrganizeConstants.ENTERPRISE_NAME_MAX_LENGTH) {
             SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "企业账号不在指定范围");
-            throw new UsernameNotFoundException("企业账号不在指定范围");
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "企业账号不在指定范围", null));
         }
 
         // 员工账号不在指定范围内 错误
         if (userName.length() < OrganizeConstants.USERNAME_MIN_LENGTH
                 || userName.length() > OrganizeConstants.USERNAME_MAX_LENGTH) {
             SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "员工账号不在指定范围");
-            throw new UsernameNotFoundException("员工账号不在指定范围");
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "员工账号不在指定范围", null));
         }
 
         // 密码如果不在指定范围内 错误
         if (password.length() < OrganizeConstants.PASSWORD_MIN_LENGTH
                 || password.length() > OrganizeConstants.PASSWORD_MAX_LENGTH) {
             SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "用户密码不在指定范围");
-            throw new UsernameNotFoundException("用户密码不在指定范围");
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "用户密码不在指定范围", null));
         }
     }
 

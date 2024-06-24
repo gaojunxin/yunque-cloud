@@ -4,6 +4,7 @@ import com.xueyi.auth.service.ISysLogService;
 import com.xueyi.common.core.constant.basic.Constants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.utils.core.SpringUtil;
+import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.utils.servlet.ServletUtil;
 import com.xueyi.common.core.web.model.BaseLoginUser;
 import com.xueyi.common.core.web.result.AjaxResult;
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.util.Assert;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 自定义登录操作类
@@ -59,9 +61,35 @@ public class AuthenticationEventHandlerImpl implements AuthenticationSuccessHand
     @Override
     @SneakyThrows
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
-        String enterpriseName = request.getParameter(SecurityConstants.LoginParam.ENTERPRISE_NAME.getCode());
-        String userName = request.getParameter(SecurityConstants.LoginParam.USER_NAME.getCode());
-        log.info("企业账号：{}，用户账号：{} 登录失败，异常：{}", enterpriseName, userName, exception.getLocalizedMessage());
+        SecurityConstants.AccountType accountType = Optional.ofNullable(request.getParameter(SecurityConstants.OAuth2ParameterNames.ACCOUNT_TYPE.getCode()))
+                .map(SecurityConstants.AccountType::getByCodeElseNull).orElse(null);
+        SecurityConstants.GrantType grantType = Optional.ofNullable(request.getParameter(SecurityConstants.OAuth2ParameterNames.GRANT_TYPE.getCode()))
+                .map(SecurityConstants.GrantType::getByCodeElseNull).orElse(null);
+        StringBuilder errorMsg = new StringBuilder();
+        if (accountType != null && grantType != null) {
+            switch (accountType) {
+                case ADMIN -> {
+                    switch (grantType) {
+                        case PASSWORD -> {
+                            String enterpriseName = request.getParameter(SecurityConstants.LoginParam.ENTERPRISE_NAME.getCode());
+                            String userName = request.getParameter(SecurityConstants.LoginParam.USER_NAME.getCode());
+                            errorMsg.append(StrUtil.format("企业账号:{}，用户账号:{}", enterpriseName, userName));
+                        }
+                        default -> {
+                        }
+                    }
+                }
+                case MEMBER, PLATFORM, EXTERNAL -> {
+                }
+            }
+        }
+        if (!errorMsg.isEmpty()) {
+            errorMsg.append(StrUtil.COMMA);
+        }
+        log.info("【登录失败】账户类型：{},认证模式：{},{}异常原因：{}",
+                Optional.ofNullable(accountType).map(SecurityConstants.AccountType::getInfo).orElse(StrUtil.EMPTY),
+                Optional.ofNullable(grantType).map(SecurityConstants.GrantType::getInfo).orElse(StrUtil.EMPTY),
+                errorMsg, exception.getLocalizedMessage());
         ServletUtil.webResponseWriter(response, AjaxResult.error(exception.getLocalizedMessage()));
     }
 }

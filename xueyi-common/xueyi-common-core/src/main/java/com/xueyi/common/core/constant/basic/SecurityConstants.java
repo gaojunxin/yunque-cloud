@@ -148,6 +148,9 @@ public class SecurityConstants {
             return StrUtil.equals(CLIENT_CREDENTIALS.code, code);
         }
 
+        public static GrantType getByCodeElseNull(String code) {
+            return EnumUtil.getByCodeElseNull(GrantType.class, code);
+        }
     }
 
     /** 账户类型 */
