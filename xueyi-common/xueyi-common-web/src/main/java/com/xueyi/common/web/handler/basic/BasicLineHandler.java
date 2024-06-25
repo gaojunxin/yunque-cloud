@@ -17,12 +17,16 @@ import net.sf.jsqlparser.expression.StringValue;
 import net.sf.jsqlparser.expression.WhenClause;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.expression.operators.relational.InExpression;
+import net.sf.jsqlparser.parser.ASTNodeAccessImpl;
+import net.sf.jsqlparser.parser.SimpleNode;
+import net.sf.jsqlparser.parser.Token;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.util.cnfexpression.MultipleExpression;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 通用租户处理器
@@ -145,7 +149,8 @@ public interface BasicLineHandler extends TenantLineHandler {
      * @return Expression
      */
     default Expression updateExpression(Table table, Expression where) {
-        return isCommonTable(table.getName()) && isLessor() ? inExpression(table, where) : andExpression(table, where);
+        return isCommonTable(table.getName()) && Optional.of(table).map(ASTNodeAccessImpl::getASTNode).map(SimpleNode::jjtGetParent).map(item -> ((SimpleNode)item).jjtGetFirstToken()).map(Token::toString)
+                .filter(item -> StrUtil.equalsAny(item, "UPDATE", "DELETE")).map(item -> isLessor()).orElse(Boolean.TRUE) ? inExpression(table, where) : andExpression(table, where);
     }
 
     /**
