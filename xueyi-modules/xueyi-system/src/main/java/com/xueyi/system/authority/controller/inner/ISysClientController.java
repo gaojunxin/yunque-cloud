@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/inner/client")
 public class ISysClientController extends BSysClientController {
 
-    @GetMapping
+    @GetMapping("/clientId")
     @InnerAuth(isAnonymous = true)
-    @Operation(summary = "第三方系统获取登录信息")
+    @Operation(summary = "获取登录信息")
     public R<SysClientDto> getInfoByClientIdInner(@RequestParam String clientId) {
         return R.ok(baseService.selectByClientId(clientId));
     }
