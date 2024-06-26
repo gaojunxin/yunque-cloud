@@ -1,7 +1,14 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicDrawer
+    v-bind="$attrs"
+    :title="getTitle"
+    @register="registerDrawer"
+    width="50%"
+    showFooter
+    @ok="handleSubmit"
+  >
     <BasicForm @register="registerForm" />
-  </BasicModal>
+  </BasicDrawer>
 </template>
 
 <script setup lang="ts">
@@ -9,9 +16,9 @@
   import { formSchema } from './data';
   import { useMessage } from '@/hooks/web/useMessage';
   import {#if($table.tree) list${BusinessName}Api,#end get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api } from '@/api/${fePackageName}/${businessName}.api';
-  import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { ${ClassName}IM } from '@/model/${fePackageName}#if(!$isDependMode)/${businessName}.model#end';
+  import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
 
   const emit = defineEmits(['success', 'register']);
   const { createMessage } = useMessage();
@@ -23,9 +30,9 @@
     showActionButtonGroup: false,
   });
 
-  const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+  const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
     resetFields();
-    setModalProps({ confirmLoading: false });
+    setDrawerProps({ loading: true, confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
 
     if (unref(isUpdate)) {
@@ -40,6 +47,7 @@
     });
     updateSchema({ field: '${treeMap.parentIdColumn.javaField}', componentProps: { treeData } });
 #end
+    setDrawerProps({ loading: false });
   });
 
   /** 标题初始化 */
@@ -49,19 +57,19 @@
   async function handleSubmit() {
     try {
       const values: ${ClassName}IM = await validate();
-      setModalProps({ confirmLoading: true });
+      setDrawerProps({ confirmLoading: true });
       unref(isUpdate)
         ? await edit${BusinessName}Api(values).then(() => {
-            closeModal();
+            closeDrawer();
             createMessage.success('编辑${functionName}成功！');
           })
         : await add${BusinessName}Api(values).then(() => {
-            closeModal();
+            closeDrawer();
             createMessage.success('新增${functionName}成功！');
           });
       emit('success');
     } finally {
-      setModalProps({ confirmLoading: false });
+      setDrawerProps({ confirmLoading: false });
     }
   }
 </script>

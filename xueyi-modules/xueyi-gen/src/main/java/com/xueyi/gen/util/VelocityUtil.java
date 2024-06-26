@@ -253,7 +253,7 @@ public class VelocityUtil {
             templates.add("vm/multi/ts/infoModel.ts.vm");
             templates.add("vm/multi/vue/detail.vue.vm");
             templates.add("vm/multi/vue/index.vue.vm");
-            templates.add("vm/multi/vue/modal.vue.vm");
+            templates.add("vm/multi/vue/drawer.vue.vm");
         }
         return templates;
     }
@@ -362,9 +362,9 @@ public class VelocityUtil {
         } else if (template.contains("detail.vue.vm")) {
             String prefixPath = StrUtil.format("{}{}/src/views", realUiPath, uiPath);
             return StrUtil.format("{}/{}/{}/Detail.vue", prefixPath, fePackageName, businessName);
-        } else if (template.contains("modal.vue.vm")) {
+        } else if (template.contains("drawer.vue.vm")) {
             String prefixPath = StrUtil.format("{}{}/src/views", realUiPath, uiPath);
-            return StrUtil.format("{}/{}/{}/Modal.vue", prefixPath, fePackageName, businessName);
+            return StrUtil.format("{}/{}/{}/Drawer.vue", prefixPath, fePackageName, businessName);
         }
         throw new ServiceException("未知文件无法生成！");
     }

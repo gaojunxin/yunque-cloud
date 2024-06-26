@@ -283,7 +283,7 @@ export const detailSchema: DescItem[] = [
       return dictConversion(dict.${column.dictName}, val);
     },
 #end
-    span: 8,
+    span: 12,
   },
 #end
 #end

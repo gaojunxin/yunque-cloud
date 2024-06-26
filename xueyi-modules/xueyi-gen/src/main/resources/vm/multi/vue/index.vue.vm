@@ -87,7 +87,10 @@
 #end
     </BasicTable>
 #if($api.add || $api.edit)
-    <${BusinessName}Modal @register="registerModal" @success="handleSuccess" />
+    <RefreshDrawer @register="refreshRegisterDrawer" @success="handleSuccess" />
+#end
+#if($api.getInfo)
+    <DetailDrawer @register="detailRegisterDrawer" />
 #end
   </div>
 </template>
@@ -104,9 +107,14 @@
   import { reactive } from 'vue';
 #end
   import { list${BusinessName}Api#if($api.batchRemove), del${BusinessName}Api#end#if($api.export), export${BusinessName}Api#end#if($api.cache), refresh${BusinessName}Api#end } from '@/api/${fePackageName}/${businessName}.api';
+#if($api.add || $api.edit || $api.getInfo)
+  import { useDrawer } from '@/components/Drawer';
+#end
 #if($api.add || $api.edit)
-  import { useModal } from '@/components/Modal';
-  import ${BusinessName}Modal from './Modal.vue';
+  import RefreshDrawer from './Drawer.vue';
+#end
+#if($api.getInfo)
+  import DetailDrawer from './Detail.vue';
 #end
 #if($api.batchRemove || $api.cache)
   import { useMessage } from '@/hooks/web/useMessage';
@@ -119,19 +127,12 @@
   import { ${BusinessName}Auth } from '@/auth/${fePackageName}#if(!$isDependMode)/${businessName}.auth#end';
 #end
   import { columns, searchFormSchema } from './data';
-#if($api.getInfo)
-  import { ${BusinessName}DetailGo } from '@/enums/${fePackageName}#if(!$isDependMode)/${businessName}.enum#end';
-  import { useUserStore } from '@/store/modules/user';
-#end
 #if($api.export)
   import { ${ClassName}PM } from '@/model/${fePackageName}#if(!$isDependMode)/${businessName}.model#end';
 #end
 
 #if($api.batchRemove || $api.cache)
   const { createMessage#if($api.batchRemove), createConfirm#end } = useMessage();
-#end
-#if($api.add || $api.edit)
-  const [registerModal, { openModal }] = useModal();
 #end
 #if($api.batchRemove)
   const state = reactive<{
@@ -143,6 +144,12 @@
   });
 #end
 
+#if($api.add || $api.edit)
+  const [refreshRegisterDrawer, { openDrawer: refreshOpenDrawer }] = useDrawer();
+#end
+#if($api.getInfo)
+  const [detailRegisterDrawer, { openDrawer: detailOpenDrawer }] = useDrawer();
+#end
   const [registerTable, { reload#if($table.tree), expandAll, collapseAll#end#if($api.export), getForm#end }] = useTable({
     title: '${functionName}列表',
     api: list${BusinessName}Api,
@@ -190,14 +197,16 @@
 
   /** 查看按钮 */
   function handleView(record: Recordable) {
-    useUserStore().getRoutePath(${BusinessName}DetailGo, record?.${pkColumn.javaField});
+    detailOpenDrawer(true, {
+      record,
+    });
   }
 #end
 #if($api.add)
 
   /** 新增按钮 */
   function handleCreate() {
-    openModal(true, {
+    refreshOpenDrawer(true, {
       isUpdate: false,
     });
   }
@@ -206,7 +215,7 @@
 
   /** 修改按钮 */
   function handleEdit(record: Recordable) {
-    openModal(true, {
+    refreshOpenDrawer(true, {
       record,
       isUpdate: true,
     });

@@ -1,30 +1,25 @@
 <template>
-  <PageWrapper :title="getTitle" @back="goBack">
+  <BasicDrawer
+    v-bind="$attrs"
+    :title="getTitle"
+    @register="registerDrawer"
+    width="50%"
+    showFooter
+    :showOkBtn="false"
+  >
     <Description @register="register" class="mt-4" />
-  </PageWrapper>
+  </BasicDrawer>
 </template>
 
-#if($pkColumn.javaType == 'Long' || $pkColumn.javaType == 'String')
-#set($IdType = 'string')
-#elseif($pkColumn.javaType == 'Integer' || $pkColumn.javaType == 'Double' || $pkColumn.javaType == 'BigDecimal')
-#set($IdType = 'number')
-#else
-#set($IdType = 'any')
-#end
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue';
-  import { get${BusinessName}Api } from '@/api/${fePackageName}/${businessName}.api';
+  import { ref } from 'vue';
   import { Description, useDescription } from '@/components/Description';
   import { detailSchema } from './data';
-  import { useRoute } from 'vue-router';
-  import { ${BusinessName}IndexGo } from '@/enums/${fePackageName}#if(!$isDependMode)/${businessName}.enum#end';
-  import { useTabs } from '@/hooks/web/useTabs';
-  import { PageWrapper } from '@/components/Page';
-  import { useUserStore } from '@/store/modules/user';
   import { DescItemSizeEnum } from '@/enums';
+  import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
+  import { get${BusinessName}Api } from '@/api/${fePackageName}/${businessName}.api';
 
-  const route = useRoute();
-  const { setTitle } = useTabs();
+  /** 标题初始化 */
   const getTitle = ref('${functionName}详情');
 
   const [register, { setDescProps }] = useDescription({
@@ -33,16 +28,11 @@
     column: DescItemSizeEnum.DEFAULT,
   });
 
-  onMounted(async () => {
-    const ${pkColumn.javaField} = route.params.${pkColumn.javaField} as ${IdType};
-    const data = await get${BusinessName}Api(${pkColumn.javaField});
-    setDescProps({ data: data });
-    getTitle.value = '${functionName}详情:' + data?.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end;
-    setTitle(getTitle.value);
+  const [registerDrawer, { setDrawerProps }] = useDrawerInner(async (data) => {
+    setDrawerProps({ loading: true, confirmLoading: false });
+    const baseInfo = await get${BusinessName}Api(data.record.${pkColumn.javaField});
+    setDescProps({ data: baseInfo });
+    getTitle.value = '${functionName}详情:' + baseInfo?.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end;
+    setDrawerProps({ loading: false });
   });
-
-  /** 返回${functionName}主页 */
-  function goBack() {
-    useUserStore().getRoutePath(${BusinessName}IndexGo);
-  }
 </script>

@@ -2,7 +2,7 @@ import { DictLM } from '@/model/sys';
 import { h } from 'vue';
 import { Tag } from 'ant-design-vue';
 import { isArray } from './core/ObjectUtil';
-import { deepMerge } from '@/utils/index';
+import { deepMerge } from './index';
 import { cloneDeep, includes, isNil, merge } from 'lodash-es';
 
 /** 字典转换 */
@@ -16,7 +16,7 @@ export function dictConvert(dictOptions: DictLM, val: string): string {
     console.error('字典对应值不存在');
     return val;
   }
-  return dict.label;
+  return dict.label || '';
 }
 
 /** 字典选择式过滤 */
