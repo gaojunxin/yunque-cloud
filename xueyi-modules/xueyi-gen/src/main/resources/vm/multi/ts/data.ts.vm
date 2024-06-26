@@ -104,7 +104,6 @@ export const columns: BasicColumn[] = [
   {
     title: '${column.readNameNoSuffix()}',
     dataIndex: '${column.javaField}',
-    width: 220,
 #if($table.tree && $column.javaField == $nameColumn.javaField)
     align: 'left',
 #end
@@ -114,6 +113,7 @@ export const columns: BasicColumn[] = [
       return dictConversion(dict.${column.dictName}, data.${column.javaField});
     },
 #end
+    width: 220,
   },
 #end
 #end
