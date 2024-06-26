@@ -19,4 +19,7 @@ public interface NumberPool {
     int Eight = 8;
     int Nine = 9;
     int Ten = 10;
+    int Fifteen = 15;
+    int Thirty = 30;
+    int ThreeHundred = 300;
 }
