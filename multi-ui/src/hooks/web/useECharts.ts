@@ -49,6 +49,10 @@ export function useECharts(
       listener: resizeFn,
     });
     removeResizeFn = removeEvent;
+
+    const resizeObserver = new ResizeObserver(resizeFn);
+    resizeObserver.observe(el);
+
     const { widthRef, screenEnum } = useBreakpoint();
     if (unref(widthRef) <= screenEnum.MD || el.offsetHeight === 0) {
       useTimeoutFn(() => {
@@ -77,7 +81,7 @@ export function useECharts(
 
           chartInstance?.setOption(unref(getOptions));
           resolve(null);
-        }, 30);
+        }, 50);
       });
     });
   }
