@@ -1,6 +1,5 @@
 package com.xueyi.gen.service.impl;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.DictConstants;
@@ -16,11 +15,11 @@ import com.xueyi.common.core.web.result.R;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.gen.config.GenConfig;
-import com.xueyi.gen.constant.GenConstants.OptionField;
 import com.xueyi.gen.constant.GenConstants.TemplateType;
 import com.xueyi.gen.domain.correlate.GenTableCorrelate;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;
+import com.xueyi.gen.domain.dto.GenTableOptionDto;
 import com.xueyi.gen.domain.query.GenTableQuery;
 import com.xueyi.gen.manager.IGenTableManager;
 import com.xueyi.gen.service.IGenTableColumnService;
@@ -281,13 +280,13 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      */
     @Override
     public void validateEdit(GenTableDto genTable) {
-        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
-        checkTclBasic(genTable, optionsObj);
+        GenTableOptionDto optionInfo = genTable.getOptions();
+        checkTclBasic(genTable, optionInfo);
         switch (TemplateType.getByCode(genTable.getTplCategory())) {
             case TREE:
-                checkTclTree(optionsObj);
+                checkTclTree(optionInfo);
             case BASE:
-                checkTclBase(optionsObj);
+                checkTclBase(optionInfo);
         }
     }
 
@@ -295,11 +294,11 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * 校验基础表配置
      *
      * @param genTable   业务表
-     * @param optionsObj 其它生成选项信息
+     * @param optionInfo 其它生成选项信息
      */
-    private void checkTclBasic(GenTableDto genTable, JSONObject optionsObj) {
-        checkSourceMode(genTable, optionsObj);
-        checkCommonMode(genTable, optionsObj);
+    private void checkTclBasic(GenTableDto genTable, GenTableOptionDto optionInfo) {
+        checkSourceMode(genTable, optionInfo);
+        checkCommonMode(genTable, optionInfo);
 
     }
 
@@ -307,13 +306,14 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * 校验基础源策略模式配置
      *
      * @param genTable   业务表
-     * @param optionsObj 其它生成选项信息
+     * @param optionInfo 其它生成选项信息
      */
-    private void checkSourceMode(GenTableDto genTable, JSONObject optionsObj) {
-        if (StrUtil.isEmpty(optionsObj.getString(OptionField.SOURCE_MODE.getCode()))) {
+    private void checkSourceMode(GenTableDto genTable, GenTableOptionDto optionInfo) {
+        GenTableOptionDto.BasicInfo basicInfo = optionInfo.getBasicInfo();
+        if (StrUtil.isEmpty(basicInfo.getSourceMode())) {
             AjaxResult.warn("未设置源策略模式！");
         }
-        if (StrUtil.isNotEmpty(optionsObj.getString(OptionField.IS_TENANT.getCode())) && StrUtil.equals(optionsObj.getString(OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode())) {
+        if (StrUtil.equals(basicInfo.getIsTenant(), DictConstants.DicYesNo.YES.getCode())) {
             for (GenTableColumnDto column : genTable.getSubList()) {
                 if (ArrayUtil.contains(GenConfig.getEntity().getBack().getTenant(), column.getJavaField())) {
                     return;
@@ -327,22 +327,23 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * 校验数据混合模式配置
      *
      * @param genTable   业务表
-     * @param optionsObj 其它生成选项信息
+     * @param optionInfo 其它生成选项信息
      */
-    private void checkCommonMode(GenTableDto genTable, JSONObject optionsObj) {
-        if (StrUtil.isEmpty(optionsObj.getString(OptionField.COMMON_MODE.getCode()))) {
-            // 暂不开启 | 兼容vue2 next-ui变更
-//            AjaxResult.warn("未设置数据混合模式！");
-            return;
-        }
-        if (StrUtil.isNotEmpty(optionsObj.getString(OptionField.IS_COMMON.getCode())) && StrUtil.equals(optionsObj.getString(OptionField.IS_COMMON.getCode()), DictConstants.DicYesNo.YES.getCode())) {
-            for (GenTableColumnDto column : genTable.getSubList()) {
-                if (ArrayUtil.contains(GenConfig.getEntity().getBack().getCommon(), column.getJavaField())) {
-                    return;
-                }
-            }
-            AjaxResult.warn("未在业务表中发现公共数据关键字，请关闭数据混合模式重试！");
-        }
+    private void checkCommonMode(GenTableDto genTable, GenTableOptionDto optionInfo) {
+        GenTableOptionDto.BasicInfo basicInfo = optionInfo.getBasicInfo();
+//        if (StrUtil.isEmpty(optionsObj.getString(OptionField.COMMON_MODE.getCode()))) {
+//            // 暂不开启 | 兼容vue2 next-ui变更
+////            AjaxResult.warn("未设置数据混合模式！");
+//            return;
+//        }
+//        if (StrUtil.isNotEmpty(optionsObj.getString(OptionField.IS_COMMON.getCode())) && StrUtil.equals(optionsObj.getString(OptionField.IS_COMMON.getCode()), DictConstants.DicYesNo.YES.getCode())) {
+//            for (GenTableColumnDto column : genTable.getSubList()) {
+//                if (ArrayUtil.contains(GenConfig.getEntity().getBack().getCommon(), column.getJavaField())) {
+//                    return;
+//                }
+//            }
+//            AjaxResult.warn("未在业务表中发现公共数据关键字，请关闭数据混合模式重试！");
+//        }
     }
 
     /**
@@ -350,10 +351,11 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      *
      * @param optionsObj 其它生成选项信息
      */
-    private void checkTclBase(JSONObject optionsObj) {
-        if (StrUtil.isEmpty(optionsObj.getString(OptionField.PARENT_MODULE_ID.getCode()))) {
+    private void checkTclBase(GenTableOptionDto optionsObj) {
+        GenTableOptionDto.MenuInfo menuInfo = optionsObj.getMenuInfo();
+        if (ObjectUtil.isEmpty(menuInfo.getParentModuleId())) {
             AjaxResult.warn("归属模块不能为空");
-        } else if (StrUtil.isEmpty(optionsObj.getString(OptionField.PARENT_MENU_ID.getCode()))) {
+        } else if (ObjectUtil.isEmpty(menuInfo.getParentMenuId())) {
             AjaxResult.warn("归属菜单不能为空");
         }
     }
@@ -363,14 +365,15 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      *
      * @param optionsObj 其它生成选项信息
      */
-    private void checkTclTree(JSONObject optionsObj) {
-        if (StrUtil.isEmpty(optionsObj.getString(OptionField.TREE_ID.getCode()))) {
+    private void checkTclTree(GenTableOptionDto optionsObj) {
+        GenTableOptionDto.FieldInfo fieldInfo = optionsObj.getFieldInfo();
+        if (ObjectUtil.isEmpty(fieldInfo.getTreeCode())) {
             AjaxResult.warn("树编码字段不能为空");
-        } else if (StrUtil.isEmpty(optionsObj.getString(OptionField.PARENT_ID.getCode()))) {
+        } else if (ObjectUtil.isEmpty(fieldInfo.getParentId())) {
             AjaxResult.warn("树父编码字段不能为空");
-        } else if (StrUtil.isEmpty(optionsObj.getString(OptionField.TREE_NAME.getCode()))) {
+        } else if (ObjectUtil.isEmpty(fieldInfo.getTreeName())) {
             AjaxResult.warn("树名称字段不能为空");
-        } else if (StrUtil.isEmpty(optionsObj.getString(OptionField.ANCESTORS.getCode()))) {
+        } else if (ObjectUtil.isEmpty(fieldInfo.getAncestors())) {
             AjaxResult.warn("树祖籍列表字段不能为空");
         }
     }
@@ -383,7 +386,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      */
     private GenTableDto initTable(Long id) {
         GenTableDto table = selectById(id);
-        JSONObject optionsObj = JSON.parseObject(table.getOptions());
+        GenTableOptionDto optionsObj = table.getOptions();
         // 设置列信息
         switch (TemplateType.getByCode(table.getTplCategory())) {
             case TREE:
@@ -401,7 +404,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * @param table      业务表信息
      * @param optionsObj 其它生成选项信息
      */
-    private void setBaseTable(GenTableDto table, JSONObject optionsObj) {
+    private void setBaseTable(GenTableDto table, GenTableOptionDto optionsObj) {
         table.getSubList().forEach(column -> {
             if (column.getIsPk()) {
                 table.setPkColumn(column);
@@ -415,7 +418,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * @param table      业务表信息
      * @param optionsObj 其它生成选项信息
      */
-    private void setTreeTable(GenTableDto table, JSONObject optionsObj) {
+    private void setTreeTable(GenTableDto table, GenTableOptionDto optionsObj) {
     }
 
     /**
@@ -424,10 +427,11 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * @param table      业务表信息
      * @param optionsObj 其它生成选项信息
      */
-    private void setMenuOptions(GenTableDto table, JSONObject optionsObj) {
-        Long menuId = optionsObj.getLong(OptionField.PARENT_MENU_ID.getCode());
+    private void setMenuOptions(GenTableDto table, GenTableOptionDto optionsObj) {
+        GenTableOptionDto.MenuInfo menuInfo = optionsObj.getMenuInfo();
+        Long menuId = menuInfo.getParentMenuId();
         if (ObjectUtil.equals(MENU_TOP_NODE, menuId)) {
-            optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), menuId);
+            menuInfo.setParentMenuAncestors(menuId.toString());
         } else {
             R<SysMenuDto> result = remoteMenuService.getInfoInner(menuId);
             if (result.isFail()) {
@@ -437,11 +441,11 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
             }
             SysMenuDto menu = result.getData();
             if (StrUtil.isEmpty(menu.getAncestors())) {
-                optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), menu.getId());
+                menuInfo.setParentMenuAncestors(menu.getId().toString());
             } else {
-                optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), menu.getAncestors() + "," + menu.getId());
+                menuInfo.setParentMenuAncestors(StrUtil.format("{},{}", menu.getAncestors(), menu.getId()));
             }
         }
-        table.setOptions(optionsObj.toString());
+        table.setOptions(optionsObj);
     }
 }

@@ -685,7 +685,7 @@ create table gen_table (
   gen_type                  char(1)             default '0'                             comment '生成路径类型（0默认路径 1自定义路径）',
   gen_path                  varchar(200)        default '/'                             comment '后端生成路径（不填默认项目路径）',
   ui_path                   varchar(200)        default '/'                             comment '前端生成路径（不填默认项目路径）',
-  options                   varchar(1000)                                               comment '其它生成选项',
+  options                   json                                                        comment '其它生成选项',
   remark                    varchar(200)        default null                            comment '备注',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',

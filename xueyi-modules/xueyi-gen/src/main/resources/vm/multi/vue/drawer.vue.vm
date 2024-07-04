@@ -15,7 +15,7 @@
   import { computed, ref, unref } from 'vue';
   import { formSchema } from './data';
   import { useMessage } from '@/hooks/web/useMessage';
-  import {#if($table.tree) list${BusinessName}Api,#end get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api } from '@/api/${fePackageName}/${businessName}.api';
+  import {#if($table.tree) list${ClassNameNoPrefix}Api,#end get${ClassNameNoPrefix}Api, add${ClassNameNoPrefix}Api, edit${ClassNameNoPrefix}Api } from '@/api/${fePackageName}/${businessName}.api';
   import { BasicForm, useForm } from '@/components/Form';
   import { ${ClassName}IM } from '@/model/${fePackageName}#if(!$isDependMode)/${businessName}.model#end';
   import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
@@ -25,7 +25,7 @@
   const isUpdate = ref(true);
 
   const [registerForm, { resetFields, setFieldsValue,#if($table.tree) updateSchema,#end validate }] = useForm({
-    labelWidth: 80,
+    labelWidth: 120,
     schemas: formSchema,
     showActionButtonGroup: false,
   });
@@ -36,11 +36,11 @@
     isUpdate.value = !!data?.isUpdate;
 
     if (unref(isUpdate)) {
-      const ${businessName} = await get${BusinessName}Api(data.record.${pkColumn.javaField});
-      setFieldsValue({...${businessName}});
+      const info = await get${ClassNameNoPrefix}Api(data.record.${pkColumn.javaField});
+      setFieldsValue({...info});
     }
 #if($table.tree)
-    const treeData = await list${BusinessName}Api({
+    const treeData = await list${ClassNameNoPrefix}Api({
       id: unref(isUpdate) ? data.record.${pkColumn.javaField} : undefined,
       defaultNode: true,
       exNodes: unref(isUpdate),
@@ -59,11 +59,11 @@
       const values: ${ClassName}IM = await validate();
       setDrawerProps({ confirmLoading: true });
       unref(isUpdate)
-        ? await edit${BusinessName}Api(values).then(() => {
+        ? await edit${ClassNameNoPrefix}Api(values).then(() => {
             closeDrawer();
             createMessage.success('编辑${functionName}成功！');
           })
-        : await add${BusinessName}Api(values).then(() => {
+        : await add${ClassNameNoPrefix}Api(values).then(() => {
             closeDrawer();
             createMessage.success('新增${functionName}成功！');
           });

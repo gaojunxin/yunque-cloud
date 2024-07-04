@@ -1,7 +1,5 @@
 package com.xueyi.gen.util;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.utils.core.ArrayUtil;
 import com.xueyi.common.core.utils.core.CollUtil;
@@ -13,6 +11,7 @@ import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.constant.GenConstants;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;
+import com.xueyi.gen.domain.dto.GenTableOptionDto;
 import com.xueyi.system.api.authority.constant.AuthorityConstants;
 
 import java.io.File;
@@ -44,59 +43,73 @@ public class GenUtil {
      * 初始化其它生成选项
      */
     public static void initTableOptions(List<GenTableColumnDto> columnList, GenTableDto table) {
-        JSONObject optionJson = new JSONObject();
+        GenTableOptionDto optionInfo = new GenTableOptionDto();
+        GenTableOptionDto.MenuInfo menuInfo = new GenTableOptionDto.MenuInfo();
         // 1.设置默认模块
-        optionJson.put(GenConstants.OptionField.PARENT_MODULE_ID.getCode(), AuthorityConstants.MODULE_DEFAULT_NODE.toString());
+        menuInfo.setParentModuleId(AuthorityConstants.MODULE_DEFAULT_NODE);
         // 2.设置默认菜单
-        optionJson.put(GenConstants.OptionField.PARENT_MENU_ID.getCode(), AuthorityConstants.MENU_TOP_NODE.toString());
+        menuInfo.setParentMenuId(AuthorityConstants.MENU_TOP_NODE);
+
+        GenTableOptionDto.BasicInfo basicInfo = new GenTableOptionDto.BasicInfo();
+
         // 3.检测是否为多租户模式
         String[] javaFields = columnList.stream().map(GenTableColumnDto::getJavaField).toArray(String[]::new);
-        optionJson.put(GenConstants.OptionField.IS_TENANT.getCode(), ArrayUtil.containsAny(GenConfig.getEntity().getBack().getTenant(), javaFields)
+        String isTenant = ArrayUtil.containsAny(GenConfig.getEntity().getBack().getTenant(), javaFields)
                 ? DictConstants.DicYesNo.YES.getCode()
-                : DictConstants.DicYesNo.NO.getCode());
+                : DictConstants.DicYesNo.NO.getCode();
+        basicInfo.setIsTenant(isTenant);
         // 4.设置默认源策略模式
-        optionJson.put(GenConstants.OptionField.SOURCE_MODE.getCode(),
-                StrUtil.equals(optionJson.getString(GenConstants.OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode())
-                        ? GenConstants.SourceMode.ISOLATE.getCode()
-                        : GenConstants.SourceMode.MASTER.getCode());
+        String sourceMode = StrUtil.equals(basicInfo.getIsTenant(), DictConstants.DicYesNo.YES.getCode())
+                ? GenConstants.SourceMode.ISOLATE.getCode()
+                : GenConstants.SourceMode.MASTER.getCode();
+        basicInfo.setSourceMode(sourceMode);
         // 5.设置默认依赖缩写模式
-        optionJson.put(GenConstants.OptionField.DEPEND_MODE.getCode(), DictConstants.DicYesNo.NO.getCode());
-        // 6.初始化配置
-        optionJson.put(GenConstants.OptionField.HAS_API_ES.getCode(), DictConstants.DicYesNo.NO.getCode());
-        optionJson.put(GenConstants.OptionField.API_LIST.getCode(), DictConstants.DicYesNo.YES.getCode());
-        optionJson.put(GenConstants.OptionField.API_GET_INFO.getCode(), DictConstants.DicYesNo.YES.getCode());
-        optionJson.put(GenConstants.OptionField.API_ADD.getCode(), DictConstants.DicYesNo.YES.getCode());
-        optionJson.put(GenConstants.OptionField.API_EDIT.getCode(), DictConstants.DicYesNo.YES.getCode());
-        optionJson.put(GenConstants.OptionField.API_BATCH_REMOVE.getCode(), DictConstants.DicYesNo.YES.getCode());
-        optionJson.put(GenConstants.OptionField.API_ES.getCode(), DictConstants.DicYesNo.NO.getCode());
-        optionJson.put(GenConstants.OptionField.API_IMPORT.getCode(), DictConstants.DicYesNo.NO.getCode());
-        optionJson.put(GenConstants.OptionField.API_EXPORT.getCode(), DictConstants.DicYesNo.NO.getCode());
-        optionJson.put(GenConstants.OptionField.API_CACHE.getCode(), DictConstants.DicYesNo.NO.getCode());
+        basicInfo.setDependMode(DictConstants.DicYesNo.NO.getCode());
+
+        // 6.初始化接口配置
+        GenTableOptionDto.ApiInfo apiInfo = new GenTableOptionDto.ApiInfo();
+        apiInfo.setApiList(DictConstants.DicYesNo.YES.getCode());
+        apiInfo.setApiGetInfo(DictConstants.DicYesNo.YES.getCode());
+        apiInfo.setApiAdd(DictConstants.DicYesNo.YES.getCode());
+        apiInfo.setApiEdit(DictConstants.DicYesNo.YES.getCode());
+        apiInfo.setApiBatchRemove(DictConstants.DicYesNo.YES.getCode());
+        // 是否可配置状态变更接口
+        apiInfo.setHasApiES(DictConstants.DicYesNo.NO.getCode());
+        apiInfo.setApiEditStatus(DictConstants.DicYesNo.NO.getCode());
+        apiInfo.setApiImport(DictConstants.DicYesNo.NO.getCode());
+        apiInfo.setApiExport(DictConstants.DicYesNo.NO.getCode());
+        apiInfo.setApiCache(DictConstants.DicYesNo.NO.getCode());
+
+        GenTableOptionDto.FieldInfo fieldInfo = new GenTableOptionDto.FieldInfo();
         columnList.forEach(column -> {
             GenConstants.OptionField optionField = GenConstants.OptionField.getByCode(column.getJavaField());
             if (ObjectUtil.isNotNull(optionField)) {
                 switch (optionField) {
                     case ID -> {
                         if (column.getIsPk()) {
-                            optionJson.put(GenConstants.OptionField.TREE_ID.getCode(), column.getIdStr());
+                            fieldInfo.setTreeCode(column.getId());
                         }
                     }
-                    case NAME -> optionJson.put(GenConstants.OptionField.TREE_NAME.getCode(), column.getIdStr());
+                    case NAME -> fieldInfo.setTreeName(column.getId());
                     case STATUS -> {
-                        optionJson.put(GenConstants.OptionField.HAS_API_ES.getCode(), DictConstants.DicYesNo.YES.getCode());
-                        optionJson.put(GenConstants.OptionField.API_ES.getCode(), DictConstants.DicYesNo.YES.getCode());
+                        apiInfo.setHasApiES(DictConstants.DicYesNo.YES.getCode());
+                        apiInfo.setApiEditStatus(DictConstants.DicYesNo.YES.getCode());
                     }
-                    case SORT -> optionJson.put(GenConstants.OptionField.SORT.getCode(), column.getIdStr());
+                    case SORT -> fieldInfo.setSort(column.getId());
                     case PARENT_ID -> {
-                        optionJson.put(GenConstants.OptionField.PARENT_ID.getCode(), column.getIdStr());
+                        fieldInfo.setParentId(column.getId());
                         table.setTplCategory(GenConstants.TemplateType.TREE.getCode());
                     }
-                    case ANCESTORS -> optionJson.put(GenConstants.OptionField.ANCESTORS.getCode(), column.getIdStr());
-                    case LEVEL -> optionJson.put(GenConstants.OptionField.LEVEL.getCode(), column.getIdStr());
+                    case ANCESTORS -> fieldInfo.setAncestors(column.getId());
+                    case LEVEL -> fieldInfo.setLevel(column.getId());
                 }
             }
         });
-        table.setOptions(optionJson.toString());
+        optionInfo.setBasicInfo(basicInfo);
+        optionInfo.setMenuInfo(menuInfo);
+        optionInfo.setFieldInfo(fieldInfo);
+        optionInfo.setApiInfo(apiInfo);
+        table.setOptions(optionInfo);
     }
 
     /**
@@ -182,12 +195,13 @@ public class GenUtil {
      * 最终校验列属性字段
      */
     public static void updateCheckColumn(GenTableDto table) {
-        JSONObject objectJson = JSON.parseObject(table.getOptions());
+        GenTableOptionDto objectJson = table.getOptions();
+        GenTableOptionDto.FieldInfo fieldInfo = objectJson.getFieldInfo();
         table.getSubList().forEach(column -> {
             if (StrUtil.equalsAny(table.getTplCategory(), GenConstants.TemplateType.TREE.getCode())) {
-                if (ObjectUtil.equals(column.getId(), objectJson.getLong(GenConstants.OptionField.PARENT_ID.getCode()))) {
+                if (ObjectUtil.equals(column.getId(), fieldInfo.getParentId())) {
                     column.setJavaField(GenConstants.OptionField.PARENT_ID.getCode());
-                } else if (ObjectUtil.equals(column.getId(), objectJson.getLong(GenConstants.OptionField.ANCESTORS.getCode()))) {
+                } else if (ObjectUtil.equals(column.getId(), fieldInfo.getAncestors())) {
                     column.setJavaField(GenConstants.OptionField.ANCESTORS.getCode());
                 }
             }

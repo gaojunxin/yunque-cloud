@@ -9,7 +9,7 @@
 #end
 import { BasicFetchResult, BasicPageParams, ${Entity}Entity } from '@/model';
 
-/** ${businessName} info model */
+/** ${functionName} 数据传输对象 */
 export interface ${ClassName}IM extends ${Entity}Entity${genericsIM} {
 #foreach ($column in $columns)
 #set($hide = true)
@@ -33,10 +33,10 @@ export interface ${ClassName}IM extends ${Entity}Entity${genericsIM} {
 #end
 }
 
-/** ${businessName} list model */
+/** ${functionName} 数据传输对象集合 */
 export type ${ClassName}LM = ${ClassName}IM[];
 
-/** ${businessName} param model */
+/** ${functionName} 数据查询对象 */
 export interface ${ClassName}PM extends ${Entity}Entity${genericsPM} {
 #foreach ($column in $columns)
 #set($hide = true)
@@ -60,8 +60,8 @@ export interface ${ClassName}PM extends ${Entity}Entity${genericsPM} {
 #end
 }
 
-/** ${businessName} page param model */
+/** ${functionName} 分页数据查询对象 */
 export type ${ClassName}PPM = BasicPageParams & ${ClassName}PM;
 
-/** ${businessName} list result model */
+/** ${functionName} 分页数据传输对象集合 */
 export type ${ClassName}LRM = BasicFetchResult<${ClassName}IM>;

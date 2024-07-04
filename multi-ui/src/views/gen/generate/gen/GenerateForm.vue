@@ -18,6 +18,10 @@
   <CollapseContainer title="接口配置" v-show="!isMergeTpl(tplType)">
     <BasicForm @register="apiRegister" />
   </CollapseContainer>
+
+  <CollapseContainer title="其他配置" v-show="!isMergeTpl(tplType)">
+    <BasicForm @register="otherRegister" />
+  </CollapseContainer>
 </template>
 
 <script setup lang="ts">
@@ -32,6 +36,7 @@
     generateBaseSchema,
     generateBasicSchema,
     generateFormSchema,
+    generateOtherSchema,
     generateTreeSchema,
     genList,
     getOptions,
@@ -91,19 +96,28 @@
     showActionButtonGroup: false,
   });
 
+  const [otherRegister, { setFieldsValue: otherSetFieldsValue, validate: otherValidate }] = useForm(
+    {
+      labelWidth: 160,
+      schemas: generateOtherSchema,
+      showActionButtonGroup: false,
+    },
+  );
+
   /** 数据初始化 */
   function initialize(info: GenTableIM) {
     state.info = info;
     tplType.value = state.info.tplCategory as TemplateTypeEnum;
     initBasic();
     const dataList = state.info.subList === undefined ? [] : getOptions(state.info.subList);
-    const option = JSON.parse(state.info?.options) as OptionIM;
+    const option = state.info?.options;
     initBase(option);
     initTree(dataList);
     basicSetFieldsValue({ ...option });
     treeSetFieldsValue({ ...option });
     baseSetFieldsValue({ ...option });
     apiSetFieldsValue({ ...option });
+    otherSetFieldsValue({ ...option });
   }
 
   /** 基础配置初始化 */
@@ -125,25 +139,27 @@
   /** 单表配置初始化 */
   async function initBase(options: OptionIM) {
     const parentMenuIdOptions =
-      options?.parentModuleId === undefined
+      options?.menuInfo?.parentModuleId === undefined
         ? []
         : await getMenuRouteListApi({
-            moduleId: options?.parentModuleId,
+            moduleId: options?.menuInfo?.parentModuleId,
             menuTypeLimit: MenuTypeEnum.DIR,
             defaultNode: true,
           });
     baseUpdateSchema([
-      { field: 'parentMenuId', componentProps: { treeData: parentMenuIdOptions } },
+      { field: 'menuInfo.parentMenuId', componentProps: { treeData: parentMenuIdOptions } },
     ]);
   }
 
   /** 树表配置初始化 */
   function initTree(subList: any[]) {
-    treeUpdateSchema({ field: 'treeCode', componentProps: { options: subList } });
-    treeUpdateSchema({ field: 'parentId', componentProps: { options: subList } });
-    treeUpdateSchema({ field: 'treeName', componentProps: { options: subList } });
-    treeUpdateSchema({ field: 'ancestors', componentProps: { options: subList } });
-    treeUpdateSchema({ field: 'level', componentProps: { options: subList } });
+    treeUpdateSchema([
+      { field: 'fieldInfo.treeCode', componentProps: { options: subList } },
+      { field: 'fieldInfo.parentId', componentProps: { options: subList } },
+      { field: 'fieldInfo.treeName', componentProps: { options: subList } },
+      { field: 'fieldInfo.ancestors', componentProps: { options: subList } },
+      { field: 'fieldInfo.level', componentProps: { options: subList } },
+    ]);
   }
 
   /** 保存校验 */
@@ -159,7 +175,8 @@
         options = sourceAssign(options, await baseValidate());
       }
       options = sourceAssign(options, await apiValidate());
-      info = sourceAssign(info, { options: JSON.stringify(options) });
+      options = sourceAssign(options, await otherValidate());
+      info = sourceAssign(info, { options: options });
       return info;
     } catch {
       emit('submit', genList[1].key);

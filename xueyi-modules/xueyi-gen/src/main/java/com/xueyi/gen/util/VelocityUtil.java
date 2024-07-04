@@ -3,7 +3,6 @@ package com.xueyi.gen.util;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileReader;
 import cn.hutool.core.io.file.FileWriter;
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.exception.ServiceException;
@@ -16,6 +15,7 @@ import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.constant.GenConstants;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;
+import com.xueyi.gen.domain.dto.GenTableOptionDto;
 import com.xueyi.system.api.authority.constant.AuthorityConstants;
 import org.apache.velocity.VelocityContext;
 
@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,7 @@ public class VelocityUtil {
     /**
      * 设置模板变量信息
      *
+     * @param genTable 业务表数据传输对象
      * @return 模板列表
      */
     public static VelocityContext prepareContext(GenTableDto genTable) {
@@ -60,7 +62,7 @@ public class VelocityUtil {
         String tplCategory = genTable.getTplCategory();
         String moduleFunctionName = StrUtil.isNotEmpty(genTable.getFunctionName()) ? genTable.getFunctionName() : "【请填写功能名称】";
         String functionName = getFunctionName(moduleFunctionName);
-        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
+        GenTableOptionDto optionsObj = genTable.getOptions();
         Map<String, Set<String>> domainMap = getCoverMap(genTable);
         initTableField(genTable);
         VelocityContext velocityContext = new VelocityContext();
@@ -121,13 +123,13 @@ public class VelocityUtil {
         // 必定隐藏字段集合 (全局隐藏的控制参数)
         velocityContext.put("mustHideField", Arrays.asList(GenConfig.getEntity().getMustHide()));
         // 是否为多租户（true | false）
-        velocityContext.put("isTenant", isTenant(genTable));
+        velocityContext.put("isTenant", isTenant(optionsObj));
         // 源策略模式
         velocityContext.put("sourceMode", getSourceMode(optionsObj));
         // 依赖缩写模式
         velocityContext.put("isDependMode", getDependMode(optionsObj));
         // 源策略是否为主库
-        velocityContext.put("isMasterSource", isMasterSource(genTable));
+        velocityContext.put("isMasterSource", isMasterSource(optionsObj));
         // 获取其他重要参数（名称、状态...）
         getOtherMainColum(velocityContext, genTable);
         // sql模板设置
@@ -142,6 +144,9 @@ public class VelocityUtil {
 
     /**
      * 获取附加参数信息
+     *
+     * @param context  模板列表
+     * @param genTable 业务表数据传输对象
      */
     public static void getOtherMainColum(VelocityContext context, GenTableDto genTable) {
         for (GenTableColumnDto column : genTable.getSubList()) {
@@ -157,32 +162,42 @@ public class VelocityUtil {
 
     /**
      * 设置sql模板变量信息
+     *
+     * @param context    模板列表
+     * @param optionsObj 生成其他选项
      */
-    public static void setMenuVelocityContext(VelocityContext context, JSONObject optionsObj) {
-        context.put("parentModuleId", getParentModuleId(optionsObj));
-        context.put("parentMenuId", getParentMenuId(optionsObj));
-        String parentMenuAncestors = optionsObj.getString(GenConstants.OptionField.PARENT_MENU_ANCESTORS.getCode());
+    public static void setMenuVelocityContext(VelocityContext context, GenTableOptionDto optionsObj) {
+        GenTableOptionDto.MenuInfo menuInfo = optionsObj.getMenuInfo();
+        context.put("parentModuleId", Optional.ofNullable(menuInfo.getParentModuleId()).orElse(AuthorityConstants.MODULE_DEFAULT_NODE));
+        context.put("parentMenuId", Optional.ofNullable(menuInfo.getParentMenuId()).orElse(AuthorityConstants.MENU_TOP_NODE));
+        String parentMenuAncestors = menuInfo.getParentMenuAncestors();
         context.put("parentMenuAncestors", parentMenuAncestors);
         List<String> ancestorsArr = StrUtil.split(parentMenuAncestors, StrUtil.COMMA);
         context.put("level", ancestorsArr.size() + 1);
+        boolean hasIdGenerator = StrUtil.isNotBlank(menuInfo.getIdGenerator());
         // 生成菜单menuId0-9
         for (int i = 0; i < 10; i++) {
-            context.put("menuId" + i, IdUtil.getSnowflake(0, 0).nextId());
+            context.put("menuId" + i, hasIdGenerator ? StrUtil.format(menuInfo.getIdGenerator(), i) : IdUtil.getSnowflake(0, 0).nextId());
             context.put("menuName" + i, IdUtil.simpleUUID());
         }
     }
 
     /**
      * 设置树表模板变量信息
+     *
+     * @param context    模板列表
+     * @param genTable   业务表数据传输对象
+     * @param optionsObj 生成其他选项
      */
-    public static void setTreeVelocityContext(VelocityContext context, GenTableDto genTable, JSONObject optionsObj) {
+    public static void setTreeVelocityContext(VelocityContext context, GenTableDto genTable, GenTableOptionDto optionsObj) {
         JSONObject treeObject = new JSONObject();
+        GenTableOptionDto.FieldInfo fieldInfo = optionsObj.getFieldInfo();
         genTable.getSubList().forEach(column -> {
-            if (ObjectUtil.equals(column.getId(), optionsObj.getLong(GenConstants.OptionField.TREE_ID.getCode()))) {
+            if (ObjectUtil.equals(column.getId(), fieldInfo.getTreeCode())) {
                 treeObject.put("idColumn", column);
-            } else if (ObjectUtil.equals(column.getId(), optionsObj.getLong(GenConstants.OptionField.PARENT_ID.getCode()))) {
+            } else if (ObjectUtil.equals(column.getId(), fieldInfo.getParentId())) {
                 treeObject.put("parentIdColumn", column);
-            } else if (ObjectUtil.equals(column.getId(), optionsObj.getLong(GenConstants.OptionField.TREE_NAME.getCode()))) {
+            } else if (ObjectUtil.equals(column.getId(), fieldInfo.getTreeName())) {
                 treeObject.put("nameColumn", column);
             }
         });
@@ -193,31 +208,21 @@ public class VelocityUtil {
      * 设置接口变量信息
      *
      * @param context    模板列表
-     * @param optionsObj 配置JSON
+     * @param optionsObj 生成其他选项
      */
-    public static void setApiStatus(VelocityContext context, JSONObject optionsObj) {
+    public static void setApiStatus(VelocityContext context, GenTableOptionDto optionsObj) {
+        GenTableOptionDto.ApiInfo apiInfo = optionsObj.getApiInfo();
         JSONObject apiJSon = new JSONObject();
-        apiJSon.put("list", checkApiStatus(optionsObj, GenConstants.OptionField.API_LIST));
-        apiJSon.put("getInfo", checkApiStatus(optionsObj, GenConstants.OptionField.API_GET_INFO));
-        apiJSon.put("add", checkApiStatus(optionsObj, GenConstants.OptionField.API_ADD));
-        apiJSon.put("edit", checkApiStatus(optionsObj, GenConstants.OptionField.API_EDIT));
-        apiJSon.put("editStatus", checkApiStatus(optionsObj, GenConstants.OptionField.API_ES));
-        apiJSon.put("batchRemove", checkApiStatus(optionsObj, GenConstants.OptionField.API_BATCH_REMOVE));
-        apiJSon.put("import", checkApiStatus(optionsObj, GenConstants.OptionField.API_IMPORT));
-        apiJSon.put("export", checkApiStatus(optionsObj, GenConstants.OptionField.API_EXPORT));
-        apiJSon.put("cache", checkApiStatus(optionsObj, GenConstants.OptionField.API_CACHE));
+        apiJSon.put("list", StrUtil.equals(apiInfo.getApiList(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("getInfo", StrUtil.equals(apiInfo.getApiGetInfo(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("add", StrUtil.equals(apiInfo.getApiAdd(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("edit", StrUtil.equals(apiInfo.getApiEdit(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("editStatus", StrUtil.equals(apiInfo.getApiEditStatus(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("batchRemove", StrUtil.equals(apiInfo.getApiBatchRemove(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("import", StrUtil.equals(apiInfo.getApiImport(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("export", StrUtil.equals(apiInfo.getApiExport(), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("cache", StrUtil.equals(apiInfo.getApiCache(), DictConstants.DicYesNo.YES.getCode()));
         context.put("api", apiJSon);
-    }
-
-    /**
-     * 校验Api是否开启
-     *
-     * @param optionsObj  配置JSON
-     * @param optionField API类型
-     * @return 结果
-     */
-    private static boolean checkApiStatus(JSONObject optionsObj, GenConstants.OptionField optionField) {
-        return StrUtil.equals(optionsObj.getString(optionField.getCode()), DictConstants.DicYesNo.YES.getCode());
     }
 
     /**
@@ -275,7 +280,7 @@ public class VelocityUtil {
         // 业务名称
         String businessName = table.getBusinessName();
 
-        JSONObject optionsObj = JSON.parseObject(table.getOptions());
+        GenTableOptionDto optionsObj = table.getOptions();
         // 获取依赖缩写模式
         boolean isDependMode = getDependMode(optionsObj);
 
@@ -472,12 +477,11 @@ public class VelocityUtil {
     /**
      * 是否为多租户
      *
-     * @param genTable 业务表对象
+     * @param optionsObj 生成其他选项
      * @return 是否为多租户
      */
-    public static boolean isTenant(GenTableDto genTable) {
-        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
-        return StrUtil.equals(optionsObj.getString(GenConstants.OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode());
+    public static boolean isTenant(GenTableOptionDto optionsObj) {
+        return StrUtil.equals(optionsObj.getBasicInfo().getIsTenant(), DictConstants.DicYesNo.YES.getCode());
     }
 
     /**
@@ -486,8 +490,8 @@ public class VelocityUtil {
      * @param optionsObj 生成其他选项
      * @return 是否为多租户
      */
-    public static String getSourceMode(JSONObject optionsObj) {
-        return optionsObj.getString(GenConstants.OptionField.SOURCE_MODE.getCode());
+    public static String getSourceMode(GenTableOptionDto optionsObj) {
+        return optionsObj.getBasicInfo().getSourceMode();
     }
 
     /**
@@ -496,8 +500,8 @@ public class VelocityUtil {
      * @param optionsObj 生成其他选项
      * @return 是否为依赖缩写模式
      */
-    public static Boolean getDependMode(JSONObject optionsObj) {
-        return ObjectUtil.equals(DictConstants.DicYesNo.YES.getCode(), optionsObj.getString(GenConstants.OptionField.DEPEND_MODE.getCode()));
+    public static Boolean getDependMode(GenTableOptionDto optionsObj) {
+        return StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), optionsObj.getBasicInfo().getDependMode());
     }
 
     /**
@@ -521,12 +525,11 @@ public class VelocityUtil {
     /**
      * 源策略是否为主库
      *
-     * @param genTable 业务表对象
+     * @param optionsObj 生成其他选项
      * @return 是否为多租户
      */
-    public static boolean isMasterSource(GenTableDto genTable) {
-        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
-        return StrUtil.equals(optionsObj.getString(GenConstants.OptionField.SOURCE_MODE.getCode()), GenConstants.SourceMode.MASTER.getCode());
+    public static boolean isMasterSource(GenTableOptionDto optionsObj) {
+        return StrUtil.equals(optionsObj.getBasicInfo().getSourceMode(), GenConstants.SourceMode.MASTER.getCode());
     }
 
     /**
@@ -614,26 +617,6 @@ public class VelocityUtil {
                 excludeList.addAll(filedSet);
         }
         return excludeList;
-    }
-
-    /**
-     * 获取归属模块Id字段
-     *
-     * @param optionsObj 生成其他选项
-     * @return 归属模块Id字段
-     */
-    public static Long getParentModuleId(JSONObject optionsObj) {
-        return optionsObj.containsKey(GenConstants.OptionField.PARENT_MODULE_ID.getCode()) ? optionsObj.getLong(GenConstants.OptionField.PARENT_MODULE_ID.getCode()) : AuthorityConstants.MODULE_DEFAULT_NODE;
-    }
-
-    /**
-     * 获取上级菜单Id字段
-     *
-     * @param optionsObj 生成其他选项
-     * @return 上级菜单Id字段
-     */
-    public static Long getParentMenuId(JSONObject optionsObj) {
-        return optionsObj.containsKey(GenConstants.OptionField.PARENT_MENU_ID.getCode()) ? optionsObj.getLong(GenConstants.OptionField.PARENT_MENU_ID.getCode()) : AuthorityConstants.MENU_TOP_NODE;
     }
 
     /**

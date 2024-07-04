@@ -6,7 +6,7 @@
 #if($api.add)
         <a-button
           :preIcon="IconEnum.ADD"
-          v-auth="${BusinessName}Auth.ADD"
+          v-auth="${ClassNameNoPrefix}Auth.ADD"
           @click="handleCreate"
           type="primary"
         >
@@ -16,7 +16,7 @@
 #if($api.batchRemove)
         <a-button
           :preIcon="IconEnum.DELETE"
-          v-auth="${BusinessName}Auth.DEL"
+          v-auth="${ClassNameNoPrefix}Auth.DEL"
           @click="handleDelete"
           type="primary"
           color="error"
@@ -27,7 +27,7 @@
 #if($api.export)
         <a-button
           :preIcon="IconEnum.EXPORT"
-          v-auth="${BusinessName}Auth.EXPORT"
+          v-auth="${ClassNameNoPrefix}Auth.EXPORT"
           @click="handleExport"
           type="primary"
           color="warning"
@@ -38,7 +38,7 @@
 #if($api.cache)
         <a-button
           :preIcon="IconEnum.RESET"
-          v-auth="${BusinessName}Auth.CACHE"
+          v-auth="${ClassNameNoPrefix}Auth.CACHE"
           @click="handleRefresh"
           type="primary"
           color="error"
@@ -60,7 +60,7 @@
             {
               icon: IconEnum.VIEW,
               tooltip: '查看',
-              auth: ${BusinessName}Auth.SINGLE,
+              auth: ${ClassNameNoPrefix}Auth.SINGLE,
               onClick: handleView.bind(null, record),
             },
 #end
@@ -68,7 +68,7 @@
             {
               icon: IconEnum.EDIT,
               tooltip: '编辑',
-              auth: ${BusinessName}Auth.EDIT,
+              auth: ${ClassNameNoPrefix}Auth.EDIT,
               onClick: handleEdit.bind(null, record),
             },
 #end
@@ -76,7 +76,7 @@
             {
               icon: IconEnum.DELETE,
               tooltip: '删除',
-              auth: ${BusinessName}Auth.DEL,
+              auth: ${ClassNameNoPrefix}Auth.DEL,
               color: 'error',
               onClick: handleDelete.bind(null, record),
             },
@@ -106,7 +106,7 @@
 #if($api.batchRemove)
   import { reactive } from 'vue';
 #end
-  import { list${BusinessName}Api#if($api.batchRemove), del${BusinessName}Api#end#if($api.export), export${BusinessName}Api#end#if($api.cache), refresh${BusinessName}Api#end } from '@/api/${fePackageName}/${businessName}.api';
+  import { list${ClassNameNoPrefix}Api#if($api.batchRemove), del${ClassNameNoPrefix}Api#end#if($api.export), export${ClassNameNoPrefix}Api#end#if($api.cache), refresh${ClassNameNoPrefix}Api#end } from '@/api/${fePackageName}/${businessName}.api';
 #if($api.add || $api.edit || $api.getInfo)
   import { useDrawer } from '@/components/Drawer';
 #end
@@ -124,7 +124,7 @@
 #end
   import { BasicTable, TableAction, useTable } from '@/components/Table';
 #if($api.getInfo || $api.add || $api.edit || $api.batchRemove || $api.export || $api.cache)
-  import { ${BusinessName}Auth } from '@/auth/${fePackageName}#if(!$isDependMode)/${businessName}.auth#end';
+  import { ${ClassNameNoPrefix}Auth } from '@/auth/${fePackageName}#if(!$isDependMode)/${businessName}.auth#end';
 #end
   import { columns, searchFormSchema } from './data';
 #if($api.export)
@@ -152,7 +152,7 @@
 #end
   const [registerTable, { reload#if($table.tree), expandAll, collapseAll#end#if($api.export), getForm#end }] = useTable({
     title: '${functionName}列表',
-    api: list${BusinessName}Api,
+    api: list${ClassNameNoPrefix}Api,
     striped: false,
     useSearchForm: true,
     rowKey: '${pkColumn.javaField}',
@@ -235,7 +235,7 @@
         title: '提示',
         content: '是否确定要删除' + delNames + '?',
         onOk: () =>
-          del${BusinessName}Api(delIds).then(() => {
+          del${ClassNameNoPrefix}Api(delIds).then(() => {
             createMessage.success('删除' + delNames + '成功！');
             reload();
           }),
@@ -248,14 +248,14 @@
   /** 导出按钮 */
   function handleExport() {
     const value = getForm().getFieldsValue() as ${ClassName}PM;
-    export${BusinessName}Api(value);
+    export${ClassNameNoPrefix}Api(value);
   }
 #end
 #if($api.cache)
 
   /** 刷新缓存按钮 */
   function handleRefresh() {
-    refresh${BusinessName}Api().then(() => createMessage.success('${functionName}缓存刷新成功！'));
+    refresh${ClassNameNoPrefix}Api().then(() => createMessage.success('${functionName}缓存刷新成功！'));
   }
 #end
 #if($api.add || $api.edit)

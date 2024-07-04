@@ -2,7 +2,9 @@ package com.xueyi.gen.domain.po;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
+import com.xueyi.gen.domain.dto.GenTableOptionDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +24,7 @@ import static com.xueyi.common.core.constant.basic.EntityConstants.STATUS;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "gen_table", excludeProperty = {STATUS, SORT, DEL_FLAG})
+@TableName(value = "gen_table", excludeProperty = {STATUS, SORT, DEL_FLAG}, autoResultMap = true)
 public class GenTablePo extends BaseEntity {
 
     @Serial
@@ -81,6 +83,7 @@ public class GenTablePo extends BaseEntity {
     protected String uiPath;
 
     /** 其它生成选项 */
-    protected String options;
+    @TableField(typeHandler = FastjsonTypeHandler.class)
+    protected GenTableOptionDto options;
 
 }

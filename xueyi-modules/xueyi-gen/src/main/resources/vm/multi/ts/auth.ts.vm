@@ -1,5 +1,5 @@
 /** ${moduleFunctionName}权限标识 */
-export enum ${BusinessName}Auth {
+export enum ${ClassNameNoPrefix}Auth {
 #if($api.list)
   /** ${moduleFunctionName} | 列表 */
   LIST = 'FE:${authorityName}:list',

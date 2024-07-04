@@ -6,7 +6,7 @@
 
     <template #footer>
       <Tabs v-model:activeKey="currentKey">
-        <TabPane v-for="item in genList" :key="item.key" :tab="item.name" forceRender="true" />
+        <TabPane v-for="item in genList" :key="item.key" :tab="item.name" :forceRender="true" />
       </Tabs>
     </template>
 

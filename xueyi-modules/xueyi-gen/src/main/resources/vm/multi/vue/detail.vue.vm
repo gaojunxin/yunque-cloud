@@ -17,7 +17,7 @@
   import { detailSchema } from './data';
   import { DescItemSizeEnum } from '@/enums';
   import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
-  import { get${BusinessName}Api } from '@/api/${fePackageName}/${businessName}.api';
+  import { get${ClassNameNoPrefix}Api } from '@/api/${fePackageName}/${businessName}.api';
 
   /** 标题初始化 */
   const getTitle = ref('${functionName}详情');
@@ -30,7 +30,7 @@
 
   const [registerDrawer, { setDrawerProps }] = useDrawerInner(async (data) => {
     setDrawerProps({ loading: true, confirmLoading: false });
-    const baseInfo = await get${BusinessName}Api(data.record.${pkColumn.javaField});
+    const baseInfo = await get${ClassNameNoPrefix}Api(data.record.${pkColumn.javaField});
     setDescProps({ data: baseInfo });
     getTitle.value = '${functionName}详情:' + baseInfo?.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end;
     setDrawerProps({ loading: false });

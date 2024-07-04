@@ -461,7 +461,12 @@ export const generateFormSchema: FormSchema[] = [
     field: 'moduleName',
     component: 'Input',
     required: true,
-    helpMessage: ['可理解为子系统名，例如 system'],
+    helpMessage: ({ values }) => {
+      return [
+        '可理解为子系统名，例如当前服务为租户服务，接口转发至租户服务时，前端请求地址为https://xxxx/tenant/xxxx，则此时模块名应设定为tenant',
+        `以当前模块名${values?.moduleName}为例，最终生成的前端接口路径为https://xxxx/${values?.moduleName}/xxxx`,
+      ];
+    },
     colProps: { span: 12 },
   },
   {
@@ -484,10 +489,19 @@ export const generateFormSchema: FormSchema[] = [
     field: 'businessName',
     component: 'Input',
     required: true,
-    helpMessage: [
-      '可理解为功能英文名，例如 module',
-      '最终业务生成的前端为： 生成模块名.生成权限名.生成业务名，如：system/organize/module',
-    ],
+    helpMessage: ({ values }) => {
+      return [
+        '可理解为功能英文名，例如 module',
+        '对应前端文件生成的名字module.api.ts, module.model.ts, module.auth.ts, module.enum.ts',
+        '最终业务生成的前端为： 生成模块名.生成权限名.生成业务名，如：system/organize/module',
+        `以当前业务名${values?.businessName}为例，生成前端时，对应文件名为：`,
+        `接口文件：'@/api/${values?.fePackageName}/${values?.businessName}.api.ts'`,
+        `枚举文件：'@/enums/${values?.fePackageName}/${values?.businessName}.enum.ts'`,
+        `权限文件：'@/auth/${values?.fePackageName}/${values?.businessName}.auth.ts'`,
+        `模型文件：'@/model/${values?.fePackageName}/${values?.businessName}.model.ts'`,
+        `页面列表文件：'@/views/${values?.fePackageName}/${values?.businessName}/index.vue'`,
+      ];
+    },
     colProps: { span: 12 },
   },
   {
@@ -495,7 +509,14 @@ export const generateFormSchema: FormSchema[] = [
     field: 'functionName',
     component: 'Input',
     required: true,
-    helpMessage: ['用作类描述，例如 用户'],
+    helpMessage: ({ values }) => {
+      return [
+        '用作类描述，例如 用户',
+        '可用 | 做分割，生成时会自动根据情况进行提取',
+        '如`系统服务 | 第三方模块 | 外系统`',
+        '在生成类时，输出为`系统服务 | 第三方模块 | 外系统`，在生成类中方法时，输出为`外系统`',
+      ];
+    },
     colProps: { span: 12 },
   },
   {
@@ -529,7 +550,7 @@ export const generateFormSchema: FormSchema[] = [
 export const generateBasicSchema: FormSchema[] = [
   {
     label: '多租户模式',
-    field: 'isTenant',
+    field: 'basicInfo.isTenant',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -540,7 +561,7 @@ export const generateBasicSchema: FormSchema[] = [
   },
   {
     label: '源策略模式',
-    field: 'sourceMode',
+    field: 'basicInfo.sourceMode',
     component: 'RadioButtonGroup',
     defaultValue: SourceModeEnum.ISOLATE,
     componentProps: {
@@ -551,7 +572,7 @@ export const generateBasicSchema: FormSchema[] = [
   },
   {
     label: '依赖缩写模式',
-    field: 'dependMode',
+    field: 'basicInfo.dependMode',
     component: 'RadioButtonGroup',
     defaultValue: DicYesNoEnum.NO,
     componentProps: {
@@ -567,7 +588,7 @@ export const generateBasicSchema: FormSchema[] = [
 export const generateBaseSchema: FormSchema[] = [
   {
     label: '归属模块',
-    field: 'parentModuleId',
+    field: 'menuInfo.parentModuleId',
     component: 'ApiSelect',
     componentProps: ({ formModel, formActionType }) => {
       return {
@@ -588,15 +609,18 @@ export const generateBaseSchema: FormSchema[] = [
                     menuTypeLimit: MenuTypeEnum.DIR,
                     defaultNode: true,
                   });
-            if (formModel.parentMenuId !== undefined && formModel.parentMenuId !== COMMON_MENU) {
-              if (!hasTreeNode(treeData, 'id', 'children', formModel.parentMenuId)) {
-                formModel.parentMenuId = undefined;
+            if (
+              formModel['menuInfo.parentMenuId'] !== undefined &&
+              formModel['menuInfo.parentMenuId'] !== COMMON_MENU
+            ) {
+              if (!hasTreeNode(treeData, 'id', 'children', formModel['menuInfo.parentMenuId'])) {
+                formModel['menuInfo.parentMenuId'] = undefined;
               }
             }
             if (formActionType !== undefined) {
               const { updateSchema } = formActionType;
               updateSchema({
-                field: 'parentMenuId',
+                field: 'menuInfo.parentMenuId',
                 componentProps: { treeData },
               });
             }
@@ -609,7 +633,7 @@ export const generateBaseSchema: FormSchema[] = [
   },
   {
     label: '上级菜单',
-    field: 'parentMenuId',
+    field: 'menuInfo.parentMenuId',
     component: 'TreeSelect',
     componentProps: {
       showSearch: true,
@@ -629,7 +653,7 @@ export const generateBaseSchema: FormSchema[] = [
 export const generateTreeSchema: FormSchema[] = [
   {
     label: '树编码字段',
-    field: 'treeCode',
+    field: 'fieldInfo.treeCode',
     component: 'Select',
     componentProps: {
       showSearch: true,
@@ -641,7 +665,7 @@ export const generateTreeSchema: FormSchema[] = [
   },
   {
     label: '树父编码字段',
-    field: 'parentId',
+    field: 'fieldInfo.parentId',
     component: 'Select',
     componentProps: {
       showSearch: true,
@@ -653,7 +677,7 @@ export const generateTreeSchema: FormSchema[] = [
   },
   {
     label: '树名称字段',
-    field: 'treeName',
+    field: 'fieldInfo.treeName',
     component: 'Select',
     componentProps: {
       showSearch: true,
@@ -665,7 +689,7 @@ export const generateTreeSchema: FormSchema[] = [
   },
   {
     label: '祖籍列表字段',
-    field: 'ancestors',
+    field: 'fieldInfo.ancestors',
     component: 'Select',
     dynamicDisabled: true,
     componentProps: {
@@ -677,7 +701,7 @@ export const generateTreeSchema: FormSchema[] = [
   },
   {
     label: '层级字段',
-    field: 'level',
+    field: 'fieldInfo.level',
     component: 'Select',
     dynamicDisabled: true,
     componentProps: {
@@ -693,7 +717,7 @@ export const generateTreeSchema: FormSchema[] = [
 export const generateApiSchema: FormSchema[] = [
   {
     label: '列表查询',
-    field: 'apiList',
+    field: 'apiInfo.apiList',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -704,7 +728,7 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '详情查询',
-    field: 'apiGetInfo',
+    field: 'apiInfo.apiGetInfo',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -715,7 +739,7 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '新增',
-    field: 'apiAdd',
+    field: 'apiInfo.apiAdd',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -726,7 +750,7 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '修改',
-    field: 'apiEdit',
+    field: 'apiInfo.apiEdit',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -736,19 +760,27 @@ export const generateApiSchema: FormSchema[] = [
     colProps: { span: 12 },
   },
   {
-    label: '修改状态',
-    field: 'apiEditStatus',
+    label: '存在状态修改',
+    field: 'apiInfo.hasApiES',
+    component: 'Input',
+    show: false,
+    colProps: { span: 12 },
+  },
+  {
+    label: '状态修改',
+    field: 'apiInfo.apiEditStatus',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
       options: dict.DicYesNoOptions,
     },
+    show: ({ values }) => values['apiInfo.hasApiES'] === GenStatusEnum.TRUE,
     required: true,
     colProps: { span: 12 },
   },
   {
     label: '批量删除',
-    field: 'apiBatchRemove',
+    field: 'apiInfo.apiBatchRemove',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -759,7 +791,7 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '导入',
-    field: 'apiImport',
+    field: 'apiInfo.apiImport',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -770,7 +802,7 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '导出',
-    field: 'apiExport',
+    field: 'apiInfo.apiExport',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
@@ -781,13 +813,28 @@ export const generateApiSchema: FormSchema[] = [
   },
   {
     label: '缓存',
-    field: 'apiCache',
+    field: 'apiInfo.apiCache',
     component: 'RadioButtonGroup',
     defaultValue: GenStatusEnum.FALSE,
     componentProps: {
       options: dict.DicYesNoOptions,
     },
     required: true,
+    colProps: { span: 12 },
+  },
+];
+
+/** 生成其他配置数据 */
+export const generateOtherSchema: FormSchema[] = [
+  {
+    label: '菜单生成Id',
+    field: 'menuInfo.idGenerator',
+    component: 'Input',
+    helpMessage: [
+      '菜单Id生成规范，示例：100000{}000',
+      `{}标识，当前生成的菜单数据Id，在{}标识从0开始进行升序生成`,
+      `示例生成菜单数据中，菜单Id为：1000000000，按钮菜单生成为1000001000、1000002000......`,
+    ],
     colProps: { span: 12 },
   },
 ];

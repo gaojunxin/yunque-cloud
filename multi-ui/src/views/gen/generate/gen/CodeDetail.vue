@@ -6,11 +6,11 @@
       </a-space>
     </template>
     <template #footer>
-      <a-tabs v-model:activeKey="currentKey" @change="handleModeChange">
-        <a-tab-pane v-for="(item, index) in codeList" :key="index" :tab="item.name" />
-      </a-tabs>
+      <Tabs v-model:activeKey="currentKey" @change="handleModeChange">
+        <Tabs.TabPane v-for="(item, index) in codeList" :key="index" :tab="item.name" />
+      </Tabs>
     </template>
-    <CodeEditor v-model:value="codeValue" :mode="codeMode" />
+    <CodeEditor v-model:value="codeValue" :mode="codeMode" readonly />
   </PageWrapper>
 </template>
 
@@ -25,9 +25,6 @@
   import { PageWrapper } from '@/components/Page';
   import { GenIndexGo } from '@/enums/gen/generate';
   import { useUserStore } from '@/store/modules/user';
-
-  const ATabs = Tabs;
-  const ATabPane = Tabs.TabPane;
 
   const route = useRoute();
   const { setTitle } = useTabs();
