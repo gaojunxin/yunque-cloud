@@ -1,16 +1,18 @@
-import { VxeGlobalRendererHandles } from 'vxe-table';
+import { VxeGlobalRendererHandles, VxeGlobalRendererOptions } from 'vxe-table';
 import XEUtils from 'xe-utils';
 import {
-  createCellRender,
   createEditRender,
-  createExportMethod,
-  createFormItemRender,
+  createCellRender,
   isEmptyValue,
+  createFormItemRender,
+  createExportMethod,
 } from './common';
 
 function getTreeSelectCellValue(
   renderOpts: VxeGlobalRendererHandles.RenderOptions,
-  params: VxeGlobalRendererHandles.RenderCellParams | VxeGlobalRendererHandles.ExportMethodParams,
+  params:
+    | VxeGlobalRendererHandles.RenderTableCellParams
+    | VxeGlobalRendererHandles.ExportMethodParams,
 ) {
   const { props = {} } = renderOpts;
   const { treeData, treeCheckable } = props;
@@ -28,8 +30,8 @@ function getTreeSelectCellValue(
 }
 
 export default {
-  renderEdit: createEditRender(),
-  renderCell: createCellRender(getTreeSelectCellValue),
-  renderItemContent: createFormItemRender(),
-  exportMethod: createExportMethod(getTreeSelectCellValue),
-};
+  renderTableEdit: createEditRender(),
+  renderTableCell: createCellRender(getTreeSelectCellValue),
+  renderFormItemContent: createFormItemRender(),
+  tableExportMethod: createExportMethod(getTreeSelectCellValue),
+} as VxeGlobalRendererOptions;

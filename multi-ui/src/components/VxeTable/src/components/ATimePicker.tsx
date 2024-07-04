@@ -1,18 +1,19 @@
+import { VxeGlobalRendererOptions } from 'vxe-table';
 import { getDatePickerCellValue } from './ADatePicker';
 import {
-  createCellRender,
   createEditRender,
-  createExportMethod,
+  createCellRender,
   createFormItemRender,
+  createExportMethod,
 } from './common';
 
 export default {
-  renderEdit: createEditRender(),
-  renderCell: createCellRender(getDatePickerCellValue, () => {
+  renderTableEdit: createEditRender(),
+  renderTableCell: createCellRender(getDatePickerCellValue, () => {
     return ['HH:mm:ss'];
   }),
-  renderItemContent: createFormItemRender(),
-  exportMethod: createExportMethod(getDatePickerCellValue, () => {
+  renderFormItemContent: createFormItemRender(),
+  tableExportMethod: createExportMethod(getDatePickerCellValue, () => {
     return ['HH:mm:ss'];
   }),
-};
+} as VxeGlobalRendererOptions;

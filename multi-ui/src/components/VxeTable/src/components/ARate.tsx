@@ -1,15 +1,16 @@
+import { VxeGlobalRendererOptions } from 'vxe-table';
 import {
-  createDefaultFilterRender,
-  createDefaultRender,
   createEditRender,
+  createDefaultRender,
   createFilterRender,
+  createDefaultFilterRender,
   createFormItemRender,
 } from './common';
 
 export default {
-  renderDefault: createDefaultRender(),
-  renderEdit: createEditRender(),
-  renderFilter: createFilterRender(),
-  defaultFilterMethod: createDefaultFilterRender(),
-  renderItemContent: createFormItemRender(),
-};
+  renderTableDefault: createDefaultRender(),
+  renderTableEdit: createEditRender(),
+  renderTableFilter: createFilterRender(),
+  tableFilterDefaultMethod: createDefaultFilterRender(),
+  renderFormItemContent: createFormItemRender(),
+} as VxeGlobalRendererOptions;
