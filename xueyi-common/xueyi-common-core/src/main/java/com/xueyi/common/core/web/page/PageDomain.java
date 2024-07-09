@@ -2,12 +2,14 @@ package com.xueyi.common.core.web.page;
 
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
+import lombok.Data;
 
 /**
  * 分页数据
  *
  * @author xueyi
  */
+@Data
 public class PageDomain {
 
     /** 当前记录起始索引 */
@@ -23,41 +25,13 @@ public class PageDomain {
     private String isAsc = "asc";
 
     /** 分页参数合理化 */
-    private Boolean reasonable = true;
+    private Boolean reasonable = false;
 
     public String getOrderBy() {
         if (StrUtil.isEmpty(orderByColumn)) {
             return StrUtil.EMPTY;
         }
         return StrUtil.toUnderlineCase(orderByColumn) + StrUtil.SPACE + isAsc;
-    }
-
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public String getOrderByColumn() {
-        return orderByColumn;
-    }
-
-    public void setOrderByColumn(String orderByColumn) {
-        this.orderByColumn = orderByColumn;
-    }
-
-    public String getIsAsc() {
-        return isAsc;
     }
 
     public void setIsAsc(String isAsc) {
@@ -74,12 +48,8 @@ public class PageDomain {
 
     public Boolean getReasonable() {
         if (ObjectUtil.isNull(reasonable)) {
-            return Boolean.TRUE;
+            return Boolean.FALSE;
         }
         return reasonable;
-    }
-
-    public void setReasonable(Boolean reasonable) {
-        this.reasonable = reasonable;
     }
 }
