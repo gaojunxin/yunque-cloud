@@ -45,6 +45,14 @@ public class XueYiMyBatisPlusConfig {
     }
 
     /**
+     * 自定义Id生成器
+     */
+    @Bean
+    public XueYiCustomIdGenerator customIdGenerator() {
+        return new XueYiCustomIdGenerator();
+    }
+
+    /**
      * 自动填充
      */
     @Bean

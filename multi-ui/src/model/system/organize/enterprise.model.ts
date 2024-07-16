@@ -1,23 +1,30 @@
 import { BaseEntity, BasicFetchResult, BasicPageParams } from '@/model';
-import { DicStatusEnum } from '@/enums';
+import { DicStatusEnum, DicYesNoEnum } from '@/enums';
 
 /** enterprise item model */
 export interface EnterpriseIM extends BaseEntity {
   /** Id */
   id: string;
+  /** 策略Id */
+  strategyId: string;
   /** 名称 */
   name: string;
+  /** 系统名称 */
+  systemName: string;
+  /** 企业名称 */
+  nick: string;
+  /** 企业Logo */
+  logo: string;
+  /** 企业账号修改次数 */
+  nameFrequency: number;
+  /** 超管租户（Y是 N否） */
+  isLessor: DicYesNoEnum;
   /** 状态（0正常 1停用） */
   status: DicStatusEnum;
-  type: string;
-  nameFrequency: string;
-  nick: string;
-  systemName: string;
-  isLessor: string;
-  logo: string;
-  isDefault: string;
-  /** 企业权限组Ids */
-  authGroupIds: string[];
+  /** 企业自定义域名 */
+  domainName: string;
+  /** 默认企业（Y是 N否） */
+  isDefault: DicYesNoEnum;
 }
 
 /** enterprise list model */
@@ -27,18 +34,20 @@ export type EnterpriseLM = EnterpriseIM[];
 export interface EnterprisePM extends BaseEntity {
   /** Id */
   id?: string;
+  /** 策略Id */
+  strategyId?: string;
   /** 名称 */
   name?: string;
+  /** 系统名称 */
+  systemName?: string;
+  /** 企业名称 */
+  nick?: string;
+  /** 超管租户（Y是 N否） */
+  isLessor?: DicYesNoEnum;
   /** 状态（0正常 1停用） */
   status?: DicStatusEnum;
-  type?: string;
-  sort?: number;
-  nameFrequency?: string;
-  nick?: string;
-  systemName?: string;
-  isLessor?: string;
-  logo?: string;
-  isDefault?: string;
+  /** 默认企业（Y是 N否） */
+  isDefault?: DicYesNoEnum;
 }
 
 /** enterprise page param model */

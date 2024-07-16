@@ -43,4 +43,5 @@ public class SysEnterprisePo extends SysEnterprise {
   @NotBlank(message = "企业名称不能为空")
   @Size(max = 30, message = "企业名称长度不能超过30个字符")
   protected String nick;
+
 }
