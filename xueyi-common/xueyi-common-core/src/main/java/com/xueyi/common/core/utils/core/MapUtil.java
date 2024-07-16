@@ -17,4 +17,11 @@ public class MapUtil extends cn.hutool.core.map.MapUtil {
         return null == map;
     }
 
+    public static <T> boolean notContainsKey(Map<T, ?> map, T key) {
+        return !containsKey(map, key);
+    }
+
+    public static <T> boolean containsKey(Map<T, ?> map, T key) {
+        return isNotEmpty(map) && map.containsKey(key);
+    }
 }

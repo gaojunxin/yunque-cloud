@@ -7,6 +7,8 @@ package com.xueyi.common.core.utils.core.pool;
  */
 public interface NumberPool {
 
+    int Ne_Thirty = -30;
+    int Ne_Ten = -10;
     int Ne_One = -1;
     int Zero = 0;
     int One = 1;
