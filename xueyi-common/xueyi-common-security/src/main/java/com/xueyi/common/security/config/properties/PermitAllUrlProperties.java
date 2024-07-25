@@ -4,6 +4,7 @@ import com.xueyi.common.core.utils.core.CollUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.ReUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
+import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.security.annotation.AdminAuth;
 import com.xueyi.common.security.annotation.ApiAuth;
 import com.xueyi.common.security.annotation.ExternalAuth;
@@ -17,6 +18,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
+import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -93,14 +96,11 @@ public class PermitAllUrlProperties implements InitializingBean {
     }
 
     private void anonymousFilter(RequestMappingInfo info) {
-        List<String> urls = Objects.requireNonNull(info.getPatternsCondition()).getPatterns().stream().map(url -> ReUtil.replaceAll(url, PATTERN, "*")).toList();
+        List<String> urls = Optional.ofNullable(info.getPatternsCondition()).map(PatternsRequestCondition::getPatterns)
+                .map(list -> list.stream().map(url -> ReUtil.replaceAll(url, PATTERN, StrUtil.ASTERISK)).toList()).orElse(null);
         if (CollUtil.isEmpty(urls))
             return;
-        Set<RequestMethod> methods = Objects.requireNonNull(info.getMethodsCondition()).getMethods();
-        if (CollUtil.isNotEmpty(methods)) {
-            methods.forEach(method -> custom.addAll(method, urls));
-        } else {
-            routine.addAll(urls);
-        }
+        Optional.ofNullable(info.getMethodsCondition()).map(RequestMethodsRequestCondition::getMethods).filter(CollUtil::isNotEmpty)
+                .ifPresentOrElse(methods -> methods.forEach(method -> custom.addAll(method, urls)), () -> routine.addAll(urls));
     }
 }
