@@ -104,7 +104,7 @@
     "vue-json-pretty": "^2.4.0",
     "vue-router": "^4.3.2",
     "vue-types": "^5.1.1",
-    "vuedraggable": "^4.1.0",
+    "vue-draggable-plus": "^0.5.2",
     "vxe-pc-ui": "^4.0.44",
     "vxe-table": "^4.7.40",
     "vxe-table-plugin-export-xlsx": "^4.0.4",
