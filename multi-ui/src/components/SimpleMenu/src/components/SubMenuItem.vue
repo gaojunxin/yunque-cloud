@@ -184,7 +184,7 @@
     if (unref(getAccordion)) {
       const { uidList } = getParentList();
       rootMenuEmitter.emit('on-update-opened', {
-        opend: false,
+        opened: false,
         parent: instance?.parent,
         uidList: uidList,
       });
@@ -267,9 +267,9 @@
           return;
         }
         if (isObject(data) && rootProps.accordion) {
-          const { opend, parent, uidList } = data as Recordable<any>;
+          const { opened, parent, uidList } = data as Recordable<any>;
           if (parent === instance?.parent) {
-            state.opened = opend;
+            state.opened = opened;
           } else if (!uidList.includes(instance?.uid)) {
             state.opened = false;
           }
