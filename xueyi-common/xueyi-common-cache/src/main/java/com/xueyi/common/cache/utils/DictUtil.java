@@ -56,7 +56,7 @@ public class DictUtil {
      * @param code 参数编码
      * @return 参数数据
      */
-    public static <T> T getCusConfigCacheToObj(String code) {
+    public static <T> T getConfigCacheToObj(String code) {
         return getConfigCache(code, Object.class, null);
     }
 

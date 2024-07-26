@@ -37,7 +37,7 @@ public class BSysConfigController extends BaseController<SysConfigQuery, SysConf
             warn("请传入编码后再查询字典");
         }
         Map<String, Object> configMap = new HashMap<>();
-        configMap.put(code, DictUtil.getCusConfigCacheToObj(code));
+        configMap.put(code, DictUtil.getConfigCacheToObj(code));
         return AjaxResult.success(configMap);
     }
 
@@ -49,7 +49,7 @@ public class BSysConfigController extends BaseController<SysConfigQuery, SysConf
             warn("请传入编码后再查询字典");
         }
         Map<String, Object> configMap = new HashMap<>();
-        codeList.forEach(code -> configMap.put(code, DictUtil.getCusConfigCacheToObj(code)));
+        codeList.forEach(code -> configMap.put(code, DictUtil.getConfigCacheToObj(code)));
         return AjaxResult.success(configMap);
     }
 
@@ -60,7 +60,7 @@ public class BSysConfigController extends BaseController<SysConfigQuery, SysConf
      * @return 参数
      */
     public AjaxResult getValueByCode(String code) {
-        Object obj = DictUtil.getCusConfigCacheToObj(code);
+        Object obj = DictUtil.getConfigCacheToObj(code);
         return success(obj);
     }
 
