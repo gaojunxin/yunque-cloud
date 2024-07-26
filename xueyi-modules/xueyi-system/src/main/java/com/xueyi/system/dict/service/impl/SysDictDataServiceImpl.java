@@ -5,6 +5,7 @@ import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.exception.ServiceException;
+import com.xueyi.common.core.utils.cache.CacheUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.redis.constant.RedisConstants;
@@ -166,7 +167,7 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
                     add(dto);
                 }};
                 List<String> enterpriseCaches = list.stream().map(SysDictDataDto::getTenantId).collect(Collectors.toSet())
-                        .stream().map(item -> CacheConstants.CacheType.getCusCacheKey(cacheKey, Boolean.TRUE, item)).toList();
+                        .stream().map(item -> CacheUtil.getCusCacheKey(cacheKey, Boolean.TRUE, item)).toList();
                 redisService.deleteObject(enterpriseCaches);
             }
         }
