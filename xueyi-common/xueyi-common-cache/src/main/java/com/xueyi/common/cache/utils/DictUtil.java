@@ -64,6 +64,16 @@ public class DictUtil {
     /**
      * 获取参数缓存
      *
+     * @param code 参数编码
+     * @return 参数数据
+     */
+    public static <T> T getCusConfigCacheToObj(String code) {
+        return getCusConfigCache(code, Object.class, null);
+    }
+
+    /**
+     * 获取参数缓存
+     *
      * @param code         参数编码
      * @param clazz        数据类型
      * @param defaultValue 默认值
