@@ -1,19 +1,8 @@
 package com.xueyi.common.cache.constant;
 
 import com.xueyi.common.core.constant.basic.DictConstants;
-import com.xueyi.common.core.context.SecurityContextHolder;
-import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.cache.CacheUtil;
 import com.xueyi.common.core.utils.core.EnumUtil;
-import com.xueyi.common.core.utils.core.ObjectUtil;
-import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
-import com.xueyi.system.api.dict.feign.RemoteConfigService;
-import com.xueyi.system.api.dict.feign.RemoteDictService;
-import com.xueyi.system.api.dict.feign.RemoteImExService;
-import com.xueyi.tenant.api.source.feign.RemoteSourceService;
-import com.xueyi.tenant.api.source.feign.RemoteStrategyService;
-import com.xueyi.tenant.api.tenant.feign.RemoteTenantService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -64,42 +53,12 @@ public class CacheConstants {
     @AllArgsConstructor
     public enum CacheType {
 
-        ROUTE_DICT_KEY("system:dict:route", false, "字典路由", () -> SpringUtil.getBean(RemoteDictService.class).refreshCommonCacheInner()),
-        SYS_DICT_KEY("system:dict:tenant", true, "租户字典", () -> SpringUtil.getBean(RemoteDictService.class).refreshCacheInner()),
-        TE_DICT_KEY("system:dict:tenant", true, "通用字典", () -> SpringUtil.getBean(RemoteDictService.class).refreshCommonCacheInner()),
-        ROUTE_CONFIG_KEY("system:config:route", false, "参数路由", () -> SpringUtil.getBean(RemoteConfigService.class).refreshCommonCacheInner()),
-        SYS_CONFIG_KEY("system:config:tenant", true, "租户参数", () -> SpringUtil.getBean(RemoteConfigService.class).refreshCacheInner()),
-        TE_CONFIG_KEY("system:config:tenant", true, "通用参数", () -> SpringUtil.getBean(RemoteConfigService.class).refreshCommonCacheInner()),
-        ROUTE_IM_EX_KEY("system:im_ex:route", false, "导入导出配置路由", () -> SpringUtil.getBean(RemoteImExService.class).refreshCommonCacheInner()),
-        SYS_IM_EX_KEY("system:im_ex:tenant", true, "租户导入导出配置", () -> SpringUtil.getBean(RemoteImExService.class).refreshCacheInner()),
-        TE_IM_EX_KEY("system:im_ex:tenant", true, "通用导入导出配置", () -> SpringUtil.getBean(RemoteImExService.class).refreshCommonCacheInner()),
-        TE_STRATEGY_KEY("system:strategy", false, "源策略组", () -> SpringUtil.getBean(RemoteStrategyService.class).refreshCacheInner()),
-        TE_SOURCE_KEY("system:source", false, "数据源", () -> SpringUtil.getBean(RemoteSourceService.class).refreshCacheInner()),
-        TE_TENANT_KEY("system:tenant", false, "租户", () -> SpringUtil.getBean(RemoteTenantService.class).refreshCacheInner());
+        ;
 
         private final String code;
         private final Boolean isTenant;
         private final String info;
         private final Supplier<Object> consumer;
-
-        /**
-         * 获取缓存键值
-         *
-         * @return 缓存键值
-         */
-        public String getCacheKey() {
-            return CacheUtil.getCusCacheKey(getCode(), getIsTenant());
-        }
-
-        /**
-         * 获取缓存键值 | 指定企业Id
-         *
-         * @param enterpriseId 企业Id
-         * @return 缓存键值
-         */
-        public String getCacheKey(Long enterpriseId) {
-            return CacheUtil.getCusCacheKey(getCode(), getIsTenant(), enterpriseId);
-        }
     }
 
     /** 登录缓存类型 */

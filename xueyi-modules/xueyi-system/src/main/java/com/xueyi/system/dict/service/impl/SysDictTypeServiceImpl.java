@@ -1,6 +1,5 @@
 package com.xueyi.system.dict.service.impl;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
@@ -19,6 +18,7 @@ import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
+import com.xueyi.system.api.dict.constant.ConfigConstants;
 import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
 import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
 import com.xueyi.system.api.dict.domain.po.SysDictTypePo;
@@ -55,7 +55,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
     /** 缓存定义 */
     @Override
     public CacheModel getCacheModel() {
-        return new CacheModel(CacheConstants.CacheType.SYS_DICT_KEY.getCode(), CacheConstants.CacheType.SYS_DICT_KEY.getIsTenant());
+        return new CacheModel(ConfigConstants.CacheType.SYS_DICT_KEY.getCode(), ConfigConstants.CacheType.SYS_DICT_KEY.getIsTenant());
     }
 
     /**
@@ -308,8 +308,8 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
         super.refreshCache(operate, operateCache, dto, dtoList, cacheKey, isTenant, SysDictTypeDto::getCode, SysDictTypeDto::getSubList);
         // 路由缓存管理方法
         if (SecurityUtils.isCommonTenant()) {
-            CacheConstants.CacheType routeCacheKey = CacheConstants.CacheType.ROUTE_DICT_KEY;
-            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCacheKey(), routeCacheKey.getIsTenant(), SysDictTypeDto::getCode, Function.identity());
+            ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_DICT_KEY;
+            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysDictTypeDto::getCode, Function.identity());
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.xueyi.tenant.tenant.service.impl;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
@@ -17,6 +16,7 @@ import com.xueyi.system.api.organize.feign.RemoteDeptService;
 import com.xueyi.system.api.organize.feign.RemotePostService;
 import com.xueyi.system.api.organize.feign.RemoteUserService;
 import com.xueyi.tenant.api.source.domain.dto.TeStrategyDto;
+import com.xueyi.tenant.api.tenant.constant.TenantConstants;
 import com.xueyi.tenant.api.tenant.domain.dto.TeTenantDto;
 import com.xueyi.tenant.api.tenant.domain.query.TeTenantQuery;
 import com.xueyi.tenant.source.service.ITeStrategyService;
@@ -60,7 +60,7 @@ public class TeTenantServiceImpl extends BaseServiceImpl<TeTenantQuery, TeTenant
     /** 缓存定义 */
     @Override
     public CacheModel getCacheModel() {
-        return new CacheModel(CacheConstants.CacheType.TE_TENANT_KEY.getCode(), CacheConstants.CacheType.TE_TENANT_KEY.getIsTenant());
+        return new CacheModel(TenantConstants.CacheType.TE_TENANT_KEY.getCode(), TenantConstants.CacheType.TE_TENANT_KEY.getIsTenant());
     }
 
     /**

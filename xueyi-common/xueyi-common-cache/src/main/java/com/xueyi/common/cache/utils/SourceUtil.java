@@ -1,10 +1,10 @@
 package com.xueyi.common.cache.utils;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.service.CacheService;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.core.web.model.SysSource;
+import com.xueyi.tenant.api.source.constant.SourceConstants;
 import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 import com.xueyi.tenant.api.source.domain.dto.TeStrategyDto;
 
@@ -39,7 +39,8 @@ public class SourceUtil {
      * @return 源策略对象
      */
     public static TeStrategyDto getTeStrategyCache(Long id) {
-        return SpringUtil.getBean(CacheService.class).getCacheObject(CacheConstants.CacheType.TE_STRATEGY_KEY, id.toString());
+        SourceConstants.CacheType cacheType = SourceConstants.CacheType.TE_STRATEGY_KEY;
+        return SpringUtil.getBean(CacheService.class).getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), id.toString());
     }
 
     /**
@@ -49,6 +50,7 @@ public class SourceUtil {
      * @return 数据源对象
      */
     public static TeSourceDto getTeSourceCache(String slave) {
-        return SpringUtil.getBean(CacheService.class).getCacheObject(CacheConstants.CacheType.TE_SOURCE_KEY, slave);
+        SourceConstants.CacheType cacheType = SourceConstants.CacheType.TE_SOURCE_KEY;
+        return SpringUtil.getBean(CacheService.class).getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), slave);
     }
 }

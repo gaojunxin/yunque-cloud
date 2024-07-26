@@ -1,6 +1,5 @@
 package com.xueyi.system.dict.service.impl;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
@@ -12,6 +11,7 @@ import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
+import com.xueyi.system.api.dict.constant.ConfigConstants;
 import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
 import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
 import com.xueyi.system.api.dict.domain.query.SysDictDataQuery;
@@ -39,7 +39,7 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
     /** 缓存定义 */
     @Override
     public CacheModel getCacheModel() {
-        return new CacheModel(CacheConstants.CacheType.SYS_DICT_KEY.getCode(), CacheConstants.CacheType.SYS_DICT_KEY.getIsTenant());
+        return new CacheModel(ConfigConstants.CacheType.SYS_DICT_KEY.getCode(), ConfigConstants.CacheType.SYS_DICT_KEY.getIsTenant());
     }
 
     /**

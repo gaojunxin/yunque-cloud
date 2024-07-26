@@ -1,7 +1,6 @@
 package com.xueyi.tenant.source.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
@@ -11,6 +10,7 @@ import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
+import com.xueyi.tenant.api.source.constant.SourceConstants;
 import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 import com.xueyi.tenant.api.source.domain.query.TeSourceQuery;
 import com.xueyi.tenant.source.domain.correlate.TeSourceCorrelate;
@@ -32,7 +32,7 @@ public class TeSourceServiceImpl extends BaseServiceImpl<TeSourceQuery, TeSource
     /** 缓存定义 */
     @Override
     public CacheModel getCacheModel() {
-        return new CacheModel(CacheConstants.CacheType.TE_SOURCE_KEY.getCode(), CacheConstants.CacheType.TE_SOURCE_KEY.getIsTenant());
+        return new CacheModel(SourceConstants.CacheType.TE_SOURCE_KEY.getCode(), SourceConstants.CacheType.TE_SOURCE_KEY.getIsTenant());
     }
 
     /**

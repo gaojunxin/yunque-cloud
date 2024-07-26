@@ -1,6 +1,5 @@
 package com.xueyi.system.dict.service.impl;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
@@ -17,6 +16,7 @@ import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
+import com.xueyi.system.api.dict.constant.ConfigConstants;
 import com.xueyi.system.api.dict.domain.dto.SysImExDto;
 import com.xueyi.system.api.dict.domain.query.SysImExQuery;
 import com.xueyi.system.dict.domain.correlate.SysImExCorrelate;
@@ -43,7 +43,7 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
     /** 缓存定义 */
     @Override
     public CacheModel getCacheModel() {
-        return new CacheModel(CacheConstants.CacheType.SYS_IM_EX_KEY.getCode(), CacheConstants.CacheType.SYS_IM_EX_KEY.getIsTenant());
+        return new CacheModel(ConfigConstants.CacheType.SYS_IM_EX_KEY.getCode(), ConfigConstants.CacheType.SYS_IM_EX_KEY.getIsTenant());
     }
 
     /**
@@ -257,8 +257,8 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
         super.refreshCache(operate, operateCache, dto, dtoList, cacheKey, isTenant, SysImExDto::getCode, cacheValueFun);
         // 路由缓存管理方法
         if (SecurityUtils.isCommonTenant()) {
-            CacheConstants.CacheType routeCacheKey = CacheConstants.CacheType.ROUTE_IM_EX_KEY;
-            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCacheKey(), routeCacheKey.getIsTenant(), SysImExDto::getCode, Function.identity());
+            ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_IM_EX_KEY;
+            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysImExDto::getCode, Function.identity());
         }
     }
 }
