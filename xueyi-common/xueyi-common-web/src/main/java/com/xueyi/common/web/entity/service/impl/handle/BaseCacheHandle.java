@@ -1,6 +1,5 @@
 package com.xueyi.common.web.entity.service.impl.handle;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
@@ -17,12 +16,6 @@ import java.util.function.Function;
  * @author xueyi
  */
 public interface BaseCacheHandle<D extends BaseEntity> {
-
-    /** 缓存主键命名定义 */
-    @Deprecated
-    default CacheConstants.CacheType getCacheKey() {
-        return null;
-    }
 
     /** 缓存定义 */
     default CacheModel getCacheModel() {
@@ -60,11 +53,9 @@ public interface BaseCacheHandle<D extends BaseEntity> {
      * @param dtoList      数据对象集合
      */
     default void refreshCache(OperateConstants.ServiceType operate, RedisConstants.OperateType operateCache, D dto, Collection<D> dtoList) {
-        refreshCache(operate, operateCache, dto, dtoList, Optional.ofNullable(getCacheModel()).map(CacheModel::getCode)
-                        .orElseGet(() -> Optional.ofNullable(getCacheKey()).map(CacheConstants.CacheType::getCode).orElse(null)),
-                Optional.ofNullable(getCacheModel()).map(CacheModel::getIsTenant)
-                        .orElseGet(() -> Optional.ofNullable(getCacheKey()).map(CacheConstants.CacheType::getIsTenant).orElse(null))
-                , D::getIdStr, Function.identity());
+        refreshCache(operate, operateCache, dto, dtoList, Optional.ofNullable(getCacheModel()).map(CacheModel::getCode).orElse(null),
+                Optional.ofNullable(getCacheModel()).map(CacheModel::getIsTenant).orElse(null),
+                D::getIdStr, Function.identity());
     }
 
     /**

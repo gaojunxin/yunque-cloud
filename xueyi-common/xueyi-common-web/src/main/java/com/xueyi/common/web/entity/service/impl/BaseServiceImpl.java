@@ -5,6 +5,7 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.exception.UtilException;
 import com.xueyi.common.core.utils.core.ObjectUtil;
+import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
@@ -222,10 +223,11 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      */
     @Override
     public void refreshCache() {
-        if (ObjectUtil.isNull(getCacheKey()) && ObjectUtil.isNull(getCacheModel())) {
+        Optional.ofNullable(getCacheModel()).filter(item -> StrUtil.isNotBlank(item.getCacheKey())).ifPresentOrElse(model -> {
+            List<D> allList = baseManager.selectList(null);
+            refreshCache(OperateConstants.ServiceType.BATCH_ADD, RedisConstants.OperateType.REFRESH_ALL, allList);
+        }, () -> {
             throw new UtilException("未正常配置缓存，无法使用!");
-        }
-        List<D> allList = baseManager.selectList(null);
-        refreshCache(OperateConstants.ServiceType.BATCH_ADD, RedisConstants.OperateType.REFRESH_ALL, allList);
+        });
     }
 }
