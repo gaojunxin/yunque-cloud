@@ -40,7 +40,7 @@ public class SourceUtil {
      */
     public static TeStrategyDto getTeStrategyCache(Long id) {
         SourceConstants.CacheType cacheType = SourceConstants.CacheType.TE_STRATEGY_KEY;
-        return SpringUtil.getBean(CacheService.class).getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), id.toString());
+        return SpringUtil.getBean(CacheService.class).getCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), id.toString());
     }
 
     /**
@@ -51,6 +51,6 @@ public class SourceUtil {
      */
     public static TeSourceDto getTeSourceCache(String slave) {
         SourceConstants.CacheType cacheType = SourceConstants.CacheType.TE_SOURCE_KEY;
-        return SpringUtil.getBean(CacheService.class).getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), slave);
+        return SpringUtil.getBean(CacheService.class).getCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), slave);
     }
 }

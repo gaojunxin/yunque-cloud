@@ -1,7 +1,6 @@
 package com.xueyi.common.cache.utils;
 
 import com.alibaba.fastjson2.JSON;
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.cache.service.CacheService;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
@@ -44,21 +43,11 @@ public class DictUtil {
     /**
      * 获取参数缓存
      *
-     * @param type 参数类型
-     * @return 参数数据
-     */
-    public static <T> T getConfigCache(CacheConstants.ConfigType type) {
-        return getCusConfigCache(type.getCode(), type.getClazz(), type.getDefaultValue());
-    }
-
-    /**
-     * 获取参数缓存
-     *
      * @param code 参数编码
      * @return 参数数据
      */
-    public static <T> T getCusConfigCache(String code) {
-        return getCusConfigCache(code, String.class, StrUtil.EMPTY);
+    public static <T> T getConfigCacheToStr(String code) {
+        return getConfigCache(code, String.class, StrUtil.EMPTY);
     }
 
     /**
@@ -68,7 +57,7 @@ public class DictUtil {
      * @return 参数数据
      */
     public static <T> T getCusConfigCacheToObj(String code) {
-        return getCusConfigCache(code, Object.class, null);
+        return getConfigCache(code, Object.class, null);
     }
 
     /**
@@ -80,24 +69,24 @@ public class DictUtil {
      * @return 参数数据
      */
     @SuppressWarnings(value = {"unchecked"})
-    public static <T> T getCusConfigCache(String code, Class<?> clazz, Object defaultValue) {
+    public static <T> T getConfigCache(String code, Class<?> clazz, Object defaultValue) {
         ConfigConstants.CacheType cacheType = ConfigConstants.CacheType.ROUTE_CONFIG_KEY;
-        SysConfigDto config = getCacheService().getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), code);
+        SysConfigDto config = getCacheService().getCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), code);
         if (ObjectUtil.isNull(config)) {
             return (T) defaultValue;
         }
         String value;
         if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), config.getCacheType())) {
             ConfigConstants.CacheType tenantCacheType = ConfigConstants.CacheType.SYS_CONFIG_KEY;
-            value = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
+            value = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
             if (ObjectUtil.isNull(value)) {
                 SpringUtil.getBean(RemoteConfigService.class).syncCacheInner();
-                value = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
+                value = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_CONFIG_KEY;
             value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
-                    getCacheService().getCusCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
+                    getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
         }
         Object obj = ClassUtil.isCollection(clazz)
                 ? JSON.parseArray(value, clazz)
@@ -127,22 +116,22 @@ public class DictUtil {
      */
     public static List<SysDictDataDto> getDictCache(String code) {
         ConfigConstants.CacheType cacheType = ConfigConstants.CacheType.ROUTE_DICT_KEY;
-        SysDictTypeDto type = getCacheService().getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), code);
+        SysDictTypeDto type = getCacheService().getCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), code);
         if (ObjectUtil.isNull(type)) {
             return null;
         }
         List<SysDictDataDto> dictList;
         if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), type.getCacheType())) {
             ConfigConstants.CacheType tenantCacheType = ConfigConstants.CacheType.SYS_DICT_KEY;
-            dictList = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
+            dictList = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
             if (ObjectUtil.isNull(dictList)) {
                 SpringUtil.getBean(RemoteDictService.class).syncCacheInner();
-                dictList = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
+                dictList = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), code);
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_DICT_KEY;
             dictList = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
-                    getCacheService().getCusCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
+                    getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
         }
         return dictList;
     }
@@ -153,24 +142,24 @@ public class DictUtil {
      * @param exCode 配置编码
      * @return 配置数据
      */
-    public static SysImExDto getCusExCache(String exCode) {
+    public static SysImExDto getExCache(String exCode) {
         ConfigConstants.CacheType cacheType = ConfigConstants.CacheType.ROUTE_IM_EX_KEY;
-        SysImExDto exInfo = getCacheService().getCusCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), exCode);
+        SysImExDto exInfo = getCacheService().getCacheObject(cacheType.getCode(), cacheType.getIsTenant(), cacheType.getConsumer(), exCode);
         if (ObjectUtil.isNull(exInfo)) {
             return null;
         }
         SysImExDto value;
         if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), exInfo.getCacheType())) {
             ConfigConstants.CacheType tenantCacheType = ConfigConstants.CacheType.SYS_IM_EX_KEY;
-            value = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), exCode);
+            value = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), exCode);
             if (ObjectUtil.isNull(value)) {
                 SpringUtil.getBean(RemoteConfigService.class).syncCacheInner();
-                value = getCacheService().getCusCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), exCode);
+                value = getCacheService().getCacheObject(tenantCacheType.getCode(), tenantCacheType.getIsTenant(), tenantCacheType.getConsumer(), exCode);
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_IM_EX_KEY;
             value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
-                    getCacheService().getCusCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), exCode));
+                    getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), exCode));
         }
         return value;
     }
@@ -182,8 +171,8 @@ public class DictUtil {
      * @param exCode 配置编码
      * @return 配置数据
      */
-    public static String getCusExImportCache(String exCode) {
-        SysImExDto exInfo = getCusExCache(exCode);
+    public static String getExImportCache(String exCode) {
+        SysImExDto exInfo = getExCache(exCode);
         if (ObjectUtil.isNotNull(exInfo) && StrUtil.isNotBlank(exInfo.getImportConfig())) {
             return exInfo.getImportConfig();
         } else {
@@ -197,8 +186,8 @@ public class DictUtil {
      * @param exCode 配置编码
      * @return 配置数据
      */
-    public static String getCusExExportCache(String exCode) {
-        SysImExDto exInfo = getCusExCache(exCode);
+    public static String getExExportCache(String exCode) {
+        SysImExDto exInfo = getExCache(exCode);
         if (ObjectUtil.isNotNull(exInfo) && StrUtil.isNotBlank(exInfo.getExportConfig())) {
             return exInfo.getExportConfig();
         } else {

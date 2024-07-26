@@ -50,7 +50,7 @@ public abstract class BaseHandleController<Q extends BaseEntity, D extends BaseE
      * @param list     数据集合
      */
     protected void export(HttpServletResponse response, String exCode, Class<?> clazz, List<?> list) {
-        XExcelUtil util = new XExcelUtil(DictUtil.getCusExExportCache(exCode), clazz);
+        XExcelUtil util = new XExcelUtil(DictUtil.getExExportCache(exCode), clazz);
         util.exportExcel(response, list);
     }
 
@@ -62,7 +62,7 @@ public abstract class BaseHandleController<Q extends BaseEntity, D extends BaseE
      * @param clazz  实体对象
      */
     public <T> List<T> importData(MultipartFile file, String exCode, Class<T> clazz) throws Exception {
-        XExcelUtil util = new XExcelUtil(DictUtil.getCusExImportCache(exCode), clazz);
+        XExcelUtil util = new XExcelUtil(DictUtil.getExImportCache(exCode), clazz);
         return util.importExcel(file.getInputStream());
     }
 
@@ -74,7 +74,7 @@ public abstract class BaseHandleController<Q extends BaseEntity, D extends BaseE
      * @param clazz    实体对象
      */
     protected void importTemplate(HttpServletResponse response, String exCode, Class<?> clazz) {
-        XExcelUtil util = new XExcelUtil(DictUtil.getCusExImportCache(exCode), clazz);
+        XExcelUtil util = new XExcelUtil(DictUtil.getExImportCache(exCode), clazz);
         util.importTemplateExcel(response);
     }
 
