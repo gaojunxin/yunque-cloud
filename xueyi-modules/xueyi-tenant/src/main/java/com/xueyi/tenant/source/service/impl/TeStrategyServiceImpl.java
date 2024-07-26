@@ -1,6 +1,7 @@
 package com.xueyi.tenant.source.service.impl;
 
 import com.xueyi.common.cache.constant.CacheConstants;
+import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
@@ -20,12 +21,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeStrategyServiceImpl extends BaseServiceImpl<TeStrategyQuery, TeStrategyDto, TeStrategyCorrelate, ITeStrategyManager> implements ITeStrategyService {
 
-    /**
-     * 缓存主键命名定义
-     */
+    /** 缓存定义 */
     @Override
-    public CacheConstants.CacheType getCacheKey() {
-        return CacheConstants.CacheType.TE_STRATEGY_KEY;
+    public CacheModel getCacheModel() {
+        return new CacheModel(CacheConstants.CacheType.TE_STRATEGY_KEY.getCode(), CacheConstants.CacheType.TE_STRATEGY_KEY.getIsTenant());
     }
 
     /**

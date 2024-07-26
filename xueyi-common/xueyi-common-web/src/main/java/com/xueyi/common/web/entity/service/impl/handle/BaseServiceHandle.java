@@ -1,7 +1,7 @@
 package com.xueyi.common.web.entity.service.impl.handle;
 
-import com.xueyi.common.cache.constant.CacheConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
+import com.xueyi.common.core.utils.cache.CacheUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
@@ -56,7 +56,7 @@ public class BaseServiceHandle<Q extends BaseEntity, D extends BaseEntity, C ext
         if (StrUtil.isBlank(cacheKey)) {
             return;
         }
-        String cacheKeyName = CacheConstants.CacheType.getCusCacheKey(cacheKey, isTenant);
+        String cacheKeyName = CacheUtil.getCusCacheKey(cacheKey, isTenant);
         // 是否存在缓存字段二次组装
         if (operate.isSingle()) {
             subCorrelates(dto, getBasicCorrelate(CorrelateConstants.ServiceType.CACHE_REFRESH));

@@ -1,6 +1,7 @@
 package com.xueyi.system.dict.service.impl;
 
 import com.xueyi.common.cache.constant.CacheConstants;
+import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
@@ -51,6 +52,12 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
     @Autowired
     private ISysDictDataService dictDataService;
 
+    /** 缓存定义 */
+    @Override
+    public CacheModel getCacheModel() {
+        return new CacheModel(CacheConstants.CacheType.SYS_DICT_KEY.getCode(), CacheConstants.CacheType.SYS_DICT_KEY.getIsTenant());
+    }
+
     /**
      * 默认方法关联配置定义
      */
@@ -60,12 +67,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
             put(CorrelateConstants.ServiceType.CACHE_REFRESH, SysDictTypeCorrelate.CACHE_REFRESH);
             put(CorrelateConstants.ServiceType.DELETE, SysDictTypeCorrelate.BASE_DEL);
         }};
-    }
-
-    /** 缓存主键命名定义 */
-    @Override
-    public CacheConstants.CacheType getCacheKey() {
-        return CacheConstants.CacheType.SYS_DICT_KEY;
     }
 
     /**

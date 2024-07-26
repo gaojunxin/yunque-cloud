@@ -1,6 +1,7 @@
 package com.xueyi.system.dict.service.impl;
 
 import com.xueyi.common.cache.constant.CacheConstants;
+import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.exception.ServiceException;
@@ -34,12 +35,10 @@ import java.util.stream.Collectors;
 @Service
 public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, SysDictDataDto, SysDictDataCorrelate, ISysDictDataManager> implements ISysDictDataService {
 
-    /**
-     * 缓存主键命名定义
-     */
+    /** 缓存定义 */
     @Override
-    public CacheConstants.CacheType getCacheKey() {
-        return CacheConstants.CacheType.SYS_DICT_KEY;
+    public CacheModel getCacheModel() {
+        return new CacheModel(CacheConstants.CacheType.SYS_DICT_KEY.getCode(), CacheConstants.CacheType.SYS_DICT_KEY.getIsTenant());
     }
 
     /**

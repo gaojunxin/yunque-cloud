@@ -1,6 +1,7 @@
 package com.xueyi.system.dict.service.impl;
 
 import com.xueyi.common.cache.constant.CacheConstants;
+import com.xueyi.common.cache.model.CacheModel;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
@@ -39,10 +40,10 @@ import java.util.stream.Collectors;
 @Service
 public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysConfigDto, SysConfigCorrelate, ISysConfigManager> implements ISysConfigService {
 
-    /** 缓存主键命名定义 */
+    /** 缓存定义 */
     @Override
-    public CacheConstants.CacheType getCacheKey() {
-        return CacheConstants.CacheType.SYS_CONFIG_KEY;
+    public CacheModel getCacheModel() {
+        return new CacheModel(CacheConstants.CacheType.SYS_CONFIG_KEY.getCode(), CacheConstants.CacheType.SYS_CONFIG_KEY.getIsTenant());
     }
 
     /**

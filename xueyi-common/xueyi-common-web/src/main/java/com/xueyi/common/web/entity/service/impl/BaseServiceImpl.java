@@ -222,7 +222,7 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      */
     @Override
     public void refreshCache() {
-        if (ObjectUtil.isNull(getCacheKey())) {
+        if (ObjectUtil.isNull(getCacheKey()) && ObjectUtil.isNull(getCacheModel())) {
             throw new UtilException("未正常配置缓存，无法使用!");
         }
         List<D> allList = baseManager.selectList(null);

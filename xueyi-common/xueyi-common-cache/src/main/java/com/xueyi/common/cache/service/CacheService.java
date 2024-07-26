@@ -2,6 +2,7 @@ package com.xueyi.common.cache.service;
 
 import cn.hutool.core.map.MapUtil;
 import com.xueyi.common.cache.constant.CacheConstants;
+import com.xueyi.common.core.utils.cache.CacheUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.redis.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> T getCusCacheObject(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheConstants.CacheType.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
         T object = redisService.getCacheObject(key);
         if (ObjectUtil.isNull(object)) {
             refreshCusCache(consumer);
@@ -70,7 +71,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> Set<T> getCusCacheSet(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheConstants.CacheType.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
         Set<T> cacheSet = redisService.getCacheSet(key);
         if (ObjectUtil.isNull(cacheSet)) {
             refreshCusCache(consumer);
@@ -98,7 +99,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> List<T> getCusCacheList(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheConstants.CacheType.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
         List<T> cacheSet = redisService.getCacheList(key);
         if (ObjectUtil.isNull(cacheSet)) {
             refreshCusCache(consumer);
@@ -126,7 +127,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> Map<String, T> getCusCacheMap(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheConstants.CacheType.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
         Map<String, T> map = redisService.getCacheMap(key);
         if (MapUtil.isEmpty(map)) {
             refreshCusCache(consumer);
@@ -156,7 +157,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> T getCusCacheObject(String cacheCode, Boolean isTenant, Supplier<Object> consumer, String code) {
-        String key = CacheConstants.CacheType.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
         T object = redisService.getCacheMapValue(key, code);
         if (ObjectUtil.isNull(object)) {
             refreshCusCache(consumer);
