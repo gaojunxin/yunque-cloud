@@ -17,6 +17,7 @@
   import { treeToList } from '@/utils/helper/treeHelper';
   import { Spin } from 'ant-design-vue';
   import { parseRowKey } from '../../helper';
+  import { warn } from '@/utils/log/LogUtil';
 
   export default defineComponent({
     name: 'EditableCell',
@@ -283,6 +284,7 @@
               });
             } catch (e) {
               result = false;
+              warn(e);
             } finally {
               spinning.value = false;
             }
