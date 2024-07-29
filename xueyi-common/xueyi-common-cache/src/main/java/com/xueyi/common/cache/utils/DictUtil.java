@@ -88,7 +88,9 @@ public class DictUtil {
             value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
                     getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
         }
-        Object obj = ClassUtil.isCollection(clazz)
+        Object obj = ClassUtil.equals(Object.class, clazz)
+                ? value
+                : ClassUtil.isCollection(clazz)
                 ? JSON.parseArray(value, clazz)
                 : ClassUtil.isSimpleType(clazz)
                 ? ConvertUtil.convert(clazz, value, defaultValue)
@@ -163,7 +165,6 @@ public class DictUtil {
         }
         return value;
     }
-
 
     /**
      * 获取导入配置缓存
