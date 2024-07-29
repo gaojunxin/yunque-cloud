@@ -32,14 +32,17 @@
   import { LoadingOutlined } from '@ant-design/icons-vue';
   import { useI18n } from '@/hooks/web/useI18n';
   import { propTypes } from '@/utils/propTypes';
-  import type { Recordable } from '@xueyi/types';
   import { useDebounceFn } from '@vueuse/core';
 
   type OptionsItem = { label?: string; value?: string; disabled?: boolean; [name: string]: any };
 
   type ApiSearchOption = {
+    // 展示搜索
+    show?: boolean;
     // 待搜索字段名
     searchName?: string;
+    // 是否允许空搜索
+    emptySearch?: boolean;
     // 搜索前置方法
     beforeFetch?: (value?: string) => Promise<string>;
     // 拦截方法
@@ -178,7 +181,13 @@
       if (props.alwaysLoad) {
         await fetch();
       } else if (!props.immediate && !unref(isFirstLoaded)) {
-        await fetch();
+        // 动态搜索查询时，允许控制初始不加载数据
+        if (!(!!props.apiSearch && !!props.apiSearch.show && !props.apiSearch.emptySearch)) {
+          await fetch();
+        } else {
+          optionsRef.value = [];
+          emitChange();
+        }
       }
     }
   }
@@ -189,8 +198,8 @@
     if (!props.apiSearch) {
       return;
     }
-    const { searchName, beforeFetch, interceptFetch } = props.apiSearch;
-    if (!searchName) {
+    const { show, searchName, beforeFetch, interceptFetch } = props.apiSearch;
+    if (!show || !searchName) {
       return;
     }
 
