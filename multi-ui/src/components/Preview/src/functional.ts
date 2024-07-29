@@ -11,8 +11,13 @@ export function createImgPreview(options: Options) {
   const container = document.createElement('div');
   Object.assign(propsData, { show: true, index: 0, scaleStep: 100 }, options);
 
-  instance = createVNode(ImgPreview, propsData);
-  render(instance, container);
-  document.body.appendChild(container);
+  if (instance?.component) {
+    // 存在实例时，更新props
+    Object.assign(instance.component.props, propsData);
+  } else {
+    instance = createVNode(ImgPreview, propsData);
+    render(instance, container);
+    document.body.appendChild(container);
+  }
   return instance.component?.exposed;
 }
