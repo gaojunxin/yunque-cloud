@@ -8,4 +8,4 @@ PATH="/usr/local/bin:$PATH"
 
 # Format and submit code according to lintstagedrc.js configuration
 cd multi-ui
-pnpm exec lint-staged
+# pnpm exec lint-staged

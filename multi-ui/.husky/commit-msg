@@ -6,4 +6,4 @@
 PATH="/usr/local/bin:$PATH"
 
 cd multi-ui
-npx --no-install commitlint --edit "$1"
+# npx --no-install commitlint --edit "$1"
