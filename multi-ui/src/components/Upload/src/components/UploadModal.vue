@@ -58,7 +58,7 @@
   import { useMessage } from '@/hooks/web/useMessage';
   //   types
   import { FileItem, UploadResultStatus } from '../types/typing';
-  import { basicProps } from '../props';
+  import { basicProps, handleFnKey } from '../props';
   import { createActionColumn, createTableColumns } from './data';
   // utils
   import { checkImgType, getBase64WithFile } from '../helper';
@@ -163,13 +163,13 @@
   }
 
   // 删除
-  function handleRemove(record: FileItem) {
-    const index = fileListRef.value.findIndex((item) => item.uuid === record.uuid);
-    index !== -1 && fileListRef.value.splice(index, 1);
-    isUploadingRef.value = fileListRef.value.some(
-      (item) => item.status === UploadResultStatus.UPLOADING,
-    );
-    emit('delete', record);
+  function handleRemove(obj: Record<handleFnKey, any>) {
+    let { record = {}, uidKey = 'uid' } = obj;
+    const index = fileListRef.value.findIndex((item) => item[uidKey] === record[uidKey]);
+    if (index !== -1) {
+      const removed = fileListRef.value.splice(index, 1);
+      emit('delete', removed[0][uidKey]);
+    }
   }
 
   async function uploadApiByItem(item: FileItem) {
