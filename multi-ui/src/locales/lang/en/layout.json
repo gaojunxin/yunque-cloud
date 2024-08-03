@@ -17,12 +17,7 @@
     "lockScreenPassword": "Lock screen password",
     "lockScreen": "Lock screen",
     "lockScreenBtn": "Locking",
-    "home": "Home",
-    "upgrade-prompt": {
-      "title": "New version released",
-      "content": "MultiSaas v3.3.4 preview version has been released",
-      "ok-text": "Go to new version"
-    }
+    "home": "Home"
   },
   "multipleTab": {
     "reload": "Refresh current",
