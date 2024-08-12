@@ -1,6 +1,7 @@
 package com.xueyi.common.datasource.annotation;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.basic.TenantConstants;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -15,9 +16,12 @@ import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
  *
  * @author xueyi
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @DS(ISOLATE)
 public @interface Isolate {
+
+    /** 策略组类型 */
+    TenantConstants.strategyType strategyType() default TenantConstants.strategyType.DEFAULT;
 }

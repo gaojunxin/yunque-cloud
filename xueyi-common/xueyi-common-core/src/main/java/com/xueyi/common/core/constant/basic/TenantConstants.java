@@ -33,19 +33,26 @@ public class TenantConstants {
     @AllArgsConstructor
     public enum Source {
 
-        MASTER("master", "默认数据源"), SLAVE("slave", "从数据源"), REGISTER("slave", "注册数据源");
+        MASTER("master", "默认数据源"),
+        SLAVE("slave", "从数据源"),
+        REGISTER("slave", "注册数据源");
 
         private final String code;
         private final String info;
 
     }
 
-    /** 源同步策略类型 */
+    /**
+     * 策略组类型
+     * 除DEFAULT外，请跟字典表 te_strategy_source_type 保持一致
+     * 自定义增加新类型时，调整字典表 te_strategy_source_type 对应数据值，并在此处增加对应枚举后即可生效
+     * 默认策略：默认策略下，所有租户均使用默认数据源
+     */
     @Getter
     @AllArgsConstructor
-    public enum SyncType {
+    public enum strategyType {
 
-        UNCHANGED("0", "不变"), REFRESH("1", "刷新"), ADD("2", "新增"), DELETE("3", "删除");
+        DEFAULT("default", "默认策略");
 
         private final String code;
         private final String info;

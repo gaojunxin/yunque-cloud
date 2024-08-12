@@ -1,9 +1,6 @@
 /** 数据源主页路由 */
 export const SourceIndexGo = 'eebe7073cbe54614baec1507c90795a5';
 
-/** 数据源详情页路由 */
-export const SourceDetailGo = '55b4eab094a540a6b0ad4584108566ef';
-
 /** 数据源默认驱动 */
 export const DRIVER_CLASSNAME = 'com.mysql.cj.jdbc.Driver';
 

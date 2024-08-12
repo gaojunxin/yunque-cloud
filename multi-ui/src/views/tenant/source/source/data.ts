@@ -11,12 +11,12 @@ import { Tag } from 'ant-design-vue';
 import { isNotEmpty } from '@/utils/core/ObjectUtil';
 
 /** 字典查询 */
-export const dictMap = await dicDictList([DicCodeEnum.SYS_YES_NO, 'sys_normal_disable']);
+export const dictMap = await dicDictList([DicCodeEnum.SYS_YES_NO, DicCodeEnum.SYS_NORMAL_DISABLE]);
 
 /** 字典表 */
 export const dict: any = {
   DicYesNoOptions: dictMap[DicCodeEnum.SYS_YES_NO],
-  DicNormalDisableOptions: dictMap['sys_normal_disable'],
+  DicNormalDisableOptions: dictMap[DicCodeEnum.SYS_NORMAL_DISABLE],
 };
 
 /** 表格数据 */
@@ -24,7 +24,7 @@ export const columns: BasicColumn[] = [
   {
     title: '数据源名称',
     dataIndex: 'name',
-    width: 220,
+    width: 120,
   },
   {
     title: '数据源编码',
@@ -33,12 +33,12 @@ export const columns: BasicColumn[] = [
       const data = record as SourceIM;
       return h(Tag, { color: ColorEnum.ORANGE }, () => data.slave);
     },
-    width: 280,
+    width: 100,
   },
   {
     title: '状态',
     dataIndex: 'status',
-    width: 220,
+    width: 80,
     customRender: ({ record }) => {
       const data = record as SourceIM;
       return dictConversion(dict.DicNormalDisableOptions, data.status);
@@ -47,7 +47,7 @@ export const columns: BasicColumn[] = [
   {
     title: '默认数据源',
     dataIndex: 'isDefault',
-    width: 220,
+    width: 100,
     customRender: ({ record }) => {
       const data = record as SourceIM;
       return dictConversion(dict.DicYesNoOptions, data.isDefault);
@@ -56,7 +56,7 @@ export const columns: BasicColumn[] = [
   {
     title: '创建时间',
     dataIndex: 'createTime',
-    width: 220,
+    width: 120,
   },
 ];
 
@@ -173,37 +173,37 @@ export const detailSchema: DescItem[] = [
   {
     label: '数据源名称',
     field: 'name',
-    span: 8,
+    span: 12,
   },
   {
     label: '数据源编码',
     field: 'slave',
-    span: 8,
+    span: 12,
   },
   {
     label: '驱动',
     field: 'driverClassName',
-    span: 8,
+    span: 24,
   },
   {
     label: '连接地址',
     field: 'urlPrepend',
-    span: 8,
+    span: 24,
   },
   {
     label: '连接参数',
     field: 'urlAppend',
-    span: 8,
+    span: 24,
   },
   {
     label: '用户名',
     field: 'userName',
-    span: 8,
+    span: 12,
   },
   {
     label: '显示顺序',
     field: 'sort',
-    span: 8,
+    span: 12,
   },
   {
     label: '状态',
@@ -211,12 +211,7 @@ export const detailSchema: DescItem[] = [
     render: (val) => {
       return dictConversion(dict.DicNormalDisableOptions, val);
     },
-    span: 8,
-  },
-  {
-    label: '备注',
-    field: 'remark',
-    span: 8,
+    span: 12,
   },
   {
     label: '默认数据源',
@@ -224,6 +219,11 @@ export const detailSchema: DescItem[] = [
     render: (val) => {
       return dictConversion(dict.DicYesNoOptions, val);
     },
-    span: 8,
+    span: 12,
+  },
+  {
+    label: '备注',
+    field: 'remark',
+    span: 12,
   },
 ];

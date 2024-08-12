@@ -1,8 +1,10 @@
 package com.xueyi.tenant.api.source.domain.po;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,7 +18,7 @@ import java.io.Serial;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("te_strategy")
+@TableName(value = "te_strategy", autoResultMap = true)
 public class TeStrategyPo extends BaseEntity {
 
     @Serial
@@ -29,6 +31,10 @@ public class TeStrategyPo extends BaseEntity {
     /** 数据源编码 */
     @TableField(updateStrategy = FieldStrategy.NEVER)
     protected String sourceSlave;
+
+    /** 策略组类型配置信息 */
+    @TableField(typeHandler = FastjsonTypeHandler.class)
+    protected JSONObject sourceTypeInfo;
 
     /** 默认策略（Y是 N否） */
     @TableField(updateStrategy = FieldStrategy.NEVER)

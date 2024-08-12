@@ -19,6 +19,15 @@
         >
           删除
         </a-button>
+        <a-button
+          :preIcon="IconEnum.RESET"
+          v-auth="StrategyAuth.EDIT"
+          @click="handleRefresh"
+          type="primary"
+          color="error"
+        >
+          刷新缓存
+        </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -46,25 +55,28 @@
         />
       </template>
     </BasicTable>
-    <StrategyModal @register="registerModal" @success="handleSuccess" />
+    <RefreshDrawer @register="refreshRegisterDrawer" @success="handleSuccess" />
+    <DetailDrawer @register="detailRegisterDrawer" />
   </div>
 </template>
 
 <script setup lang="ts">
   import { reactive } from 'vue';
-  import { delStrategyApi, listStrategyApi } from '@/api/tenant/source/strategy.api';
-  import { useModal } from '@/components/Modal';
+  import {
+    delStrategyApi,
+    listStrategyApi,
+    refreshStrategyApi,
+  } from '@/api/tenant/source/strategy.api';
   import { useMessage } from '@/hooks/web/useMessage';
   import { IconEnum } from '@/enums';
   import { BasicTable, TableAction, useTable } from '@/components/Table';
   import { StrategyAuth } from '@/auth/tenant/source';
-  import { columns, searchFormSchema } from './strategy.data';
-  import { StrategyDetailGo } from '@/enums/tenant/source';
-  import StrategyModal from './StrategyModal.vue';
-  import { useUserStore } from '@/store/modules/user';
+  import { columns, searchFormSchema } from './data';
+  import { useDrawer } from '@/components/Drawer';
+  import DetailDrawer from './Detail.vue';
+  import RefreshDrawer from './Drawer.vue';
 
   const { createMessage, createConfirm } = useMessage();
-  const [registerModal, { openModal }] = useModal();
   const state = reactive<{
     ids: string[];
     idNames: string;
@@ -72,8 +84,11 @@
     ids: [],
     idNames: '',
   });
+
+  const [refreshRegisterDrawer, { openDrawer: refreshOpenDrawer }] = useDrawer();
+  const [detailRegisterDrawer, { openDrawer: detailOpenDrawer }] = useDrawer();
   const [registerTable, { reload }] = useTable({
-    title: '源策略列表',
+    title: '源策略组列表',
     api: listStrategyApi,
     striped: false,
     useSearchForm: true,
@@ -109,19 +124,21 @@
 
   /** 查看按钮 */
   function handleView(record: Recordable) {
-    useUserStore().getRoutePath(StrategyDetailGo, record.id);
+    detailOpenDrawer(true, {
+      record,
+    });
   }
 
   /** 新增按钮 */
   function handleCreate() {
-    openModal(true, {
+    refreshOpenDrawer(true, {
       isUpdate: false,
     });
   }
 
   /** 修改按钮 */
   function handleEdit(record: Recordable) {
-    openModal(true, {
+    refreshOpenDrawer(true, {
       record,
       isUpdate: true,
     });
@@ -145,6 +162,11 @@
           }),
       });
     }
+  }
+
+  /** 刷新缓存按钮 */
+  function handleRefresh() {
+    refreshStrategyApi().then(() => createMessage.success('缓存刷新成功！'));
   }
 
   function handleSuccess() {

@@ -51,6 +51,7 @@ create table te_strategy (
   source_slave              varchar(200)	    not null	                            comment '数据源编码',
   sort                      int unsigned        default 0                               comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  source_type_info          json                                                        comment '策略组类型配置信息',
   remark                    varchar(200)        default null                            comment '备注',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
@@ -418,7 +419,8 @@ values (10001, '常规|性别', 'sys_user_sex', '常规|性别列表', '0', '1',
        (10029, '代码生成|源策略模式', 'gen_source_mode', '代码生成|源策略模式列表', '0', '1', 0),
        (10030, '系统服务|字典模块|数据类型', 'sys_dict_data_type', '系统服务|字典模块|数据类型列表', '0', '1', 0),
        (10031, '系统服务|字典模块|缓存类型', 'sys_dict_cache_type', '系统服务|字典模块|缓存类型列表', '0', '1', 0),
-       (10032, '常规|功能状态', 'sys_function_status', '常规|功能状态列表', '3', '1', 0);
+       (10032, '常规|功能状态', 'sys_function_status', '常规|功能状态列表', '3', '1', 0),
+(10033, '租户服务|策略模块|源策略|策略类型', 'te_strategy_source_type', '租户服务|策略模块|源策略|策略类型列表（additional_a控制是否必填（Y必填/N非必填））', '3', '1', 0);
 
 -- ----------------------------
 -- 11、字典数据表
@@ -582,6 +584,9 @@ values (1000101, 1, '男', '0', 'sys_user_sex', '', '', 'Y', '常规|性别：�
        (1003102, 2, '全局', '1', 'sys_dict_cache_type', '', 'blue', 'N', '系统服务|字典模块|缓存类型：全局', 0),
        (1003201, 1, '开启', 'Y', 'sys_function_status', '', 'blue', 'N', '常规|功能状态: 开启', 0),
        (1003202, 2, '关闭', 'N', 'sys_function_status', '', 'orange', 'Y', '常规|功能状态: 关闭', 0);
+
+insert into sys_dict_data (id, sort, label, value, code, additional_a, css_class, list_class, is_default, remark, tenant_id)
+values (1003301, 1, '业务源A', 'sourceType1', 'te_strategy_source_type', 'N', '', 'blue', 'N', '租户服务|策略模块|源策略|策略类型：业务源A（非必填）', 0);
 
 -- ----------------------------
 -- 12、参数配置表

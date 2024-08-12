@@ -1,15 +1,22 @@
 <template>
-  <BasicModal v-bind="$attrs" @register="registerModal" :title="getTitle" @ok="handleSubmit">
+  <BasicDrawer
+    v-bind="$attrs"
+    :title="getTitle"
+    @register="registerDrawer"
+    width="50%"
+    showFooter
+    @ok="handleSubmit"
+  >
     <BasicForm @register="registerForm" />
     <template #insertFooter>
       <a-button type="primary" danger @click="connection">连接测试</a-button>
     </template>
-  </BasicModal>
+  </BasicDrawer>
 </template>
 
 <script setup lang="ts">
   import { computed, ref, unref } from 'vue';
-  import { formSchema } from './source.data';
+  import { formSchema } from './data';
   import { useMessage } from '@/hooks/web/useMessage';
   import {
     addSourceApi,
@@ -17,9 +24,9 @@
     editSourceApi,
     getSourceApi,
   } from '@/api/tenant/source/source.api';
-  import { BasicModal, useModalInner } from '@/components/Modal';
   import { BasicForm, useForm } from '@/components/Form';
   import { SourceIM } from '@/model/tenant/source';
+  import { BasicDrawer, useDrawerInner } from '@/components/Drawer';
 
   const emit = defineEmits(['success', 'register']);
 
@@ -27,22 +34,23 @@
   const isUpdate = ref(true);
 
   const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
-    labelWidth: 100,
+    labelWidth: 120,
     schemas: formSchema,
     showActionButtonGroup: false,
   });
 
-  const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+  const [registerDrawer, { setDrawerProps, closeDrawer }] = useDrawerInner(async (data) => {
     resetFields();
-    setModalProps({ confirmLoading: false });
+    setDrawerProps({ loading: true, confirmLoading: false });
     isUpdate.value = !!data?.isUpdate;
 
     if (unref(isUpdate)) {
-      const source = await getSourceApi(data.record.id);
+      const sourceInfo = await getSourceApi(data.record.id);
       setFieldsValue({
-        ...source,
+        ...sourceInfo,
       });
     }
+    setDrawerProps({ loading: false });
   });
 
   /** 标题初始化 */
@@ -52,19 +60,19 @@
   async function handleSubmit() {
     try {
       const values: SourceIM = await validate();
-      setModalProps({ confirmLoading: true });
+      setDrawerProps({ confirmLoading: true });
       unref(isUpdate)
         ? await editSourceApi(values).then(() => {
-            closeModal();
+            closeDrawer();
             createMessage.success('编辑数据源成功！');
           })
         : await addSourceApi(values).then(() => {
-            closeModal();
+            closeDrawer();
             createMessage.success('新增数据源成功！');
           });
       emit('success');
     } finally {
-      setModalProps({ confirmLoading: false });
+      setDrawerProps({ confirmLoading: false });
     }
   }
 

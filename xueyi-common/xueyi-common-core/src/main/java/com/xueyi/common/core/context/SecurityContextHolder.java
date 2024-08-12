@@ -270,7 +270,7 @@ public class SecurityContextHolder {
      * 获取源策略组Id
      */
     public static Long getStrategyId() {
-        return ConvertUtil.toLong(get(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode()), SecurityConstants.EMPTY_TENANT_ID);
+        return ConvertUtil.toLong(get(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode()));
     }
 
     /**
@@ -287,7 +287,7 @@ public class SecurityContextHolder {
      * 记录上一次租户源策略组Id
      */
     private static void setLastStrategyId(Long strategyId) {
-        if (ObjectUtil.isNotNull(strategyId) && ObjectUtil.notEqual(SecurityConstants.EMPTY_TENANT_ID, strategyId)) {
+        if (ObjectUtil.isNotNull(strategyId)) {
             set(SecurityConstants.BaseSecurity.LAST_STRATEGY_ID.getCode(), strategyId.toString());
         }
     }

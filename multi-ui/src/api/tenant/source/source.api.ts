@@ -11,6 +11,7 @@ enum Api {
   EDIT = basicApi,
   EDIT_STATUS = basicApi + '/status',
   DEL_BATCH = basicApi + '/batch/',
+  REFRESH = basicApi + '/refresh',
 }
 
 /** 查询数据源列表 */
@@ -40,3 +41,6 @@ export const editStatusSourceApi = (id: string, status: any) =>
 /** 删除数据源 */
 export const delSourceApi = (ids: string | string[]) =>
   defHttp.delete({ url: Api.DEL_BATCH, params: ids.toString() });
+
+/** 刷新数据源缓存 */
+export const refreshSourceApi = () => defHttp.get({ url: Api.REFRESH });

@@ -42,8 +42,10 @@ public class SourceUtil {
         return Optional.ofNullable(getStrategyCache(strategyId)).map(strategyInfo -> {
             SysSource source = new SysSource();
             source.setId(strategyInfo.getId());
+            source.setStrategyId(strategyInfo.getId());
             source.setSourceId(strategyInfo.getSourceId());
             source.setMaster(strategyInfo.getSourceSlave());
+            source.setSourceTypeInfo(strategyInfo.getSourceTypeInfo());
             return source;
         }).orElseGet(() -> {
             log.error("【源策略组缓存】源策略组Id：{}对应的源策略信息不存在", strategyId);
