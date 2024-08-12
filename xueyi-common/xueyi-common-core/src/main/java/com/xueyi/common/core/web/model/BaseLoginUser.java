@@ -2,7 +2,6 @@ package com.xueyi.common.core.web.model;
 
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -45,7 +44,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
     protected Long userId;
 
     /** 用户名 */
-    @Getter
     protected String userName;
 
     /** 密码 */
@@ -93,6 +91,10 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
     private boolean credentialsNonExpired = true;
 
     private boolean enabled = true;
+
+    public String getUserName() {
+        return userName;
+    }
 
     @Override
     public String getUsername() {
