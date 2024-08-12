@@ -210,6 +210,27 @@ public class JwtUtil {
     }
 
     /**
+     * 根据令牌获取源策略组Id
+     *
+     * @param token 令牌
+     * @return 源策略组Id
+     */
+    public static String getStrategyId(String token) {
+        Claims claims = parseToken(token);
+        return getStrategyId(claims);
+    }
+
+    /**
+     * 根据令牌获取源策略组Id
+     *
+     * @param claims 身份信息
+     * @return 源策略组Id
+     */
+    public static String getStrategyId(Claims claims) {
+        return getValue(claims, SecurityConstants.BaseSecurity.STRATEGY_ID.getCode());
+    }
+
+    /**
      * 根据令牌获取租户策略源
      *
      * @param token 令牌

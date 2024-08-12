@@ -77,6 +77,7 @@ public class AuthFilter implements WebFilter {
         String enterpriseId = JwtUtil.getEnterpriseId(claims);
         String enterpriseName = JwtUtil.getEnterpriseName(claims);
         String isLessor = JwtUtil.getIsLessor(claims);
+        String strategyId = JwtUtil.getStrategyId(claims);
         String sourceName = JwtUtil.getSourceName(claims);
         String userId = JwtUtil.getUserId(claims);
         String userName = JwtUtil.getUserName(claims);
@@ -88,7 +89,7 @@ public class AuthFilter implements WebFilter {
         }
 
         switch (accountType) {
-            case ADMIN -> {
+            case ADMIN, EXTERNAL -> {
                 if (StrUtil.hasBlank(userId, userName, userType)) {
                     return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
                 }
@@ -103,6 +104,7 @@ public class AuthFilter implements WebFilter {
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode(), enterpriseName);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), accountType.getCode());
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.IS_LESSOR.getCode(), isLessor);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), strategyId);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), sourceName);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), accessTokenPrefix);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.REFRESH_TOKEN.getCode(), userKey);
