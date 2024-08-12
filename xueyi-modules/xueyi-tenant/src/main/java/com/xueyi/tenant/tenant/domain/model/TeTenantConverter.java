@@ -1,6 +1,7 @@
 package com.xueyi.tenant.tenant.domain.model;
 
 import com.xueyi.common.core.web.entity.model.BaseConverter;
+import com.xueyi.common.core.web.model.SysEnterprise;
 import com.xueyi.tenant.api.tenant.domain.dto.TeTenantDto;
 import com.xueyi.tenant.api.tenant.domain.po.TeTenantPo;
 import com.xueyi.tenant.api.tenant.domain.query.TeTenantQuery;
@@ -14,4 +15,6 @@ import org.mapstruct.MappingConstants;
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TeTenantConverter extends BaseConverter<TeTenantQuery, TeTenantDto, TeTenantPo> {
+
+    SysEnterprise mapper(TeTenantDto dto);
 }

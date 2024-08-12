@@ -7,6 +7,17 @@
         <option name="sourceFilePath" value="multi-ui/Dockerfile" />
       </settings>
     </deployment>
-    <method v="2" />
+    <method v="2">
+      <option name="NpmBeforeRunTask" enabled="true">
+        <package-json value="$PROJECT_DIR$/multi-ui/package.json" />
+        <command value="run" />
+        <scripts>
+          <script value="build" />
+        </scripts>
+        <node-interpreter value="project" />
+        <package-manager value="pnpm" />
+        <envs />
+      </option>
+    </method>
   </configuration>
 </component>

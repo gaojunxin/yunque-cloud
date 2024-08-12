@@ -42,7 +42,7 @@ public class DSUtil {
         } else if (checkHasDs(sourceName)) {
             return sourceName;
         }
-        TeSourceDto source = SourceUtil.getTeSourceCache(sourceName);
+        TeSourceDto source = SourceUtil.getSourceCache(sourceName);
         if (ObjectUtil.isNull(source)) {
             throw new UtilException("数据源缓存不存在！");
         }
