@@ -11,9 +11,9 @@ import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.system.api.model.DataScope;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.organize.domain.dto.SysUserDto;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ import java.util.Map;
 @Component
 public class TokenUserService implements ITokenService<SysUserDto, LoginUser> {
 
-    @Autowired
+    @Resource
     private RedisService redisService;
 
     /**

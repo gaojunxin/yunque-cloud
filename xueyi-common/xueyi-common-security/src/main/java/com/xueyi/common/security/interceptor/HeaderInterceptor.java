@@ -35,6 +35,7 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             SecurityContextHolder.setNickName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.NICK_NAME.getCode()));
             SecurityContextHolder.setUserType(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_TYPE.getCode()));
             SecurityContextHolder.setAccessToken(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode()));
+            SecurityContextHolder.setStrategyId(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.STRATEGY_ID.getCode()));
             SecurityContextHolder.setSourceName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode()));
             SecurityContextHolder.setUserKey(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_KEY.getCode()));
             SecurityContextHolder.setTenantIgnore(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.TENANT_IGNORE.getCode()));

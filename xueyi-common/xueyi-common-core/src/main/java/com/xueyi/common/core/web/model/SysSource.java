@@ -18,10 +18,13 @@ public class SysSource extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 源策略Id */
-    Long sourceId;
+    /** 源策略组Id */
+    protected Long strategyId;
+
+    /** 数据源Id */
+    protected  Long sourceId;
 
     /** 主写源 */
-    String master;
+    protected String master;
 
 }

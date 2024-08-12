@@ -32,121 +32,92 @@ import java.util.Optional;
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 public class SecurityUtils {
 
-    /**
-     * 获取企业Id
-     */
+    /** 获取企业Id */
     public static Long getEnterpriseId() {
         return SecurityContextHolder.getEnterpriseId();
     }
 
-    /**
-     * 获取企业名称
-     */
+    /** 获取企业名称 */
     public static String getEnterpriseName() {
         return SecurityContextHolder.getEnterpriseName();
     }
 
-    /**
-     * 获取租户权限标识
-     */
+    /** 获取租户权限标识 */
     public static String getIsLessor() {
         return SecurityContextHolder.getIsLessor();
     }
 
-    /**
-     * 获取用户Id
-     */
+    /** 获取用户Id */
     public static Long getUserId() {
         return SecurityContextHolder.getUserId();
     }
 
-    /**
-     * 获取用户名称
-     */
+    /** 获取用户名称 */
     public static String getUserName() {
         return SecurityContextHolder.getUserName();
     }
 
-    /**
-     * 获取用户昵称
-     */
+    /** 获取用户昵称 */
     public static String getNickName() {
         return SecurityContextHolder.getNickName();
     }
 
-    /**
-     * 获取用户权限标识
-     */
+    /** 获取用户权限标识 */
     public static String getUserType() {
         return SecurityContextHolder.getUserType();
     }
 
-    /**
-     * 获取租户策略源
-     */
+    /** 获取租户源策略组Id */
+    public static Long getStrategyId() {
+        return SecurityContextHolder.getStrategyId();
+    }
+
+    /** 获取租户策略源 */
     public static String getSourceName() {
         return SecurityContextHolder.getSourceName();
     }
 
-    /**
-     * 获取用户key
-     */
+    /** 获取用户key */
     public static String getUserKey() {
         return SecurityContextHolder.getUserKey();
     }
 
-    /**
-     * 获取账户类型
-     */
+    /** 获取账户类型 */
     public static String getAccountTypeStr() {
         return SecurityContextHolder.getAccountType();
     }
 
-    /**
-     * 获取账户类型 枚举
-     */
+    /** 获取账户类型 枚举 */
     public static SecurityConstants.AccountType getAccountType() {
         return SecurityConstants.AccountType.getByCodeElseNull(SecurityContextHolder.getAccountType());
     }
 
-    /**
-     * 获取企业信息
-     */
+    /** 获取企业信息 */
     public static SysEnterprise getEnterprise() {
         return getTokenService().getEnterprise();
     }
 
-    /**
-     * 获取用户信息
-     */
+    /** 获取用户信息 */
     public static <User> User getUser() {
         return (User) getTokenService().getUser();
     }
 
-    /**
-     * 获取源策略信息
-     */
+    /** 获取源策略信息 */
     public static SysSource getSource() {
         return getTokenService().getSource();
     }
 
-    /**
-     * 获取登录用户信息
-     */
+    /** 获取登录用户信息 */
     public static <LoginUser extends BaseLoginUser<?>> LoginUser getLoginUser() {
         return (LoginUser) getTokenService().getLoginUser();
     }
 
-    /**
-     * 获取请求token
-     */
+    /** 获取请求token */
     public static String getToken() {
         return getToken(Objects.requireNonNull(ServletUtil.getRequest()));
     }
 
-    /**
-     * 根据request获取请求token
-     */
+    /** 根据request获取请求token */
     public static String getToken(HttpServletRequest request) {
         // 从header获取token标识 | 优先识别补充Token
         String token = request.getHeader(TokenConstants.SUPPLY_AUTHORIZATION);
@@ -215,59 +186,43 @@ public class SecurityUtils {
         }
     }
 
-    /**
-     * 裁剪token前缀
-     */
+    /** 裁剪token前缀 */
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
         return StrUtil.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX) ? token.replaceFirst(TokenConstants.PREFIX, StrUtil.EMPTY) : token;
     }
 
-    /**
-     * 是否为公共租户
-     */
+    /** 是否为公共租户 */
     public static boolean isCommonTenant() {
         return ObjectUtil.equals(SecurityConstants.COMMON_TENANT_ID, getEnterpriseId());
     }
 
-    /**
-     * 是否为空租户信息
-     */
+    /** 是否为空租户信息 */
     public static boolean isEmptyTenant() {
         return ObjectUtil.equals(SecurityConstants.EMPTY_TENANT_ID, getEnterpriseId());
     }
 
-    /**
-     * 是否不为空租户信息
-     */
+    /** 是否不为空租户信息 */
     public static boolean isNotEmptyTenant() {
         return !isEmptyTenant();
     }
 
-    /**
-     * 是否为超管租户
-     */
+    /** 是否为超管租户 */
     public static boolean isAdminTenant() {
         return StrUtil.equals(SecurityConstants.TenantType.ADMIN.getCode(), getIsLessor());
     }
 
-    /**
-     * 是否不为超管租户
-     */
+    /** 是否不为超管租户 */
     public static boolean isNotAdminTenant() {
         return !isAdminTenant();
     }
 
-    /**
-     * 是否为超管用户
-     */
+    /** 是否为超管用户 */
     public static boolean isAdminUser() {
         return StrUtil.equals(SecurityConstants.UserType.ADMIN.getCode(), getUserType());
     }
 
-    /**
-     * 是否不为超管用户
-     */
+    /** 是否不为超管用户 */
     public static boolean isNotAdminUser() {
         return !isAdminUser();
     }

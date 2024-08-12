@@ -20,7 +20,7 @@ public class SysEnterprise extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 策略Id */
+    /** 源策略组Id */
     protected Long strategyId;
 
     /** 名称 */
@@ -47,12 +47,12 @@ public class SysEnterprise extends BaseEntity {
     /** 企业自定义域名 */
     protected String domainName;
 
-    public static boolean isNotLessor(String userType) {
-        return !isLessor(userType);
-    }
-
     public boolean isLessor() {
         return isLessor(getIsLessor());
+    }
+
+    public static boolean isNotLessor(String userType) {
+        return !isLessor(userType);
     }
 
     public static boolean isLessor(String isLessor) {

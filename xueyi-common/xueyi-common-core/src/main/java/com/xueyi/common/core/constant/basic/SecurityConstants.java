@@ -48,6 +48,9 @@ public class SecurityConstants {
     /** 企业类型 */
     public static final String IS_LESSOR = "is_lessor";
 
+    /** 租户源策略组Id */
+    public static final String STRATEGY_ID = "strategy_id";
+
     /** 租户策略源名称 */
     public static final String SOURCE_NAME = "source_name";
 
@@ -68,7 +71,6 @@ public class SecurityConstants {
 
     /** {noop} 加密的特征码 */
     public static final String NOOP = "{noop}";
-
 
     /** 用户类型 */
     @Getter
@@ -138,18 +140,23 @@ public class SecurityConstants {
         CLIENT_CREDENTIALS("client_credentials", "客户端模式"),
         PASSWORD("password", "密码模式"),
         WECHAT_MP("wechat_mp", "微信公众号模式"),
-        WECHAT_MA("wechat_ma", "微信小程序模式"),
+        WECHAT_MA("MP-WEIXIN", "微信小程序模式"),
+        TIKTOK_MA("MP-TOUTIAO", "抖音小程序模式"),
         REFRESH_TOKEN("refresh_token", "刷新模式");
 
         private final String code;
         private final String info;
 
-        public static boolean isClient(String code) {
-            return StrUtil.equals(CLIENT_CREDENTIALS.code, code);
+        public static GrantType getByCode(String code) {
+            return EnumUtil.getByCode(GrantType.class, code);
         }
 
         public static GrantType getByCodeElseNull(String code) {
             return EnumUtil.getByCodeElseNull(GrantType.class, code);
+        }
+
+        public static boolean isClient(String code) {
+            return StrUtil.equals(CLIENT_CREDENTIALS.code, code);
         }
     }
 
@@ -166,12 +173,12 @@ public class SecurityConstants {
         private final String code;
         private final String info;
 
-        public static SecurityConstants.AccountType getByCode(String code) {
-            return EnumUtil.getByCode(SecurityConstants.AccountType.class, code);
+        public static AccountType getByCode(String code) {
+            return EnumUtil.getByCode(AccountType.class, code);
         }
 
-        public static SecurityConstants.AccountType getByCodeElseNull(String code) {
-            return EnumUtil.getByCodeElseNull(SecurityConstants.AccountType.class, code);
+        public static AccountType getByCodeElseNull(String code) {
+            return EnumUtil.getByCodeElseNull(AccountType.class, code);
         }
 
         /** 管理端用户 */
@@ -214,12 +221,7 @@ public class SecurityConstants {
     @AllArgsConstructor
     public enum LoginMemberParam {
 
-        CODE("code", "code"),
-        SIGNATURE("signature", "signature"),
-        SESSION_KEY("sessionKey", "完整用户信息的加密数据"),
-        ENCRYPTED_DATA("encryptedData", "完整用户信息的加密数据"),
-        iv("iv", "加密算法的初始向量"),
-        SECRET("secret", "平台账户Token");
+        ;
 
         private final String code;
         private final String info;
@@ -233,6 +235,19 @@ public class SecurityConstants {
 
         ENTERPRISE_ID("enterpriseId", "企业Id"),
         APP_ID("appId", "应用Id");
+
+        private final String code;
+        private final String info;
+
+    }
+
+    /** 外系统账户 - 登陆参数 */
+    @Getter
+    @AllArgsConstructor
+    public enum LoginExternalParam {
+
+        SIGNATURE("signature", "签名"),
+        SECRET("secret", "令牌");
 
         private final String code;
         private final String info;
@@ -265,6 +280,8 @@ public class SecurityConstants {
         USER_TYPE("user_type", "用户类型"),
         USER_KEY("user_key", "用户标识"),
         SOURCE("source", "租户策略源"),
+        STRATEGY_ID(SecurityConstants.STRATEGY_ID, "租户源策略组Id"),
+        LAST_STRATEGY_ID("last_strategy_id", "上一次租户源策略组Id"),
         SOURCE_NAME(SecurityConstants.SOURCE_NAME, "租户策略源名称"),
         LAST_SOURCE_NAME("last_source_name", "上一次租户策略源名称"),
         USER_INFO("user_info", "登录用户"),

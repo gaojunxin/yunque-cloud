@@ -1,5 +1,7 @@
 package com.xueyi.common.security.service;
 
+import com.xueyi.common.cache.utils.EnterpriseUtil;
+import com.xueyi.common.cache.utils.SourceUtil;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TokenConstants;
 import com.xueyi.common.core.utils.JwtUtil;
@@ -30,7 +32,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.xueyi.common.cache.constant.CacheConstants.*;
+import static com.xueyi.common.cache.constant.CacheConstants.ACCESS_TIME;
+import static com.xueyi.common.cache.constant.CacheConstants.EXPIRATION;
+import static com.xueyi.common.cache.constant.CacheConstants.REFRESH_TIME;
 
 /**
  * token控制器
@@ -175,6 +179,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
         claimsMap.put(SecurityConstants.BaseSecurity.USER_NAME.getCode(), loginUser.getUserName());
         claimsMap.put(SecurityConstants.BaseSecurity.NICK_NAME.getCode(), loginUser.getNickName());
         claimsMap.put(SecurityConstants.BaseSecurity.USER_TYPE.getCode(), loginUser.getUserType());
+        claimsMap.put(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), loginUser.getStrategyId());
         claimsMap.put(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), loginUser.getSourceName());
         claimsMap.put(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), loginUser.getAccountType().getCode());
 
@@ -207,9 +212,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
         // 默认构建
         loginMap.put(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), loginUser.getAccessToken());
         loginMap.put(SecurityConstants.BaseSecurity.REFRESH_TOKEN.getCode(), loginUser.getRefreshToken());
-        loginMap.put(SecurityConstants.BaseSecurity.ENTERPRISE.getCode(), loginUser.getEnterprise());
         loginMap.put(SecurityConstants.BaseSecurity.USER.getCode(), loginUser.getUser());
-        loginMap.put(SecurityConstants.BaseSecurity.SOURCE.getCode(), loginUser.getSource());
         loginMap.put(SecurityConstants.BaseSecurity.EXPIRE_TIME.getCode(), getExpireTime(loginUser.getLoginTime()));
         loginMap.put(SecurityConstants.BaseSecurity.USER_INFO.getCode(), loginUser);
         loginMap.put(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), loginUser.getAccountType().getCode());
@@ -254,14 +257,8 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @return 企业信息
      */
     default SysEnterprise getEnterprise(String token) {
-        try {
-            if (StrUtil.isNotBlank(token)) {
-                String key = JwtUtil.getUserKey(token);
-                return getRedisService().getCacheMapValue(key, SecurityConstants.BaseSecurity.ENTERPRISE.getCode());
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
+        return Optional.ofNullable(token).filter(StrUtil::isNotBlank).map(this::getLoginUser)
+                .map(BaseLoginUser::getEnterpriseId).map(EnterpriseUtil::getEnterpriseCache).orElse(null);
     }
 
     /**
@@ -340,7 +337,6 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     default void setLoginUser(LoginUser loginUser) {
         if (ObjectUtil.isNotNull(loginUser)) {
             Map<String, Object> loginMap = new HashMap<>();
-            loginMap.put(SecurityConstants.BaseSecurity.ENTERPRISE.getCode(), loginUser.getEnterprise());
             loginMap.put(SecurityConstants.BaseSecurity.USER.getCode(), loginUser.getUser());
             loginMap.put(SecurityConstants.BaseSecurity.USER_INFO.getCode(), loginUser);
             if (StrUtil.isNotBlank(loginUser.getRefreshToken())) {
@@ -375,13 +371,8 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @return 源策略信息
      */
     default SysSource getSource(String token) {
-        try {
-            if (StrUtil.isNotBlank(token)) {
-                return getRedisService().getCacheMapValue(JwtUtil.getUserKey(token), SecurityConstants.BaseSecurity.SOURCE.getCode());
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
+        return Optional.ofNullable(token).filter(StrUtil::isNotBlank).map(this::getLoginUser)
+                .map(BaseLoginUser::getStrategyId).map(SourceUtil::getSourceCache).orElse(null);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.xueyi.common.core.web.model;
 
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
@@ -44,6 +45,7 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
     protected Long userId;
 
     /** 用户名 */
+    @Getter
     protected String userName;
 
     /** 密码 */
@@ -57,6 +59,9 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
 
     /** 用户标识 */
     protected String userType;
+
+    /** 源策略组Id */
+    protected Long strategyId;
 
     /** 主数据源 */
     protected String sourceName;
@@ -89,10 +94,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
 
     private boolean enabled = true;
 
-    public String getUserName() {
-        return userName;
-    }
-
     @Override
     public String getUsername() {
         return userName;
@@ -110,7 +111,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
 
     /** 初始化企业信息 */
     public void initEnterprise(SysEnterprise enterprise) {
-        setEnterprise(enterprise);
         setEnterpriseId(enterprise.getId());
         setEnterpriseName(enterprise.getName());
         setIsLessor(enterprise.getIsLessor());
@@ -118,7 +118,7 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
 
     /** 初始化数据源信息 */
     public void initSource(SysSource source) {
-        setSource(source);
+        setStrategyId(source.getStrategyId());
         setSourceName(source.getMaster());
     }
 }
