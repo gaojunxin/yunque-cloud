@@ -1,5 +1,6 @@
 package com.xueyi.common.web.entity.manager.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.SqlConstants;
@@ -19,7 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.xueyi.common.core.constant.basic.SqlConstants.*;
+import static com.xueyi.common.core.constant.basic.SqlConstants.ANCESTORS_FIND;
+import static com.xueyi.common.core.constant.basic.SqlConstants.ANCESTORS_PART_UPDATE;
+import static com.xueyi.common.core.constant.basic.SqlConstants.Entity;
+import static com.xueyi.common.core.constant.basic.SqlConstants.NONE_FIND;
+import static com.xueyi.common.core.constant.basic.SqlConstants.TREE_LEVEL_UPDATE;
 
 /**
  * 数据封装层处理 树型通用数据处理
@@ -106,10 +111,11 @@ public class TreeManagerImpl<Q extends P, D extends P, P extends TreeEntity<D>, 
         if (StrUtil.equals(newAncestors, oldAncestors)) {
             return NumberUtil.Zero;
         }
-        return baseMapper.update(null, updateChildrenWrapper(dto, Wrappers.<P>lambdaUpdate()
-                .setSql(StrUtil.format(ANCESTORS_PART_UPDATE, Entity.ANCESTORS.getCode(), Entity.ANCESTORS.getCode(), NumberUtil.One, oldAncestors.length(), newAncestors))
+        LambdaUpdateWrapper<P> updateWrapper = updateChildrenWrapper(dto);
+        updateWrapper.setSql(StrUtil.format(ANCESTORS_PART_UPDATE, Entity.ANCESTORS.getCode(), Entity.ANCESTORS.getCode(), NumberUtil.One, oldAncestors.length(), newAncestors))
                 .setSql(StrUtil.format(TREE_LEVEL_UPDATE, Entity.LEVEL.getCode(), Entity.LEVEL.getCode(), dto.getLevelChange()))
-                .likeRight(P::getAncestors, oldAncestors)));
+                .likeRight(P::getAncestors, oldAncestors);
+        return baseMapper.update(updateWrapper);
     }
 
     /**
@@ -122,15 +128,16 @@ public class TreeManagerImpl<Q extends P, D extends P, P extends TreeEntity<D>, 
     public int updateChildren(D dto) {
         String newAncestors = dto.getChildAncestors();
         String oldAncestors = dto.getOldChildAncestors();
-        return baseMapper.update(null, updateChildrenWrapper(dto, Wrappers.<P>lambdaUpdate()
-                .set(P::getStatus, dto.getStatus())
+        LambdaUpdateWrapper<P> updateWrapper = updateChildrenWrapper(dto);
+        updateWrapper.set(P::getStatus, dto.getStatus())
                 .func(i -> {
                     if (StrUtil.notEquals(newAncestors, oldAncestors)) {
                         i.setSql(StrUtil.format(ANCESTORS_PART_UPDATE, Entity.ANCESTORS.getCode(), Entity.ANCESTORS.getCode(), NumberUtil.One, oldAncestors.length(), newAncestors))
                                 .setSql(StrUtil.format(TREE_LEVEL_UPDATE, Entity.LEVEL.getCode(), Entity.LEVEL.getCode(), dto.getLevelChange()));
                     }
                 })
-                .likeRight(P::getAncestors, oldAncestors)));
+                .likeRight(P::getAncestors, oldAncestors);
+        return baseMapper.update(updateWrapper);
     }
 
     /**
