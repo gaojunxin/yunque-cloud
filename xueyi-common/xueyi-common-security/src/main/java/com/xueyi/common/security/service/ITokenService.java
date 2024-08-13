@@ -243,6 +243,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 获取企业信息
      *
+     * @param request 请求
      * @return 企业信息
      */
     default SysEnterprise getEnterprise(HttpServletRequest request) {
@@ -257,8 +258,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @return 企业信息
      */
     default SysEnterprise getEnterprise(String token) {
-        return Optional.ofNullable(token).filter(StrUtil::isNotBlank).map(this::getLoginUser)
-                .map(BaseLoginUser::getEnterpriseId).map(EnterpriseUtil::getEnterpriseCache).orElse(null);
+        return Optional.ofNullable(getLoginUserSingle(token)).map(BaseLoginUser::getEnterpriseId).map(EnterpriseUtil::getEnterpriseCache).orElse(null);
     }
 
     /**
@@ -273,6 +273,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 获取用户信息
      *
+     * @param request 请求
      * @return 用户信息
      */
     default User getUser(HttpServletRequest request) {
@@ -284,6 +285,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 获取用户信息
      *
+     * @param token 令牌
      * @return 用户信息
      */
     default User getUser(String token) {
@@ -297,18 +299,19 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     }
 
     /**
-     * 获取用户身份信息
+     * 获取登陆身份信息
      *
-     * @return 用户信息
+     * @return 登陆信息
      */
     default LoginUser getLoginUser() {
         return getLoginUser(ServletUtil.getRequest());
     }
 
     /**
-     * 获取用户身份信息
+     * 获取登陆身份信息
      *
-     * @return 用户信息
+     * @param request 请求
+     * @return 登陆信息
      */
     default LoginUser getLoginUser(HttpServletRequest request) {
         // 获取请求携带的令牌
@@ -317,18 +320,17 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     }
 
     /**
-     * 获取用户身份信息
+     * 获取登陆身份信息
      *
-     * @return 用户信息
+     * @param token 令牌
+     * @return 登陆信息
      */
     default LoginUser getLoginUser(String token) {
-        try {
-            if (StrUtil.isNotBlank(token)) {
-                return getRedisService().getCacheMapValue(JwtUtil.getUserKey(token), SecurityConstants.BaseSecurity.USER_INFO.getCode());
-            }
-        } catch (Exception ignored) {
-        }
-        return null;
+        return Optional.ofNullable(getLoginUserSingle(token)).map(item -> {
+            item.setEnterprise(EnterpriseUtil.getEnterpriseCache(item.getEnterpriseId()));
+            item.setSource(SourceUtil.getSourceCacheByEnterpriseId(item.getEnterpriseId()));
+            return item;
+        }).orElse(null);
     }
 
     /**
@@ -357,6 +359,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 获取源策略信息
      *
+     * @param request 请求
      * @return 源策略信息
      */
     default SysSource getSource(HttpServletRequest request) {
@@ -368,15 +371,17 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 获取源策略信息
      *
+     * @param token 令牌
      * @return 源策略信息
      */
     default SysSource getSource(String token) {
-        return Optional.ofNullable(token).filter(StrUtil::isNotBlank).map(this::getLoginUser)
-                .map(BaseLoginUser::getStrategyId).map(SourceUtil::getSourceCache).orElse(null);
+        return Optional.ofNullable(getLoginUserSingle(token)).map(BaseLoginUser::getStrategyId).map(SourceUtil::getSourceCache).orElse(null);
     }
 
     /**
      * 删除用户缓存信息
+     *
+     * @param token 令牌
      */
     default void delLogin(String token) {
         if (StrUtil.isNotBlank(token)) {
@@ -386,6 +391,8 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
 
     /**
      * 验证令牌有效期，自动刷新缓存
+     *
+     * @param request 请求
      */
     default void refreshToken(HttpServletRequest request) {
         refreshToken(SecurityUtils.getToken(request));
@@ -394,7 +401,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
     /**
      * 刷新令牌有效期
      *
-     * @param token token
+     * @param token 令牌
      */
     default void refreshToken(String token) {
         Claims claims = JwtUtil.parseToken(token);
@@ -441,5 +448,21 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * 获取登陆身份信息
+     *
+     * @param token 令牌
+     * @return 登陆信息
+     */
+    default LoginUser getLoginUserSingle(String token) {
+        try {
+            if (StrUtil.isNotBlank(token)) {
+                return getRedisService().getCacheMapValue(JwtUtil.getUserKey(token), SecurityConstants.BaseSecurity.USER_INFO.getCode());
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 }
