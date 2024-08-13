@@ -91,13 +91,13 @@ export const useUserStore = defineStore({
       return !this.isLessor;
     },
     isLessor(): boolean {
-      return this.enterpriseInfo !== null && this.enterpriseInfo.isLessor === TenantTypeEnum.ADMIN;
+      return this.enterpriseInfo?.isLessor === TenantTypeEnum.ADMIN;
     },
     isNotAdmin(): boolean {
       return !this.isAdmin;
     },
     isAdmin(): boolean {
-      return this.userInfo !== null && this.userInfo.userType === UserTypeEnum.ADMIN;
+      return this.userInfo?.userType === UserTypeEnum.ADMIN;
     },
   },
   actions: {

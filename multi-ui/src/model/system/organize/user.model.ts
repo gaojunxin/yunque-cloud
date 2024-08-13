@@ -1,7 +1,7 @@
 import { BaseEntity, BasicFetchResult, BasicPageParams } from '@/model';
 import { RoleLM } from '../authority';
 import { PostIM } from './post.model';
-import { DicStatusEnum } from '@/enums';
+import { DicStatusEnum, UserTypeEnum } from '@/enums';
 
 /** user item model */
 export interface UserIM extends BaseEntity {
@@ -13,7 +13,8 @@ export interface UserIM extends BaseEntity {
   code: string;
   userName: string;
   nickName: string;
-  userType: string;
+  /** 用户类型（00超管用户 01普通用户） */
+  userType: UserTypeEnum;
   /** 状态（0正常 1停用） */
   status: DicStatusEnum;
   avatar: string;
@@ -42,7 +43,8 @@ export interface UserPM extends BaseEntity {
   code?: string;
   userName?: string;
   nickName?: string;
-  userType?: string;
+  /** 用户类型（00超管用户 01普通用户） */
+  userType?: UserTypeEnum;
   /** 状态（0正常 1停用） */
   status?: DicStatusEnum;
   avatar?: string;

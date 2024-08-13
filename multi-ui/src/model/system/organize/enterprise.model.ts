@@ -1,5 +1,5 @@
 import { BaseEntity, BasicFetchResult, BasicPageParams } from '@/model';
-import { DicStatusEnum, DicYesNoEnum } from '@/enums';
+import { DicStatusEnum, DicYesNoEnum, TenantTypeEnum } from '@/enums';
 
 /** enterprise item model */
 export interface EnterpriseIM extends BaseEntity {
@@ -18,7 +18,7 @@ export interface EnterpriseIM extends BaseEntity {
   /** 企业账号修改次数 */
   nameFrequency: number;
   /** 超管租户（Y是 N否） */
-  isLessor: DicYesNoEnum;
+  isLessor: TenantTypeEnum;
   /** 状态（0正常 1停用） */
   status: DicStatusEnum;
   /** 企业自定义域名 */
@@ -43,7 +43,7 @@ export interface EnterprisePM extends BaseEntity {
   /** 企业名称 */
   nick?: string;
   /** 超管租户（Y是 N否） */
-  isLessor?: DicYesNoEnum;
+  isLessor?: TenantTypeEnum;
   /** 状态（0正常 1停用） */
   status?: DicStatusEnum;
   /** 默认企业（Y是 N否） */
