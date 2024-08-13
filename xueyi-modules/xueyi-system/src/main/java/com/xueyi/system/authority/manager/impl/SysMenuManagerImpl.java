@@ -174,13 +174,11 @@ public class SysMenuManagerImpl extends TreeManagerImpl<SysMenuQuery, SysMenuDto
     /**
      * 修改条件构造 | 树子数据修改
      *
-     * @param menu          数据传输对象
-     * @param updateWrapper 更新条件构造器
+     * @param menu 数据传输对象
      * @return 条件构造器
      */
     @Override
-    protected LambdaUpdateWrapper<SysMenuPo> updateChildrenWrapper(SysMenuDto menu, LambdaUpdateWrapper<SysMenuPo> updateWrapper) {
-        updateWrapper.set(SysMenuPo::getModuleId, menu.getModuleId());
-        return updateWrapper;
+    protected LambdaUpdateWrapper<SysMenuPo> updateChildrenWrapper(SysMenuDto menu) {
+        return Wrappers.<SysMenuPo>lambdaUpdate().set(SysMenuPo::getModuleId, menu.getModuleId());
     }
 }

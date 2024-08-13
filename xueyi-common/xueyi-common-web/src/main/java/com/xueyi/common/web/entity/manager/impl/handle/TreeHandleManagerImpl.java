@@ -1,6 +1,7 @@
 package com.xueyi.common.web.entity.manager.impl.handle;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xueyi.common.core.web.entity.base.TreeEntity;
 import com.xueyi.common.core.web.entity.model.BaseConverter;
 import com.xueyi.common.web.entity.manager.impl.BaseManagerImpl;
@@ -20,11 +21,10 @@ public class TreeHandleManagerImpl<Q extends P, D extends P, P extends TreeEntit
     /**
      * 修改条件构造 | 树子数据修改
      *
-     * @param dto           数据传输对象
-     * @param updateWrapper 更新条件构造器
+     * @param dto 数据传输对象
      * @return 条件构造器
      */
-    protected LambdaUpdateWrapper<P> updateChildrenWrapper(D dto, LambdaUpdateWrapper<P> updateWrapper) {
-        return updateWrapper;
+    protected LambdaUpdateWrapper<P> updateChildrenWrapper(D dto) {
+        return Wrappers.lambdaUpdate();
     }
 }
