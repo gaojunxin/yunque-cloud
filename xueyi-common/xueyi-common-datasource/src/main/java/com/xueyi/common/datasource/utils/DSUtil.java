@@ -48,7 +48,7 @@ public class DSUtil {
             String sourceName = SecurityUtils.getSourceName();
             if (StrUtil.isBlank(sourceName)) {
                 SysSource source = SourceUtil.getSourceCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-                sourceName = source.getSourceName();
+                sourceName = source.getMaster();
             }
             return loadDs(sourceName);
         } else {
