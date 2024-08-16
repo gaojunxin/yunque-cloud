@@ -28,9 +28,9 @@ import { SelectValue } from 'ant-design-vue/es/select';
 export const dictMap = await dicDictList([
   'auth_frame_type',
   DicCodeEnum.SYS_YES_NO,
-  'sys_show_hide',
+  DicCodeEnum.SYS_SHOW_HIDE,
   'auth_menu_type',
-  'sys_normal_disable',
+  DicCodeEnum.SYS_NORMAL_DISABLE,
   'sys_common_private',
 ]);
 
@@ -38,9 +38,9 @@ export const dictMap = await dicDictList([
 export const dict: any = {
   DicAuthFrameTypeOptions: dictMap['auth_frame_type'],
   DicYesNoOptions: dictMap[DicCodeEnum.SYS_YES_NO],
-  DicShowHideOptions: dictMap['sys_show_hide'],
+  DicShowHideOptions: dictMap[DicCodeEnum.SYS_SHOW_HIDE],
   DicAuthMenuTypeOptions: dictMap['auth_menu_type'],
-  DicNormalDisableOptions: dictMap['sys_normal_disable'],
+  DicNormalDisableOptions: dictMap[DicCodeEnum.SYS_NORMAL_DISABLE],
   DicCommonPrivateOptions: dictMap['sys_common_private'],
 };
 
@@ -124,7 +124,7 @@ export const columns: BasicColumn[] = [
   {
     title: '菜单图标',
     dataIndex: 'icon',
-    width: 100,
+    width: 90,
     customRender: ({ record }) => {
       const data = record as MenuIM;
       return h(Icon, { icon: data.icon });
@@ -133,7 +133,7 @@ export const columns: BasicColumn[] = [
   {
     title: '显示顺序',
     dataIndex: 'sort',
-    width: 100,
+    width: 90,
   },
   {
     title: '菜单类型',
@@ -147,7 +147,7 @@ export const columns: BasicColumn[] = [
   {
     title: '状态',
     dataIndex: 'status',
-    width: 120,
+    width: 80,
     customRender: ({ record }) => {
       const data = record as MenuIM;
       return dictConversion(dict.DicNormalDisableOptions, data.status);
@@ -156,7 +156,7 @@ export const columns: BasicColumn[] = [
   {
     title: '归属模块',
     dataIndex: 'enterpriseInfo.nick',
-    width: 220,
+    width: 120,
     customRender: ({ record }) => {
       const data = record as MenuIM;
       return h(Tag, { color: ColorEnum.GREEN }, () => data?.module?.name);
@@ -165,7 +165,7 @@ export const columns: BasicColumn[] = [
   {
     title: '公共菜单',
     dataIndex: 'isCommon',
-    width: 120,
+    width: 90,
     customRender: ({ record }) => {
       const data = record as MenuIM;
       return dictConversion(dict.DicCommonPrivateOptions, data.isCommon);
@@ -174,7 +174,7 @@ export const columns: BasicColumn[] = [
   {
     title: '归属企业',
     dataIndex: 'enterpriseInfo.nick',
-    width: 220,
+    width: 90,
     customRender: ({ record }) => {
       const data = record as MenuIM;
       return data.isCommon === DicCommonPrivateEnum.PRIVATE
@@ -266,47 +266,45 @@ export const formSchema: FormSchema[] = [
         labelField: 'name',
         valueField: 'id',
         onChange: (e: SelectValue) => {
-          (async () => {
-            if (formModel.moduleId !== e) {
-              const treeData =
-                e === undefined
-                  ? []
-                  : await getMenuRouteListApi({
-                      id: formModel.id,
-                      moduleId: e as string,
-                      menuTypeLimit: MenuTypeEnum.DETAILS,
-                      exNodes: formModel.id !== undefined,
-                      defaultNode: true,
-                    });
-              formModel.parentId = searchTree(treeData, formModel.parentId);
-              const { updateSchema } = formActionType;
-              updateSchema({
-                field: 'parentId',
-                componentProps: { treeData },
-              });
-            }
-
-            function searchTree(nodes, searchKey) {
-              for (let _i = 0; _i < nodes.length; _i++) {
-                if (nodes[_i].id === searchKey) {
-                  return nodes[_i].id;
-                } else {
-                  if (nodes[_i].children && nodes[_i].children.length > 0) {
-                    const res = searchTree(nodes[_i].children, searchKey);
-                    if (res) {
-                      return res;
-                    }
+          function searchTree(nodes, searchKey) {
+            for (let _i = 0; _i < nodes.length; _i++) {
+              if (nodes[_i].id === searchKey) {
+                return nodes[_i].id;
+              } else {
+                if (nodes[_i].children && nodes[_i].children.length > 0) {
+                  const res = searchTree(nodes[_i].children, searchKey);
+                  if (res) {
+                    return res;
                   }
                 }
               }
-              return undefined;
             }
+            return undefined;
+          }
+
+          (async () => {
+            const treeData =
+              e === undefined
+                ? []
+                : await getMenuRouteListApi({
+                    id: formModel.id,
+                    moduleId: e as string,
+                    menuTypeLimit: MenuTypeEnum.DETAILS,
+                    exNodes: formModel.id !== undefined,
+                    defaultNode: true,
+                  });
+            formModel.parentId = searchTree(treeData, formModel.parentId);
+            const { updateSchema } = formActionType;
+            updateSchema({
+              field: 'parentId',
+              componentProps: { treeData },
+            });
           })();
         },
       };
     },
     required: true,
-    colProps: { span: 24 },
+    colProps: { span: 12 },
   },
   {
     label: '父级菜单',
@@ -323,7 +321,7 @@ export const formSchema: FormSchema[] = [
       getPopupContainer: () => document.body,
     },
     required: true,
-    colProps: { span: 24 },
+    colProps: { span: 12 },
   },
   {
     label: '菜单名称',
@@ -353,7 +351,7 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: ({ values }) => isNotEmpty(values.id),
     required: () => useUserStore().isLessor,
     ifShow: () => useUserStore().isLessor,
-    colProps: { span: 13 },
+    colProps: { span: 12 },
   },
   {
     label: '租户名称',
@@ -371,7 +369,7 @@ export const formSchema: FormSchema[] = [
     dynamicDisabled: ({ values }) => isNotEmpty(values.id),
     ifShow: ({ values }) => values.isCommon === DicCommonPrivateEnum.PRIVATE,
     required: ({ values }) => values.isCommon === DicCommonPrivateEnum.PRIVATE,
-    colProps: { span: 11 },
+    colProps: { span: 12 },
   },
   {
     label: '状态',
@@ -393,7 +391,7 @@ export const formSchema: FormSchema[] = [
       options: dict.DicAuthMenuTypeOptions,
     },
     required: true,
-    colProps: { span: 24 },
+    colProps: { span: 12 },
   },
   {
     label: '页面类型',
@@ -405,7 +403,7 @@ export const formSchema: FormSchema[] = [
     },
     required: ({ values }) => isMenu(values.menuType),
     ifShow: ({ values }) => isMenu(values.menuType),
-    colProps: { span: 24 },
+    colProps: { span: 12 },
   },
   {
     label: '路由名称',

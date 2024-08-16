@@ -12,6 +12,8 @@ export enum DicCodeEnum {
   SYS_NORMAL_DISABLE = 'sys_normal_disable',
   // 是否
   SYS_YES_NO = 'sys_yes_no',
+  // 显隐
+  SYS_SHOW_HIDE = 'sys_show_hide',
   // 功能状态
   SYS_FUNCTION_STATUS = 'sys_function_status',
   // 公共私有
