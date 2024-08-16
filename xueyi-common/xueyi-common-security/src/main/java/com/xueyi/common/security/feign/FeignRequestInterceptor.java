@@ -58,9 +58,9 @@ public class FeignRequestInterceptor implements RequestInterceptor {
      * @param security        安全值
      */
     private <T extends SecurityConstants.ISecurityInterface> void setHeaderKey(RequestTemplate requestTemplate, Map<String, String> headers, T security) {
-        Optional.ofNullable(SecurityContextHolder.get(security.getCode())).filter(StrUtil::isNotBlank).ifPresentOrElse(info -> requestTemplate.header(security.getCode(), info),
+        Optional.ofNullable(SecurityContextHolder.get(security.getCode())).filter(StrUtil::isNotBlank).map(ServletUtil::urlEncode).ifPresentOrElse(info -> requestTemplate.header(security.getCode(), info),
                 () -> setHeaderKey(requestTemplate, headers, security.getCode()));
-        Optional.ofNullable(SecurityContextHolder.get(security.getBaseCode())).filter(StrUtil::isNotBlank).ifPresentOrElse(info -> requestTemplate.header(security.getBaseCode(), info),
+        Optional.ofNullable(SecurityContextHolder.get(security.getBaseCode())).filter(StrUtil::isNotBlank).map(ServletUtil::urlEncode).ifPresentOrElse(info -> requestTemplate.header(security.getBaseCode(), info),
                 () -> setHeaderKey(requestTemplate, headers, security.getBaseCode()));
     }
 
