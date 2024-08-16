@@ -27,8 +27,11 @@ public class DsIsolateExpressionProcessor extends DsProcessor {
 
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
-        return Optional.ofNullable(invocation.getThis()).map(Object::getClass)
-                .map(clazz -> AnnotationUtils.findAnnotation(clazz, Isolate.class))
-                .filter(ObjectUtil::isNotNull).map(DSUtil::loadDs).orElse(null);
+        return Optional.of(invocation.getMethod())
+                .map(method -> AnnotationUtils.findAnnotation(method, Isolate.class))
+                .filter(ObjectUtil::isNotNull).map(DSUtil::loadDs).orElseGet(() ->
+                        Optional.ofNullable(invocation.getThis()).map(Object::getClass)
+                                .map(clazz -> AnnotationUtils.findAnnotation(clazz, Isolate.class))
+                                .filter(ObjectUtil::isNotNull).map(DSUtil::loadDs).orElse(null));
     }
 }

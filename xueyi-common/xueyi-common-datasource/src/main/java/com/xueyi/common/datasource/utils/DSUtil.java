@@ -42,7 +42,6 @@ public class DSUtil {
      * @param isolate 租户策略源
      */
     public static String loadDs(Isolate isolate) {
-
         // 默认数据源
         if (ObjectUtil.equals(TenantConstants.strategyType.DEFAULT, isolate.strategyType())) {
             String sourceName = SecurityUtils.getSourceName();
