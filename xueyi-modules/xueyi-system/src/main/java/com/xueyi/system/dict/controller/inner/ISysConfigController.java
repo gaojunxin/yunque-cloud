@@ -29,50 +29,39 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/inner/config")
 public class ISysConfigController extends BSysConfigController {
 
-    /**
-     * 同步参数缓存 | 租户数据
-     *
-     * @return 结果
-     */
+    @InnerAuth(isAnonymous = true)
     @GetMapping(value = "/sync")
+    @Operation(summary = "同步参数缓存 | 租户数据")
     public R<Boolean> syncCacheInner() {
         return R.ok(baseService.syncCache());
     }
 
-    /**
-     * 刷新参数缓存 | 租户数据
-     */
     @Override
+    @InnerAuth(isAnonymous = true)
     @GetMapping("/refresh")
+    @Operation(summary = "刷新参数缓存 | 租户数据")
     @Log(title = "参数管理", businessType = BusinessType.REFRESH)
     public R<Boolean> refreshCacheInner() {
         return super.refreshCacheInner();
     }
 
-    /**
-     * 刷新参数缓存 | 默认数据
-     */
     @InnerAuth(isAnonymous = true)
     @GetMapping("/common/refresh")
+    @Operation(summary = "刷新参数缓存 | 默认数据")
     @Log(title = "参数管理", businessType = BusinessType.REFRESH)
     public R<Boolean> refreshCommonCacheInner() {
         SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         return super.refreshCacheInner();
     }
 
-    /**
-     * 查询参数对象
-     */
-    @Operation()
     @GetMapping("/code/{code}")
+    @Operation(summary = "查询参数对象")
     public R<SysConfigDto> getConfigByCodeInner(@PathVariable("code") String code) {
         return R.ok(baseService.selectConfigByCode(code));
     }
 
-    /**
-     * 参数修改
-     */
     @PutMapping
+    @Operation(summary = "参数修改")
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
     public R<Boolean> editInner(@Validated({V_E.class}) @RequestBody SysConfigDto config) {
         config.initOperate(BaseConstants.Operate.EDIT);
