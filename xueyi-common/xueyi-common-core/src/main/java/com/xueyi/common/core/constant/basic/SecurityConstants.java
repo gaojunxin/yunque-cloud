@@ -254,10 +254,13 @@ public class SecurityConstants {
 
     }
 
+    /** JWT信息解析默认前缀 */
+    public static final String TOKEN_SECURITY_PREFIX = "base_";
+
     /** 通用安全常量 */
     @Getter
     @AllArgsConstructor
-    public enum BaseSecurity {
+    public enum BaseSecurity implements ISecurityInterface {
         AUTHORIZATION_HEADER(SecurityConstants.AUTHORIZATION_HEADER, "授权信息"),
         SUPPLY_AUTHORIZATION_HEADER("supply-authorization", "补充授权信息"),
         CLIENT_ID("clientId", "客户端ID"),
@@ -269,7 +272,6 @@ public class SecurityConstants {
         REFRESH_TOKEN("refresh_token", "用户唯一标识 - 刷新令牌"),
         ENTERPRISE("enterprise", "企业信息"),
         ENTERPRISE_ID(SecurityConstants.ENTERPRISE_ID, "企业Id"),
-        LAST_ENTERPRISE_ID("last_enterprise_id", "上一次变更企业Id"),
         ENTERPRISE_NAME("enterprise_name", "企业账号"),
         PASSWORD("password", "用户密码"),
         USER("user", "用户信息"),
@@ -281,9 +283,7 @@ public class SecurityConstants {
         USER_KEY("user_key", "用户标识"),
         SOURCE("source", "租户策略源"),
         STRATEGY_ID(SecurityConstants.STRATEGY_ID, "租户源策略组Id"),
-        LAST_STRATEGY_ID("last_strategy_id", "上一次租户源策略组Id"),
-        SOURCE_NAME(SecurityConstants.SOURCE_NAME, "租户策略源名称"),
-        LAST_SOURCE_NAME("last_source_name", "上一次租户策略源名称"),
+        SOURCE_NAME(SecurityConstants.SOURCE_NAME, "租户主数据源名称"),
         USER_INFO("user_info", "登录用户"),
         ACCOUNT_TYPE("account_type", "账户类型"),
         TENANT_IGNORE("tenant_ignore", "租户控制忽略"),
@@ -297,7 +297,7 @@ public class SecurityConstants {
     /** 管理端安全常量 */
     @Getter
     @AllArgsConstructor
-    public enum AdminSecurity {
+    public enum AdminSecurity implements ISecurityInterface {
 
         DATA_SCOPE("data_scope", "数据权限"),
         MODULE_ROUTE("module_route", "模块路由列表"),
@@ -312,7 +312,7 @@ public class SecurityConstants {
     /** 会员端安全常量 */
     @Getter
     @AllArgsConstructor
-    public enum MemberSecurity {
+    public enum MemberSecurity implements ISecurityInterface {
 
         APPLICATION_ID("application_id", "应用Id"),
         APP_ID("app_id", "AppId");
@@ -325,12 +325,27 @@ public class SecurityConstants {
     /** 平台端安全常量 */
     @Getter
     @AllArgsConstructor
-    public enum PlatformSecurity {
+    public enum PlatformSecurity implements ISecurityInterface {
 
         APP_ID("app_id", "AppId");
 
         private final String code;
         private final String info;
 
+    }
+
+    /**
+     * 安全常量通用接口
+     */
+    public interface ISecurityInterface {
+
+        String getCode();
+
+        /**
+         * 获取JWT信息解析安全常量
+         */
+        default String getBaseCode() {
+            return TOKEN_SECURITY_PREFIX + getCode();
+        }
     }
 }

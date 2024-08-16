@@ -58,10 +58,10 @@ public class AuthAspect implements Ordered {
         if (!innerAuth.isAnonymous()) {
             // 用户信息验证
             if (ObjectUtil.isNotNull(innerAuth) && innerAuth.isUser()) {
-                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode());
-                String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getCode());
-                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
-                String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
+                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode());
+                String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getBaseCode());
+                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode());
+                String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode());
                 if ((StrUtil.hasBlank(enterpriseId, userId, sourceName, accountType))) {
                     log.warn("请求地址'{}'，没有设置用户信息", request.getRequestURI());
                     throw new InnerAuthException("没有设置用户信息，不允许访问");
@@ -85,16 +85,16 @@ public class AuthAspect implements Ordered {
         HttpServletRequest request = ServletUtil.getRequest();
         Assert.notNull(request, "request cannot be null");
         if (!adminAuth.isAnonymous()) {
-            String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
+            String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode());
             if (StrUtil.notEquals(SecurityConstants.AccountType.ADMIN.getCode(), accountType)) {
                 log.warn("请求地址'{}'，没有管理端访问权限", request.getRequestURI());
                 throw new InnerAuthException("没有管理端访问权限，不允许访问");
             }
             // 用户信息验证
             if (ObjectUtil.isNotNull(adminAuth) && adminAuth.isUser()) {
-                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode());
-                String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getCode());
-                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
+                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode());
+                String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getBaseCode());
+                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode());
                 if ((StrUtil.hasBlank(enterpriseId, userId, sourceName, accountType))) {
                     log.warn("请求地址'{}'，没有设置用户信息", request.getRequestURI());
                     throw new InnerAuthException("没有设置用户信息，不允许访问");
@@ -118,7 +118,7 @@ public class AuthAspect implements Ordered {
         HttpServletRequest request = ServletUtil.getRequest();
         Assert.notNull(request, "request cannot be null");
         if (!externalAuth.isAnonymous()) {
-            String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
+            String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode());
             if (StrUtil.notEquals(SecurityConstants.AccountType.EXTERNAL.getCode(), accountType)) {
                 log.warn("请求地址'{}'，没有外系统端访问权限", request.getRequestURI());
                 throw new InnerAuthException("没有外系统端访问权限，不允许访问");

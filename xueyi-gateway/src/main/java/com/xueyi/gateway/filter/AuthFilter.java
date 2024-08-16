@@ -5,6 +5,8 @@ import com.xueyi.common.core.constant.basic.TokenConstants;
 import com.xueyi.common.core.utils.JwtUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
+import com.xueyi.common.core.utils.jwt.JwtMemberUtil;
+import com.xueyi.common.core.utils.jwt.JwtPlatformUtil;
 import com.xueyi.common.core.utils.servlet.ServletUtil;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.gateway.config.properties.IgnoreWhiteProperties;
@@ -74,50 +76,75 @@ public class AuthFilter implements WebFilter {
             return unauthorizedResponse(exchange, chain, isWhites, "登录状态已过期");
         }
 
-        String enterpriseId = JwtUtil.getEnterpriseId(claims);
-        String enterpriseName = JwtUtil.getEnterpriseName(claims);
-        String isLessor = JwtUtil.getIsLessor(claims);
-        String strategyId = JwtUtil.getStrategyId(claims);
-        String sourceName = JwtUtil.getSourceName(claims);
-        String userId = JwtUtil.getUserId(claims);
-        String userName = JwtUtil.getUserName(claims);
-        String nickName = JwtUtil.getNickName(claims);
-        String userType = JwtUtil.getUserType(claims);
+        // JWT解析信息
+        String baseEnterpriseId = JwtUtil.getEnterpriseId(claims);
+        String baseEnterpriseName = JwtUtil.getEnterpriseName(claims);
+        String baseIsLessor = JwtUtil.getIsLessor(claims);
+        String baseStrategyId = JwtUtil.getStrategyId(claims);
+        String baseSourceName = JwtUtil.getSourceName(claims);
+        String baseUserId = JwtUtil.getUserId(claims);
+        String baseUserName = JwtUtil.getUserName(claims);
+        String baseNickName = JwtUtil.getNickName(claims);
+        String baseUserType = JwtUtil.getUserType(claims);
 
-        if (StrUtil.hasBlank(enterpriseId, enterpriseName, isLessor, sourceName)) {
+        if (StrUtil.hasBlank(baseEnterpriseId, baseEnterpriseName, baseIsLessor, baseSourceName)) {
             return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
         }
 
         switch (accountType) {
             case ADMIN, EXTERNAL -> {
-                if (StrUtil.hasBlank(userId, userName, userType)) {
+                if (StrUtil.hasBlank(baseUserId, baseUserName, baseUserType)) {
                     return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
                 }
+            }
+            case MEMBER -> {
+                String applicationId = JwtMemberUtil.getApplicationId(claims);
+                String appId = JwtMemberUtil.getAppId(claims);
+
+                if (StrUtil.hasBlank(appId)) {
+                    return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
+                }
+
+                ServletUtil.addHeader(mutate, SecurityConstants.MemberSecurity.APPLICATION_ID.getBaseCode(), applicationId);
+                ServletUtil.addHeader(mutate, SecurityConstants.MemberSecurity.APP_ID.getBaseCode(), appId);
+            }
+            case PLATFORM -> {
+                String appId = JwtPlatformUtil.getAppId(claims);
+
+                if (StrUtil.hasBlank(appId)) {
+                    return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
+                }
+
+                ServletUtil.addHeader(mutate, SecurityConstants.PlatformSecurity.APP_ID.getBaseCode(), appId);
             }
             default -> {
                 return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
             }
         }
 
-        // 设置用户信息到请求
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode(), enterpriseId);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode(), enterpriseName);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), accountType.getCode());
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.IS_LESSOR.getCode(), isLessor);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), strategyId);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), sourceName);
+        // 设置Token解析信息到请求
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode(), baseEnterpriseId);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getBaseCode(), baseEnterpriseName);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode(), accountType.getCode());
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.IS_LESSOR.getBaseCode(), baseIsLessor);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.STRATEGY_ID.getBaseCode(), baseStrategyId);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode(), baseSourceName);
+
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_ID.getBaseCode(), baseUserId);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_NAME.getBaseCode(), baseUserName);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.NICK_NAME.getBaseCode(), baseNickName);
+        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_TYPE.getBaseCode(), baseUserType);
+
+        // 令牌信息
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), accessTokenPrefix);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.REFRESH_TOKEN.getCode(), userKey);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_KEY.getCode(), userKey);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_ID.getCode(), userId);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_NAME.getCode(), userName);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.NICK_NAME.getCode(), nickName);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_TYPE.getCode(), userType);
 
         // 内部请求来源参数清除
         ServletUtil.removeHeader(mutate, SecurityConstants.BaseSecurity.FROM_SOURCE.getCode());
-        if (!isWhites)
+        if (!isWhites) {
             ServletUtil.removeHeader(mutate, TokenConstants.SUPPLY_AUTHORIZATION);
+        }
         return chain.filter(exchange);
     }
 

@@ -25,21 +25,22 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
     @SneakyThrows
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
-            String accountType = ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
+            setSecurityContext(request, SecurityConstants.BaseSecurity.ENTERPRISE_ID);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.ENTERPRISE_NAME);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.IS_LESSOR);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.USER_ID);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.USER_NAME);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.NICK_NAME);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.USER_TYPE);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.STRATEGY_ID);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.SOURCE_NAME);
+            setSecurityContext(request, SecurityConstants.BaseSecurity.ACCOUNT_TYPE);
 
-            SecurityContextHolder.setEnterpriseId(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode()));
-            SecurityContextHolder.setEnterpriseName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode()));
-            SecurityContextHolder.setIsLessor(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.IS_LESSOR.getCode()));
-            SecurityContextHolder.setUserId(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_ID.getCode()));
-            SecurityContextHolder.setUserName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_NAME.getCode()));
-            SecurityContextHolder.setNickName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.NICK_NAME.getCode()));
-            SecurityContextHolder.setUserType(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_TYPE.getCode()));
             SecurityContextHolder.setAccessToken(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode()));
-            SecurityContextHolder.setStrategyId(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.STRATEGY_ID.getCode()));
-            SecurityContextHolder.setSourceName(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode()));
             SecurityContextHolder.setUserKey(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.USER_KEY.getCode()));
             SecurityContextHolder.setTenantIgnore(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.TENANT_IGNORE.getCode()));
-            SecurityContextHolder.setAccountType(accountType);
+
+            String accountType = SecurityContextHolder.getAccountType();
 
             // 刷新用户有效期
             if (StrUtil.isNotBlank(accountType)) {
@@ -53,5 +54,16 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
     @SneakyThrows
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         SecurityContextHolder.remove();
+    }
+
+    /**
+     * 设置安全上下文
+     *
+     * @param request  请求
+     * @param security 安全值
+     */
+    private <T extends SecurityConstants.ISecurityInterface> void setSecurityContext(HttpServletRequest request, T security) {
+        SecurityContextHolder.set(security.getCode(), ServletUtil.getHeader(request, security.getCode()));
+        SecurityContextHolder.set(security.getBaseCode(), ServletUtil.getHeader(request, security.getBaseCode()));
     }
 }

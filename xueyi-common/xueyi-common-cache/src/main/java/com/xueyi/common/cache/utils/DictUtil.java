@@ -85,7 +85,7 @@ public class DictUtil {
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_CONFIG_KEY;
-            value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
+            value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID, () ->
                     getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
         }
         Object obj = ClassUtil.equals(Object.class, clazz)
@@ -132,7 +132,7 @@ public class DictUtil {
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_DICT_KEY;
-            dictList = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
+            dictList = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID, () ->
                     getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), code));
         }
         return dictList;
@@ -160,7 +160,7 @@ public class DictUtil {
             }
         } else {
             ConfigConstants.CacheType commonCacheType = ConfigConstants.CacheType.TE_IM_EX_KEY;
-            value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID.toString(), () ->
+            value = SecurityContextHolder.setEnterpriseIdFun(SecurityConstants.COMMON_TENANT_ID, () ->
                     getCacheService().getCacheObject(commonCacheType.getCode(), commonCacheType.getIsTenant(), commonCacheType.getConsumer(), exCode));
         }
         return value;

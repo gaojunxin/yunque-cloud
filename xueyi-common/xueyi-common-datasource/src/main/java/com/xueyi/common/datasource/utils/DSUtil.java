@@ -5,16 +5,16 @@ import com.baomidou.dynamic.datasource.creator.DataSourceProperty;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.xueyi.common.cache.utils.SourceUtil;
-import com.xueyi.common.core.constant.basic.TenantConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.exception.UtilException;
 import com.xueyi.common.core.utils.core.CollUtil;
+import com.xueyi.common.core.utils.core.ConvertUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.SpringUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
-import com.xueyi.common.core.web.model.SysSource;
 import com.xueyi.common.datasource.annotation.Isolate;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,25 +42,31 @@ public class DSUtil {
      * @param isolate 租户策略源
      */
     public static String loadDs(Isolate isolate) {
-        // 默认数据源
-        if (ObjectUtil.equals(TenantConstants.strategyType.DEFAULT, isolate.strategyType())) {
-            String sourceName = SecurityUtils.getSourceName();
-            if (StrUtil.isBlank(sourceName)) {
-                SysSource source = SourceUtil.getSourceCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-                sourceName = source.getMaster();
-            }
-            return loadDs(sourceName);
-        } else {
-            Long strategyId = SecurityUtils.getStrategyId();
-            SysSource source = ObjectUtil.isNotNull(strategyId)
-                    ? SourceUtil.getSourceCache(strategyId)
-                    : SourceUtil.getSourceCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-            String sourceName = Optional.ofNullable(source).map(SysSource::getSourceTypeInfo).map(item -> item.getString(isolate.strategyType().getCode())).orElseGet(() -> {
-                log.error("【源管理工具类】数据源策略组类型：{}不存在", isolate.strategyType().getCode());
-                return null;
-            });
-            return loadDs(sourceName);
+        // 判定是否自定义数据源
+        String sourceName = SecurityContextHolder.get(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
+        // 判定是否自定义源策略组Id
+        if (StrUtil.isBlank(sourceName)) {
+            sourceName = Optional.ofNullable(SecurityContextHolder.get(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode())).filter(StrUtil::isNotBlank)
+                    .map(ConvertUtil::toLong).filter(ObjectUtil::isNotNull).map(SourceUtil::getSourceCache)
+                    .map(source -> source.getSourceSlave(isolate.strategyType())).orElse(null);
         }
+        // 判定是否自定义租户Id
+        if (StrUtil.isBlank(sourceName)) {
+            sourceName = Optional.ofNullable(SecurityContextHolder.get(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode())).filter(StrUtil::isNotBlank)
+                    .map(ConvertUtil::toLong).filter(ObjectUtil::isNotNull).map(SourceUtil::getSourceCacheByEnterpriseId)
+                    .map(source -> source.getSourceSlave(isolate.strategyType())).orElse(null);
+        }
+        // 取Token默认数据源
+        if (StrUtil.isBlank(sourceName)) {
+            sourceName = switch (isolate.strategyType()) {
+                case DEFAULT -> SecurityContextHolder.get(SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode());
+                default ->
+                        Optional.ofNullable(SecurityContextHolder.get(SecurityConstants.BaseSecurity.STRATEGY_ID.getBaseCode()))
+                                .filter(StrUtil::isNotBlank).map(ConvertUtil::toLong).filter(ObjectUtil::isNotNull).map(SourceUtil::getSourceCache)
+                                .map(source -> source.getSourceSlave(isolate.strategyType())).orElse(null);
+            };
+        }
+        return loadDs(sourceName);
     }
 
     /**

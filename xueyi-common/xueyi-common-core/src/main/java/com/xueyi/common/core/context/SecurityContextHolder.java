@@ -26,90 +26,32 @@ public class SecurityContextHolder {
      * 获取企业Id
      */
     public static Long getEnterpriseId() {
-        return ConvertUtil.toLong(get(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode()), SecurityConstants.EMPTY_TENANT_ID);
+        return ConvertUtil.toLong(getInfoBySecurity(SecurityConstants.BaseSecurity.ENTERPRISE_ID), SecurityConstants.EMPTY_TENANT_ID);
     }
 
     /**
      * 设置企业Id
      */
     public static void setEnterpriseId(String enterpriseId) {
-        Long lastEnterpriseId = getEnterpriseId();
         set(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode(), enterpriseId);
-        // 记录上一次企业Id
-        Optional.ofNullable(lastEnterpriseId).filter(item -> ObjectUtil.isNotNull(item) && ObjectUtil.notEqual(SecurityConstants.EMPTY_TENANT_ID, item))
-                .ifPresent(key -> set(SecurityConstants.BaseSecurity.LAST_ENTERPRISE_ID.getCode(), key.toString()));
     }
 
     /**
-     * 回滚上一次企业Id | 如若无上一次则不变更
+     * 清除自定义企业Id
      */
     public static void rollLastEnterpriseId() {
-        Optional.ofNullable(get(SecurityConstants.BaseSecurity.LAST_ENTERPRISE_ID.getCode())).filter(StrUtil::isNotBlank)
-                .ifPresent(SecurityContextHolder::setEnterpriseId);
+        set(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode(), StrUtil.EMPTY);
     }
 
     /**
      * 指定租户方法执行 | Supplier
      *
      * @param enterpriseId 租户Id
-     * @param sourceName   策略源名称
      * @param supplier     SupplierFun
      * @return 返回结果
      */
-    public static <T> T setEnterpriseFun(Long enterpriseId, String sourceName, Supplier<T> supplier) {
-        return setEnterpriseFun(enterpriseId, sourceName, supplier, Boolean.TRUE);
-    }
-
-    /**
-     * 指定租户方法执行 | Supplier
-     *
-     * @param enterpriseId 租户Id
-     * @param sourceName   策略源名称
-     * @param supplier     SupplierFun
-     * @param isExecute    是否执行控制
-     */
-    public static <T> T setEnterpriseFun(Long enterpriseId, String sourceName, Supplier<T> supplier, Boolean isExecute) {
-        if (isExecute) {
-            Optional.ofNullable(enterpriseId).filter(ObjectUtil::isNotNull).map(Object::toString).ifPresent(SecurityContextHolder::setEnterpriseId);
-            Optional.ofNullable(sourceName).filter(StrUtil::isNotBlank).ifPresent(SecurityContextHolder::setSourceName);
-        }
-        T info = supplier.get();
-        if (isExecute) {
-            Optional.ofNullable(enterpriseId).filter(ObjectUtil::isNotNull).ifPresent(str -> rollLastEnterpriseId());
-            Optional.ofNullable(sourceName).filter(StrUtil::isNotBlank).ifPresent(str -> rollLastSourceName());
-        }
-        return info;
-    }
-
-    /**
-     * 指定租户方法执行 | Runnable
-     *
-     * @param enterpriseId 租户Id
-     * @param sourceName   策略源名称
-     * @param runnable     RunnableFun
-     */
-    public static void setEnterpriseFun(Long enterpriseId, String sourceName, Runnable runnable) {
-        setEnterpriseFun(enterpriseId, sourceName, runnable, Boolean.TRUE);
-    }
-
-    /**
-     * 指定租户方法执行 | Runnable
-     *
-     * @param enterpriseId 租户Id
-     * @param sourceName   策略源名称
-     * @param runnable     RunnableFun
-     * @param isExecute    是否执行控制
-     */
-    public static void setEnterpriseFun(Long enterpriseId, String sourceName, Runnable runnable, Boolean isExecute) {
-        if (isExecute) {
-            Optional.ofNullable(enterpriseId).filter(ObjectUtil::isNotNull).map(Object::toString).ifPresent(SecurityContextHolder::setEnterpriseId);
-            Optional.ofNullable(sourceName).filter(StrUtil::isNotBlank).ifPresent(SecurityContextHolder::setSourceName);
-        }
-        runnable.run();
-        if (isExecute) {
-            Optional.ofNullable(enterpriseId).filter(ObjectUtil::isNotNull).ifPresent(str -> rollLastEnterpriseId());
-            Optional.ofNullable(sourceName).filter(StrUtil::isNotBlank).ifPresent(str -> rollLastSourceName());
-        }
+    public static <T> T setEnterpriseIdFun(Long enterpriseId, Supplier<T> supplier) {
+        return setEnterpriseIdFun(enterpriseId.toString(), supplier);
     }
 
     /**
@@ -121,6 +63,17 @@ public class SecurityContextHolder {
      */
     public static <T> T setEnterpriseIdFun(String enterpriseId, Supplier<T> supplier) {
         return setEnterpriseIdFun(enterpriseId, supplier, Boolean.TRUE);
+    }
+
+    /**
+     * 指定租户方法执行 | Supplier
+     *
+     * @param enterpriseId 租户Id
+     * @param supplier     SupplierFun
+     * @param isExecute    是否执行控制
+     */
+    public static <T> T setEnterpriseIdFun(Long enterpriseId, Supplier<T> supplier, Boolean isExecute) {
+        return setEnterpriseIdFun(!isExecute && ObjectUtil.isNull(enterpriseId) ? StrUtil.EMPTY : enterpriseId.toString(), supplier, isExecute);
     }
 
     /**
@@ -147,8 +100,29 @@ public class SecurityContextHolder {
      * @param enterpriseId 租户Id
      * @param runnable     RunnableFun
      */
+    public static void setEnterpriseIdFun(Long enterpriseId, Runnable runnable) {
+        setEnterpriseIdFun(enterpriseId.toString(), runnable);
+    }
+
+    /**
+     * 指定租户方法执行 | Runnable
+     *
+     * @param enterpriseId 租户Id
+     * @param runnable     RunnableFun
+     */
     public static void setEnterpriseIdFun(String enterpriseId, Runnable runnable) {
         setEnterpriseIdFun(enterpriseId, runnable, Boolean.TRUE);
+    }
+
+    /**
+     * 指定租户方法执行 | Runnable
+     *
+     * @param enterpriseId 租户Id
+     * @param runnable     RunnableFun
+     * @param isExecute    是否执行控制
+     */
+    public static void setEnterpriseIdFun(Long enterpriseId, Runnable runnable, Boolean isExecute) {
+        setEnterpriseIdFun(!isExecute && ObjectUtil.isNull(enterpriseId) ? StrUtil.EMPTY : enterpriseId.toString(), runnable, isExecute);
     }
 
     /**
@@ -172,7 +146,7 @@ public class SecurityContextHolder {
      * 获取企业名称
      */
     public static String getEnterpriseName() {
-        return get(SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.ENTERPRISE_NAME);
     }
 
     /**
@@ -186,7 +160,7 @@ public class SecurityContextHolder {
      * 获取租户权限标识
      */
     public static String getIsLessor() {
-        return get(SecurityConstants.BaseSecurity.IS_LESSOR.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.IS_LESSOR);
     }
 
     /**
@@ -200,7 +174,7 @@ public class SecurityContextHolder {
      * 获取用户Id
      */
     public static Long getUserId() {
-        return ConvertUtil.toLong(get(SecurityConstants.BaseSecurity.USER_ID.getCode()), SecurityConstants.EMPTY_USER_ID);
+        return ConvertUtil.toLong(getInfoBySecurity(SecurityConstants.BaseSecurity.USER_ID), SecurityConstants.EMPTY_USER_ID);
     }
 
     /**
@@ -214,7 +188,7 @@ public class SecurityContextHolder {
      * 获取用户名称
      */
     public static String getUserName() {
-        return get(SecurityConstants.BaseSecurity.USER_NAME.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.USER_NAME);
     }
 
     /**
@@ -228,7 +202,7 @@ public class SecurityContextHolder {
      * 获取用户昵称
      */
     public static String getNickName() {
-        return get(SecurityConstants.BaseSecurity.NICK_NAME.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.NICK_NAME);
     }
 
     /**
@@ -242,7 +216,7 @@ public class SecurityContextHolder {
      * 获取用户权限标识
      */
     public static String getUserType() {
-        return get(SecurityConstants.BaseSecurity.USER_TYPE.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.USER_TYPE);
     }
 
     /**
@@ -253,24 +227,10 @@ public class SecurityContextHolder {
     }
 
     /**
-     * 获取用户令牌
-     */
-    public static String getAccessToken() {
-        return get(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode());
-    }
-
-    /**
-     * 设置用户令牌
-     */
-    public static void setAccessToken(String accessToken) {
-        set(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), accessToken);
-    }
-
-    /**
      * 获取源策略组Id
      */
     public static Long getStrategyId() {
-        return ConvertUtil.toLong(get(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode()));
+        return ConvertUtil.toLong(getInfoBySecurity(SecurityConstants.BaseSecurity.STRATEGY_ID));
     }
 
     /**
@@ -279,50 +239,133 @@ public class SecurityContextHolder {
     public static void setStrategyId(String strategyId) {
         Long lastStrategyId = getStrategyId();
         set(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), strategyId);
-        // 记录上一次租户策略源
-        Optional.ofNullable(lastStrategyId).filter(ObjectUtil::isNotNull).ifPresent(key -> set(SecurityConstants.BaseSecurity.LAST_STRATEGY_ID.getCode(), key.toString()));
     }
 
     /**
-     * 记录上一次租户源策略组Id
-     */
-    private static void setLastStrategyId(Long strategyId) {
-        if (ObjectUtil.isNotNull(strategyId)) {
-            set(SecurityConstants.BaseSecurity.LAST_STRATEGY_ID.getCode(), strategyId.toString());
-        }
-    }
-
-    /**
-     * 回滚上一次租户源策略组Id | 如若无上一次则不变更
+     * 清除自定义租户源策略组Id
      */
     public static void rollLastStrategyId() {
-        Optional.ofNullable(get(SecurityConstants.BaseSecurity.LAST_STRATEGY_ID.getCode())).filter(StrUtil::isNotBlank)
-                .ifPresent(SecurityContextHolder::setSourceName);
+        set(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), StrUtil.EMPTY);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Supplier
+     *
+     * @param strategyId 租户源策略组Id
+     * @param supplier   SupplierFun
+     * @return 返回结果
+     */
+    public static <T> T setStrategyIdFun(Long strategyId, Supplier<T> supplier) {
+        return setStrategyIdFun(strategyId.toString(), supplier);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Supplier
+     *
+     * @param strategyId 租户源策略组Id
+     * @param supplier   SupplierFun
+     * @return 返回结果
+     */
+    public static <T> T setStrategyIdFun(String strategyId, Supplier<T> supplier) {
+        return setStrategyIdFun(strategyId, supplier, Boolean.TRUE);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Supplier
+     *
+     * @param strategyId 租户源策略组Id
+     * @param supplier   SupplierFun
+     * @param isExecute  是否执行控制
+     */
+    public static <T> T setStrategyIdFun(Long strategyId, Supplier<T> supplier, Boolean isExecute) {
+        return setStrategyIdFun(!isExecute && ObjectUtil.isNull(strategyId) ? StrUtil.EMPTY : strategyId.toString(), supplier, isExecute);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Supplier
+     *
+     * @param strategyId 租户源策略组Id
+     * @param supplier   SupplierFun
+     * @param isExecute  是否执行控制
+     */
+    public static <T> T setStrategyIdFun(String strategyId, Supplier<T> supplier, Boolean isExecute) {
+        if (isExecute) {
+            setStrategyId(strategyId);
+        }
+        T info = supplier.get();
+        if (isExecute) {
+            rollLastStrategyId();
+        }
+        return info;
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Runnable
+     *
+     * @param strategyId 租户源策略组Id
+     * @param runnable   RunnableFun
+     */
+    public static void setStrategyIdFun(Long strategyId, Runnable runnable) {
+        setStrategyIdFun(strategyId.toString(), runnable);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Runnable
+     *
+     * @param strategyId 租户源策略组Id
+     * @param runnable   RunnableFun
+     */
+    public static void setStrategyIdFun(String strategyId, Runnable runnable) {
+        setStrategyIdFun(strategyId, runnable, Boolean.TRUE);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Runnable
+     *
+     * @param strategyId 租户源策略组Id
+     * @param runnable   RunnableFun
+     * @param isExecute  是否执行控制
+     */
+    public static void setStrategyIdFun(Long strategyId, Runnable runnable, Boolean isExecute) {
+        setStrategyIdFun(!isExecute && ObjectUtil.isNull(strategyId) ? StrUtil.EMPTY : strategyId.toString(), runnable, isExecute);
+    }
+
+    /**
+     * 指定租户源策略组方法执行 | Runnable
+     *
+     * @param strategyId 租户源策略组Id
+     * @param runnable   RunnableFun
+     * @param isExecute  是否执行控制
+     */
+    public static void setStrategyIdFun(String strategyId, Runnable runnable, Boolean isExecute) {
+        if (isExecute) {
+            setStrategyId(strategyId);
+        }
+        runnable.run();
+        if (isExecute) {
+            rollLastStrategyId();
+        }
     }
 
     /**
      * 获取租户策略源
      */
     public static String getSourceName() {
-        return get(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.SOURCE_NAME);
     }
 
     /**
      * 设置租户策略源
      */
     public static void setSourceName(String sourceName) {
-        String lastSourceName = getSourceName();
         set(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), sourceName);
-        // 记录上一次租户策略源
-        Optional.ofNullable(lastSourceName).filter(StrUtil::isNotBlank).ifPresent(key -> set(SecurityConstants.BaseSecurity.LAST_SOURCE_NAME.getCode(), key));
     }
 
     /**
-     * 回滚上一次租户策略源 | 如若无上一次则不变更
+     * 清除自定义租户策略源
      */
     public static void rollLastSourceName() {
-        Optional.ofNullable(get(SecurityConstants.BaseSecurity.LAST_SOURCE_NAME.getCode())).filter(StrUtil::isNotBlank)
-                .ifPresent(SecurityContextHolder::setSourceName);
+        set(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), StrUtil.EMPTY);
     }
 
     /**
@@ -386,7 +429,7 @@ public class SecurityContextHolder {
      * 获取账户类型
      */
     public static String getAccountType() {
-        return get(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
+        return getInfoBySecurity(SecurityConstants.BaseSecurity.ACCOUNT_TYPE);
     }
 
     /**
@@ -394,6 +437,20 @@ public class SecurityContextHolder {
      */
     public static void setAccountType(String accountType) {
         set(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), accountType);
+    }
+
+    /**
+     * 获取用户令牌
+     */
+    public static String getAccessToken() {
+        return get(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode());
+    }
+
+    /**
+     * 设置用户令牌
+     */
+    public static void setAccessToken(String accessToken) {
+        set(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), accessToken);
     }
 
     /**
@@ -523,5 +580,17 @@ public class SecurityContextHolder {
 
     public static void remove() {
         THREAD_LOCAL.remove();
+    }
+
+    /**
+     * 根据安全常量获取值
+     *
+     * @param security 安全常量值
+     * @return 结果值
+     */
+    protected static <T extends SecurityConstants.ISecurityInterface> String getInfoBySecurity(T security) {
+        Map<String, Object> map = getLocalMap();
+        return Optional.ofNullable(ConvertUtil.toStr(map.getOrDefault(security.getCode(), StrUtil.EMPTY))).filter(StrUtil::isNotBlank)
+                .orElseGet(() -> ConvertUtil.toStr(map.getOrDefault(security.getBaseCode(), StrUtil.EMPTY)));
     }
 }

@@ -1,6 +1,7 @@
 package com.xueyi.common.security.feign;
 
 import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.utils.ip.IpUtil;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * feign 请求拦截器
@@ -26,36 +28,40 @@ public class FeignRequestInterceptor implements RequestInterceptor {
         if (ObjectUtil.isNotNull(httpServletRequest)) {
             Map<String, String> headers = ServletUtil.getHeaders(httpServletRequest);
             // 传递用户信息请求头，防止丢失
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.IS_LESSOR.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_ID.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_NAME.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.NICK_NAME.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_TYPE.getCode());
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ENTERPRISE_ID);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ENTERPRISE_NAME);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.IS_LESSOR);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_ID);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_NAME);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.NICK_NAME);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_TYPE);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.SOURCE_NAME);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.STRATEGY_ID);
+            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ACCOUNT_TYPE);
+
             setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode());
             setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.USER_KEY.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
-            setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
             setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.AUTHORIZATION_HEADER.getCode());
             setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.SUPPLY_AUTHORIZATION_HEADER.getCode());
             setHeaderKey(requestTemplate, headers, SecurityConstants.BaseSecurity.TENANT_IGNORE.getCode());
 
-            String accountType = SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode();
-
-            // 会员端专属参数
-            if (StrUtil.equals(SecurityConstants.AccountType.MEMBER.getCode(), accountType)) {
-                setHeaderKey(requestTemplate, headers, SecurityConstants.MemberSecurity.APPLICATION_ID.getCode());
-                setHeaderKey(requestTemplate, headers, SecurityConstants.MemberSecurity.APP_ID.getCode());
-            }
-            // 平台端专属参数
-            else if (StrUtil.equals(SecurityConstants.AccountType.PLATFORM.getCode(), accountType)) {
-                setHeaderKey(requestTemplate, headers, SecurityConstants.PlatformSecurity.APP_ID.getCode());
-            }
-
             // 配置客户端IP
             requestTemplate.header("X-Forwarded-For", IpUtil.getIpAddr());
         }
+    }
+
+    /**
+     * 更替请求头内容
+     *
+     * @param requestTemplate 请求模板对象
+     * @param headers         请求头内容
+     * @param security        安全值
+     */
+    private <T extends SecurityConstants.ISecurityInterface> void setHeaderKey(RequestTemplate requestTemplate, Map<String, String> headers, T security) {
+        Optional.ofNullable(SecurityContextHolder.get(security.getCode())).filter(StrUtil::isNotBlank).ifPresentOrElse(info -> requestTemplate.header(security.getCode(), info),
+                () -> setHeaderKey(requestTemplate, headers, security.getCode()));
+        Optional.ofNullable(SecurityContextHolder.get(security.getBaseCode())).filter(StrUtil::isNotBlank).ifPresentOrElse(info -> requestTemplate.header(security.getBaseCode(), info),
+                () -> setHeaderKey(requestTemplate, headers, security.getBaseCode()));
     }
 
     /**
