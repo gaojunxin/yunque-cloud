@@ -178,6 +178,9 @@ public class SecurityUtils {
                 accountType = ServletUtil.getHeader(Objects.requireNonNull(ServletUtil.getRequest()), SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
             }
             if (StrUtil.isBlank(accountType)) {
+                accountType = ServletUtil.getHeader(Objects.requireNonNull(ServletUtil.getRequest()), SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode());
+            }
+            if (StrUtil.isBlank(accountType)) {
                 return false;
             }
             return getTokenService(accountType).hasLogin();
