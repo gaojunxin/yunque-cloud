@@ -17,7 +17,6 @@ import com.xueyi.common.core.web.model.SysEnterprise;
 import com.xueyi.common.core.web.model.SysSource;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.utils.SecurityUtils;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.Ordered;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -404,16 +403,17 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @param token 令牌
      */
     default void refreshToken(String token) {
-        Claims claims = JwtUtil.parseToken(token);
-        // 获取过期时间信息
-        String accessToken = Optional.ofNullable(JwtUtil.getAccessKey(claims)).map(key -> StrUtil.replaceFirst(key, TokenConstants.PREFIX, StrUtil.EMPTY)).orElse(null);
-        Optional.ofNullable(accessToken).map(key -> getRedisService().getExpire(key))
-                .filter(expireTime -> NumberUtil.compare(getMillisMinuteTen(), expireTime) >= NumberUtil.Zero)
-                .ifPresent(t -> getRedisService().expire(accessToken, getAccessExpireTime(), TimeUnit.MINUTES));
-        String refreshToken = JwtUtil.getUserKey(claims);
-        Optional.ofNullable(refreshToken).map(key -> getRedisService().getExpire(key))
-                .filter(expireTime -> NumberUtil.compare(getMillisMinuteTen(), expireTime) >= NumberUtil.Zero)
-                .ifPresent(t -> getRedisService().expire(refreshToken, getRefreshExpireTime(), TimeUnit.MINUTES));
+        Optional.ofNullable(token).map(JwtUtil::parseToken).ifPresent(claims -> {
+            // 获取过期时间信息
+            String accessToken = Optional.ofNullable(JwtUtil.getAccessKey(claims)).map(key -> StrUtil.replaceFirst(key, TokenConstants.PREFIX, StrUtil.EMPTY)).orElse(null);
+            Optional.ofNullable(accessToken).map(key -> getRedisService().getExpire(key))
+                    .filter(expireTime -> NumberUtil.compare(getMillisMinuteTen(), expireTime) >= NumberUtil.Zero)
+                    .ifPresent(t -> getRedisService().expire(accessToken, getAccessExpireTime(), TimeUnit.MINUTES));
+            String refreshToken = JwtUtil.getUserKey(claims);
+            Optional.ofNullable(refreshToken).map(key -> getRedisService().getExpire(key))
+                    .filter(expireTime -> NumberUtil.compare(getMillisMinuteTen(), expireTime) >= NumberUtil.Zero)
+                    .ifPresent(t -> getRedisService().expire(refreshToken, getRefreshExpireTime(), TimeUnit.MINUTES));
+        });
     }
 
     /**
@@ -422,8 +422,8 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @return UserKey
      */
     default String getUserKey() {
-        String token = SecurityUtils.getToken(Objects.requireNonNull(ServletUtil.getRequest()));
-        return StrUtil.isNotBlank(token) ? JwtUtil.getUserKey(token) : null;
+        return Optional.ofNullable(ServletUtil.getRequest()).map(SecurityUtils::getToken)
+                .filter(StrUtil::isNotBlank).map(JwtUtil::getUserKey).orElse(null);
     }
 
     /**
