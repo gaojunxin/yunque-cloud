@@ -10,7 +10,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-
 /**
  * 系统服务 | 监控模块 | 日志服务
  *
@@ -23,12 +22,10 @@ public interface RemoteLogService {
      * 保存系统日志
      *
      * @param operateLog   日志实体
-     * @param enterpriseId 企业Id
-     * @param sourceName   数据源
      * @return 结果
      */
     @PostMapping(value = "/inner/operateLog", headers = SecurityConstants.FROM_SOURCE_INNER)
-    R<Boolean> saveOperateLog(@RequestBody SysOperateLogDto operateLog, @RequestHeader(SecurityConstants.ENTERPRISE_ID) Long enterpriseId, @RequestHeader(SecurityConstants.SOURCE_NAME) String sourceName) throws Exception;
+    R<Boolean> saveOperateLog(@RequestBody SysOperateLogDto operateLog) throws Exception;
 
     /**
      * 保存访问记录

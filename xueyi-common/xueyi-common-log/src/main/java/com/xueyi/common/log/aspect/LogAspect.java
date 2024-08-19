@@ -15,6 +15,7 @@ import com.xueyi.common.log.enums.BusinessStatus;
 import com.xueyi.common.log.filter.PropertyPreExcludeFilter;
 import com.xueyi.common.log.service.AsyncLogService;
 import com.xueyi.common.security.service.TokenUserService;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.log.domain.dto.SysOperateLogDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,12 +30,11 @@ import org.springframework.core.NamedThreadLocal;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 操作日志记录处理
@@ -96,41 +96,55 @@ public class LogAspect {
             String ip = IpUtil.getIpAddr();
             operateLog.setIp(ip);
 
-            operateLog.setUrl(StrUtil.sub(ServletUtil.getRequest().getRequestURI(), 0, 255));
+            // 请求URL
+            Optional.ofNullable(ServletUtil.getRequest()).map(HttpServletRequest::getRequestURI)
+                    .map(url -> StrUtil.sub(url, 0, 255))
+                    .ifPresent(operateLog::setUrl);
             BaseLoginUser<?> loginUser = tokenService.getLoginUser();
-            String sourceName = ObjectUtil.isNotNull(loginUser) ? loginUser.getSourceName() : null;
-            Long userId = ObjectUtil.isNotNull(loginUser) ? loginUser.getUserId() : null;
-            Long enterpriseId = ObjectUtil.isNotNull(loginUser) ? loginUser.getEnterpriseId() : null;
-            String userName = ObjectUtil.isNotNull(loginUser) ? loginUser.getUserName() : StrUtil.EMPTY;
-            String userNick = ObjectUtil.isNotNull(loginUser) ? loginUser.getNickName() : StrUtil.EMPTY;
-            operateLog.setSourceName(StrUtil.isNotEmpty(sourceName) ? sourceName : TenantConstants.Source.SLAVE.getCode());
-            operateLog.setUserId(ObjectUtil.isNotNull(userId) ? userId : SecurityConstants.EMPTY_USER_ID);
+            // 策略源
+            String sourceName = Optional.ofNullable(SecurityUtils.getSourceName()).filter(StrUtil::isNotBlank)
+                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getSourceName)
+                            .orElse(TenantConstants.Source.SLAVE.getCode()));
+            // 用户Id
+            Long userId = Optional.ofNullable(SecurityUtils.getUserId()).filter(id -> ObjectUtil.notEqual(SecurityConstants.EMPTY_USER_ID, id))
+                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getUserId)
+                            .orElse(SecurityConstants.EMPTY_USER_ID));
+            // 企业Id
+            Long enterpriseId = Optional.ofNullable(SecurityUtils.getEnterpriseId()).filter(id -> ObjectUtil.notEqual(SecurityConstants.EMPTY_TENANT_ID, id))
+                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getEnterpriseId)
+                            .orElse(SecurityConstants.EMPTY_TENANT_ID));
+            // 用户名
+            String userName = Optional.ofNullable(SecurityUtils.getUserName()).filter(StrUtil::isNotBlank)
+                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getUserName)
+                            .orElse(StrUtil.EMPTY));
+            // 用户昵称
+            String userNick = Optional.ofNullable(SecurityUtils.getNickName()).filter(StrUtil::isNotBlank)
+                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getNickName)
+                            .orElse(StrUtil.EMPTY));
+            operateLog.setSourceName(sourceName);
+            operateLog.setUserId(userId);
             operateLog.setUserName(userName);
             operateLog.setUserNick(userNick);
-            operateLog.setEnterpriseId(ObjectUtil.isNotNull(enterpriseId) ? enterpriseId : SecurityConstants.EMPTY_TENANT_ID);
-            if (e != null) {
+            operateLog.setEnterpriseId(enterpriseId);
+            Optional.ofNullable(e).ifPresent(ex -> {
                 operateLog.setStatus(BusinessStatus.FAIL.getCode());
-                operateLog.setErrorMsg(StrUtil.sub(e.getMessage(), 0, 2000));
-            }
+                operateLog.setErrorMsg(StrUtil.sub(ex.getMessage(), 0, 2000));
+            });
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
-            operateLog.setMethod(className + StrUtil.DOT + methodName + StrUtil.PARENTHESES);
+            operateLog.setMethod(StrUtil.format("{}.{}()", className, methodName));
             // 设置请求方式
-            operateLog.setRequestMethod(ServletUtil.getRequest().getMethod());
+            Optional.ofNullable(ServletUtil.getRequest()).map(HttpServletRequest::getMethod).ifPresent(operateLog::setRequestMethod);
             // 处理设置注解上的参数
             getControllerMethodDescription(joinPoint, controllerLog, operateLog, jsonResult);
             // 设置消耗时间
             operateLog.setCostTime(System.currentTimeMillis() - TIME_THREADLOCAL.get());
-            // 传递线程信息
-            ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            RequestContextHolder.setRequestAttributes(servletRequestAttributes, true);
             // 保存数据库
             asyncLogService.saveOperateLog(operateLog);
         } catch (Exception exp) {
             // 记录本地异常日志
-            log.error("异常信息:{}", exp.getMessage());
-            exp.printStackTrace();
+            log.error("【操作日志】异常信息:{}，原因：", exp.getMessage(), exp);
         } finally {
             TIME_THREADLOCAL.remove();
         }
