@@ -1,6 +1,5 @@
 package com.xueyi.system.authority.mapper.merge;
 
-import com.xueyi.common.datasource.annotation.Master;
 import com.xueyi.common.web.entity.mapper.BasicMapper;
 import com.xueyi.system.authority.domain.merge.SysTenantAuthGroupMerge;
 
@@ -9,6 +8,5 @@ import com.xueyi.system.authority.domain.merge.SysTenantAuthGroupMerge;
  *
  * @author xueyi
  */
-@Master
 public interface SysTenantAuthGroupMergeMapper extends BasicMapper<SysTenantAuthGroupMerge> {
 }

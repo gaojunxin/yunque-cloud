@@ -1,6 +1,5 @@
 package com.xueyi.system.authority.controller.inner;
 
-import com.xueyi.common.cache.utils.SourceUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.utils.core.ArrayUtil;

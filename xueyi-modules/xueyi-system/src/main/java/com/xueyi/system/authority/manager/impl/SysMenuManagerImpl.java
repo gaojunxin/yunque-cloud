@@ -20,7 +20,6 @@ import com.xueyi.system.authority.domain.merge.SysRoleMenuMerge;
 import com.xueyi.system.authority.domain.model.SysMenuConverter;
 import com.xueyi.system.authority.manager.ISysMenuManager;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
-import com.xueyi.system.authority.mapper.merge.SysAuthGroupMenuMergeMapper;
 import com.xueyi.system.authority.mapper.merge.SysRoleMenuMergeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -39,9 +38,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class SysMenuManagerImpl extends TreeManagerImpl<SysMenuQuery, SysMenuDto, SysMenuPo, SysMenuMapper, SysMenuConverter> implements ISysMenuManager {
-
-    @Autowired
-    private SysAuthGroupMenuMergeMapper authGroupMenuMergeMapper;
 
     @Autowired
     private SysRoleMenuMergeMapper roleMenuMergeMapper;

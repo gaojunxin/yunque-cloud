@@ -15,7 +15,6 @@ import com.xueyi.system.authority.domain.merge.SysRoleModuleMerge;
 import com.xueyi.system.authority.domain.model.SysModuleConverter;
 import com.xueyi.system.authority.manager.ISysModuleManager;
 import com.xueyi.system.authority.mapper.SysModuleMapper;
-import com.xueyi.system.authority.mapper.merge.SysAuthGroupModuleMergeMapper;
 import com.xueyi.system.authority.mapper.merge.SysRoleModuleMergeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,9 +35,6 @@ public class SysModuleManagerImpl extends BaseManagerImpl<SysModuleQuery, SysMod
 
     @Autowired
     private SysRoleModuleMergeMapper roleModuleMergeMapper;
-
-    @Autowired
-    private SysAuthGroupModuleMergeMapper authGroupModuleMergeMapper;
 
     /**
      * 获取全部状态正常公共模块

@@ -26,12 +26,6 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
-            <!-- 租管接口 -->
-            <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-api-tenant</artifactId>
-                <version>${xueyi.version}</version>
-            </dependency>
 
             <!-- 文件接口 -->
             <dependency>

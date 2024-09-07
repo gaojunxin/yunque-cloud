@@ -1,6 +1,5 @@
 package com.xueyi.common.web.entity.manager.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xueyi.common.core.constant.basic.SqlConstants;
 import com.xueyi.common.core.utils.core.CollUtil;
@@ -81,7 +80,6 @@ public class BaseManagerImpl<Q extends P, D extends P, P extends BaseEntity, PM 
      * @return 结果
      */
     @Override
-    @DSTransactional
     @SuppressWarnings("unchecked")
     public int insertBatch(Collection<D> dtoList) {
         return CollUtil.isNotEmpty(dtoList)
@@ -107,7 +105,6 @@ public class BaseManagerImpl<Q extends P, D extends P, P extends BaseEntity, PM 
      * @return 结果
      */
     @Override
-    @DSTransactional
     @SuppressWarnings("unchecked")
     public int updateBatch(Collection<D> dtoList) {
         return CollUtil.isNotEmpty(dtoList)

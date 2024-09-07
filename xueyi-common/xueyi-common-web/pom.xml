@@ -29,11 +29,6 @@
             <artifactId>xueyi-common-datascope</artifactId>
         </dependency>
 
-        <!-- XueYi Common DataSource -->
-        <dependency>
-            <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-common-datasource</artifactId>
-        </dependency>
 
         <!-- XueYi Common DataSource -->
         <dependency>
