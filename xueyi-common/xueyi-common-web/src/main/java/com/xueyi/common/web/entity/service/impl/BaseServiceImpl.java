@@ -1,6 +1,5 @@
 package com.xueyi.common.web.entity.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.exception.UtilException;
@@ -97,7 +96,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int insert(D dto) {
         startHandle(OperateConstants.ServiceType.ADD, dto, null);
         int row = baseManager.insert(dto);
@@ -111,7 +109,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @param dtoList 数据对象集合
      */
     @Override
-    @DSTransactional
     public int insertBatch(Collection<D> dtoList) {
         startBatchHandle(OperateConstants.ServiceType.BATCH_ADD, dtoList, null);
         int rows = baseManager.insertBatch(dtoList);
@@ -126,7 +123,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int update(D dto) {
         D originDto = startHandle(OperateConstants.ServiceType.EDIT, dto, null);
         int row = baseManager.update(dto);
@@ -140,7 +136,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @param dtoList 数据对象集合
      */
     @Override
-    @DSTransactional
     public int updateBatch(Collection<D> dtoList) {
         List<D> originList = startBatchHandle(OperateConstants.ServiceType.BATCH_EDIT, dtoList, null);
         int rows = baseManager.updateBatch(dtoList);
@@ -155,7 +150,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int updateStatus(D dto) {
         D originDto = startHandle(OperateConstants.ServiceType.EDIT_STATUS, dto, null);
         int row = baseManager.updateStatus(dto);
@@ -170,7 +164,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int deleteById(Serializable id) {
         D originDto = startHandle(OperateConstants.ServiceType.DELETE, null, id);
         int row = baseManager.deleteById(id);
@@ -185,7 +178,6 @@ public class BaseServiceImpl<Q extends BaseEntity, D extends BaseEntity, C exten
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int deleteByIds(Collection<? extends Serializable> idList) {
         List<D> originList = startBatchHandle(OperateConstants.ServiceType.BATCH_DELETE, null, idList);
         int rows = baseManager.deleteByIds(idList);

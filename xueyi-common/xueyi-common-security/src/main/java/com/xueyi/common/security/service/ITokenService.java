@@ -1,7 +1,5 @@
 package com.xueyi.common.security.service;
 
-import com.xueyi.common.cache.utils.EnterpriseUtil;
-import com.xueyi.common.cache.utils.SourceUtil;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TokenConstants;
 import com.xueyi.common.core.utils.JwtUtil;
@@ -230,35 +228,6 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
         return loginMap;
     }
 
-    /**
-     * 获取企业信息
-     *
-     * @return 企业信息
-     */
-    default SysEnterprise getEnterprise() {
-        return getEnterprise(ServletUtil.getRequest());
-    }
-
-    /**
-     * 获取企业信息
-     *
-     * @param request 请求
-     * @return 企业信息
-     */
-    default SysEnterprise getEnterprise(HttpServletRequest request) {
-        // 获取请求携带的令牌
-        String token = SecurityUtils.getToken(request);
-        return getEnterprise(token);
-    }
-
-    /**
-     * 获取企业信息
-     *
-     * @return 企业信息
-     */
-    default SysEnterprise getEnterprise(String token) {
-        return Optional.ofNullable(getLoginUserSingle(token)).map(BaseLoginUser::getEnterpriseId).map(EnterpriseUtil::getEnterpriseCache).orElse(null);
-    }
 
     /**
      * 获取用户信息
@@ -325,11 +294,7 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * @return 登陆信息
      */
     default LoginUser getLoginUser(String token) {
-        return Optional.ofNullable(getLoginUserSingle(token)).map(item -> {
-            item.setEnterprise(EnterpriseUtil.getEnterpriseCache(item.getEnterpriseId()));
-            item.setSource(SourceUtil.getSourceCacheByEnterpriseId(item.getEnterpriseId()));
-            return item;
-        }).orElse(null);
+        return getLoginUserSingle(token);
     }
 
     /**
@@ -344,37 +309,6 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
                 getRedisService().setCacheMap(loginUser.getRefreshToken(), loginMap);
             }
         }
-    }
-
-    /**
-     * 获取源策略信息
-     *
-     * @return 源策略信息
-     */
-    default SysSource getSource() {
-        return getSource(ServletUtil.getRequest());
-    }
-
-    /**
-     * 获取源策略信息
-     *
-     * @param request 请求
-     * @return 源策略信息
-     */
-    default SysSource getSource(HttpServletRequest request) {
-        // 获取请求携带的令牌
-        String token = SecurityUtils.getToken(request);
-        return getSource(token);
-    }
-
-    /**
-     * 获取源策略信息
-     *
-     * @param token 令牌
-     * @return 源策略信息
-     */
-    default SysSource getSource(String token) {
-        return Optional.ofNullable(getLoginUserSingle(token)).map(BaseLoginUser::getStrategyId).map(SourceUtil::getSourceCache).orElse(null);
     }
 
     /**

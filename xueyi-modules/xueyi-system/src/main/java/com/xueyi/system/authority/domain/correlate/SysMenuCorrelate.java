@@ -9,7 +9,6 @@ import com.xueyi.system.api.authority.domain.dto.SysModuleDto;
 import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.authority.domain.merge.SysAuthGroupMenuMerge;
 import com.xueyi.system.authority.domain.merge.SysRoleMenuMerge;
-import com.xueyi.system.authority.mapper.merge.SysAuthGroupMenuMergeMapper;
 import com.xueyi.system.authority.mapper.merge.SysRoleMenuMergeMapper;
 import com.xueyi.system.authority.service.ISysModuleService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -42,8 +41,6 @@ public enum SysMenuCorrelate implements CorrelateService {
     BASE_DEL("默认删除|（角色-菜单关联 | 企业权限组-菜单关联）", new ArrayList<>() {{
         // 菜单 | 角色-菜单关联
         add(new Indirect<>(DELETE, SysRoleMenuMergeMapper.class, SysRoleMenuMerge::getMenuId, SysMenuDto::getId));
-        // 模块 | 企业权限组-菜单关联
-        add(new Indirect<>(DELETE, SysAuthGroupMenuMergeMapper.class, SysAuthGroupMenuMerge::getMenuId, SysMenuDto::getId));
     }});
 
     private final String info;

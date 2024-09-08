@@ -2,7 +2,6 @@ package com.xueyi.system.authority.service.impl;
 
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
-import com.xueyi.system.authority.domain.correlate.SysAuthGroupCorrelate;
 import com.xueyi.system.authority.domain.dto.SysAuthGroupDto;
 import com.xueyi.system.authority.domain.query.SysAuthGroupQuery;
 import com.xueyi.system.authority.manager.ISysAuthGroupManager;

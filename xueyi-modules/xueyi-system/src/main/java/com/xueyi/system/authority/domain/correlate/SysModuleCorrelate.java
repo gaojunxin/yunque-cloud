@@ -9,7 +9,6 @@ import com.xueyi.system.api.authority.domain.dto.SysModuleDto;
 import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.authority.domain.merge.SysAuthGroupModuleMerge;
 import com.xueyi.system.authority.domain.merge.SysRoleModuleMerge;
-import com.xueyi.system.authority.mapper.merge.SysAuthGroupModuleMergeMapper;
 import com.xueyi.system.authority.mapper.merge.SysRoleModuleMergeMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -40,8 +39,6 @@ public enum SysModuleCorrelate implements CorrelateService {
         add(new Direct<>(DELETE, ISysMenuService.class, SysModuleDto::getId, SysMenuDto::getModuleId));
         // 模块 | 角色-模块关联
         add(new Indirect<>(DELETE, SysRoleModuleMergeMapper.class, SysRoleModuleMerge::getModuleId, SysModuleDto::getId));
-        // 模块 | 企业权限组-模块关联
-        add(new Indirect<>(DELETE, SysAuthGroupModuleMergeMapper.class, SysAuthGroupModuleMerge::getModuleId, SysModuleDto::getId));
     }});
 
     private final String info;

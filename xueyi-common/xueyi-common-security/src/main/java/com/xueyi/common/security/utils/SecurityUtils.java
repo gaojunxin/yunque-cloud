@@ -92,20 +92,12 @@ public class SecurityUtils {
         return SecurityConstants.AccountType.getByCodeElseNull(SecurityContextHolder.getAccountType());
     }
 
-    /** 获取企业信息 */
-    public static SysEnterprise getEnterprise() {
-        return getTokenService().getEnterprise();
-    }
 
     /** 获取用户信息 */
     public static <User> User getUser() {
         return (User) getTokenService().getUser();
     }
 
-    /** 获取源策略信息 */
-    public static SysSource getSource() {
-        return getTokenService().getSource();
-    }
 
     /** 获取登录用户信息 */
     public static <LoginUser extends BaseLoginUser<?>> LoginUser getLoginUser() {
