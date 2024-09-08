@@ -32,13 +32,5 @@ public class ASysAuthController extends BasisController {
     public AjaxResult getCommonAuthScope() {
         return success(TreeUtil.buildTree(authService.selectCommonAuthScope()));
     }
-
-    /**
-     * 获取企业模块 | 菜单权限树
-     */
-    @GetMapping(value = "/enterprise/authScope")
-    @PreAuthorize("@ss.hasAnyAuthority(@Auth.SYS_ROLE_ADD, @Auth.SYS_ROLE_AUTH)")
-    public AjaxResult getEnterpriseAuthScope() {
-        return success(TreeUtil.buildTree(authService.selectEnterpriseAuthScope()));
-    }
+    
 }

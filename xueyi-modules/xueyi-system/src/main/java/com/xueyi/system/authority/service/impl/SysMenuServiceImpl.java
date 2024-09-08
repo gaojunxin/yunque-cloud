@@ -1,6 +1,5 @@
 package com.xueyi.system.authority.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
@@ -61,13 +60,9 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
     @Override
 //    @DataScope(userAlias = CREATE_BY, mapperScope = {"SysMenuMapper"})
     public List<SysMenuDto> selectListScope(SysMenuQuery menu) {
-        boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-        return SecurityContextHolder.setTenantIgnoreFun(() -> {
-            List<SysMenuDto> list = super.selectListScope(menu);
-            subCorrelates(list, SysMenuCorrelate.EN_INFO_SELECT);
-            subCorrelates(list, SysMenuCorrelate.INFO_LIST);
-            return list;
-        }, isAdminTenant);
+        List<SysMenuDto> list = super.selectListScope(menu);
+        subCorrelates(list, SysMenuCorrelate.INFO_LIST);
+        return list;
     }
 
     /**
@@ -78,13 +73,9 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      */
     @Override
     public SysMenuDto selectInfoById(Serializable id) {
-        boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-        return SecurityContextHolder.setTenantIgnoreFun(() -> {
-            SysMenuDto menu = selectById(id);
-            subCorrelates(menu, SysMenuCorrelate.EN_INFO_SELECT);
-            subCorrelates(menu, SysMenuCorrelate.INFO_LIST);
-            return menu;
-        }, isAdminTenant);
+        SysMenuDto menu = selectById(id);
+        subCorrelates(menu, SysMenuCorrelate.INFO_LIST);
+        return menu;
     }
 
     /**
@@ -100,27 +91,12 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
     }
 
     /**
-     * 获取企业有权限且状态正常的菜单
-     *
-     * @param authGroupIds 企业权限组Id集合
-     * @param roleIds      角色Id集合
-     * @param isLessor     租户标识
-     * @param userType     用户标识
-     * @return 菜单对象集合
-     */
-    @Override
-    public List<SysMenuDto> selectEnterpriseList(Set<Long> authGroupIds, Set<Long> roleIds, String isLessor, String userType) {
-        return baseManager.selectEnterpriseList(authGroupIds, roleIds, isLessor, userType);
-    }
-
-    /**
      * 新增菜单对象
      *
      * @param menu 菜单对象
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int insert(SysMenuDto menu) {
         menu.setName(IdUtil.simpleUUID());
         return super.insert(menu);
@@ -133,7 +109,6 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int insertBatch(Collection<SysMenuDto> menuList) {
         if (CollUtil.isNotEmpty(menuList)) {
             menuList.forEach(menu -> menu.setName(IdUtil.simpleUUID()));
@@ -150,14 +125,10 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      */
     @Override
     protected SysMenuDto startHandle(OperateConstants.ServiceType operate, SysMenuDto newDto, Serializable id) {
-        SysMenuDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> super.startHandle(operate, newDto, id));
+        SysMenuDto originDto = super.startHandle(operate, newDto, id);
         switch (operate) {
             case ADD -> {
-                if (newDto.isCommon()) {
-                    newDto.setTenantId(TenantConstants.COMMON_TENANT_ID);
-                } else if (ObjectUtil.isNull(newDto.getTenantId())) {
-                    newDto.setTenantId(SecurityUserUtils.getEnterpriseId());
-                }
+
             }
             case EDIT -> {
                 if (ObjectUtil.isNull(originDto)) {
@@ -166,14 +137,12 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
                     throw new ServiceException(StrUtil.format("{}菜单{}失败，不允许变更公共类型！", operate.getInfo(), newDto.getName()));
                 }
                 newDto.setIsCommon(originDto.getIsCommon());
-                newDto.setTenantId(originDto.getTenantId());
             }
             case EDIT_STATUS -> {
                 newDto.setIsCommon(originDto.getIsCommon());
-                newDto.setTenantId(originDto.getTenantId());
             }
             case DELETE -> {
-                if (SecurityUserUtils.isNotAdminTenant() && (originDto.isCommon() || ObjectUtil.notEqual(originDto.getTenantId(), SecurityUserUtils.getEnterpriseId()))) {
+                if ((originDto.isCommon() )) {
                     throw new ServiceException("无操作权限，公共菜单不允许删除！");
                 }
             }
@@ -182,7 +151,7 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
         switch (operate) {
             case ADD, EDIT -> {
                 if (newDto.isCommon()) {
-                    SysModuleDto module = SecurityContextHolder.setTenantIgnoreFun(() -> moduleService.selectById(newDto.getModuleId()));
+                    SysModuleDto module = moduleService.selectById(newDto.getModuleId());
                     if (ObjectUtil.isNull(module)) {
                         throw new ServiceException("数据不存在！");
                     }
@@ -191,7 +160,7 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
                     }
 
                     if (ObjectUtil.notEqual(BaseConstants.TOP_ID, newDto.getParentId())) {
-                        SysMenuDto parentMenu = SecurityContextHolder.setTenantIgnoreFun(() -> baseManager.selectById(newDto.getParentId()));
+                        SysMenuDto parentMenu = baseManager.selectById(newDto.getParentId());
                         if (ObjectUtil.isNull(parentMenu)) {
                             throw new ServiceException("数据不存在！");
                         }
@@ -203,21 +172,6 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
             }
         }
 
-        switch (operate) {
-            case ADD, EDIT, EDIT_STATUS -> {
-                if (newDto.isNotCommon() && SecurityUserUtils.isNotAdminTenant() && ObjectUtil.notEqual(SecurityUserUtils.getEnterpriseId(), newDto.getTenantId())) {
-                    throw new ServiceException(StrUtil.format("{}菜单{}失败，仅允许配置本企业私有菜单！", operate.getInfo(), newDto.getName()));
-                }
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
-                }
-            }
-        }
         return originDto;
     }
 
@@ -231,18 +185,6 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysMenuDto originDto, SysMenuDto newDto) {
-        switch (operate) {
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-            case ADD, EDIT, EDIT_STATUS -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.rollLastEnterpriseId();
-                }
-            }
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -255,19 +197,14 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      */
     @Override
     protected List<SysMenuDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysMenuDto> newList, Collection<? extends Serializable> idList) {
-        List<SysMenuDto> originList = SecurityContextHolder.setTenantIgnoreFun(() -> super.startBatchHandle(operate, newList, idList));
+        List<SysMenuDto> originList = super.startBatchHandle(operate, newList, idList);
         if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-            Long enterpriseId = SecurityUserUtils.getEnterpriseId();
-            originList = originList.stream().filter(item -> isAdminTenant || (item.isNotCommon() && ObjectUtil.equals(item.getTenantId(), enterpriseId)))
+            originList = originList.stream().filter(item -> (item.isNotCommon() ))
                     .collect(Collectors.toList());
             if (CollUtil.isEmpty(originList)) {
                 throw new ServiceException("无待删除菜单！");
             }
 
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
         }
         return originList;
     }
@@ -282,11 +219,6 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysMenuDto> originList, Collection<SysMenuDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 }

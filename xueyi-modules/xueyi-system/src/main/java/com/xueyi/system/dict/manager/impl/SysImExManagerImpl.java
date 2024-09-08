@@ -49,7 +49,6 @@ public class SysImExManagerImpl extends BaseManagerImpl<SysImExQuery, SysImExDto
                 Wrappers.<SysImExPo>lambdaQuery()
                         .ne(SysImExPo::getId, id)
                         .eq(SysImExPo::getCode, code)
-                        .eq(SysImExPo::getTenantId, TenantConstants.COMMON_TENANT_ID)
                         .last(SqlConstants.LIMIT_ONE));
         return baseConverter.mapperDto(config);
     }

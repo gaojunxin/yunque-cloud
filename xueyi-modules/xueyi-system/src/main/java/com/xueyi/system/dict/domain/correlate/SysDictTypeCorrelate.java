@@ -7,7 +7,6 @@ import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
 import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
 import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.dict.service.ISysDictDataService;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,10 +25,6 @@ import static com.xueyi.common.web.correlate.contant.CorrelateConstants.SubOpera
 @AllArgsConstructor
 public enum SysDictTypeCorrelate implements CorrelateService {
 
-    EN_INFO_SELECT("企业查询|（企业信息）", new ArrayList<>() {{
-        // 字典类型 | 企业信息
-        add(new Direct<>(SELECT, ISysEnterpriseService.class, SysDictTypeDto::getTenantId, SysEnterpriseDto::getId, SysDictTypeDto::getEnterpriseInfo));
-    }}),
     CACHE_REFRESH("缓存|（字典数据）", new ArrayList<>() {{
         // 字典类型 | 字典数据
         add(new Direct<>(SELECT, ISysDictDataService.class, SysDictTypeDto::getCode, SysDictDataDto::getCode, SysDictTypeDto::getSubList));

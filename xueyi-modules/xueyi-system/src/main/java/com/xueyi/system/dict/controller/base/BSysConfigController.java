@@ -70,7 +70,7 @@ public class BSysConfigController extends BaseController<SysConfigQuery, SysConf
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysConfigDto config) {
         if (Objects.requireNonNull(operate) == BaseConstants.Operate.ADD) {
-            if (ObjectUtil.isNull(config.getTenantId()) && baseService.checkConfigCodeUnique(config.getId(), config.getCode())) {
+            if ( baseService.checkConfigCodeUnique(config.getId(), config.getCode())) {
                 warn(StrUtil.format("{}{}{}失败，参数编码已存在", operate.getInfo(), getNodeName(), config.getName()));
             }
         }

@@ -51,38 +51,12 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
      */
     @Override
     protected SysDictDataDto startHandle(OperateConstants.ServiceType operate, SysDictDataDto newDto, Serializable id) {
-        SysDictDataDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> super.startHandle(operate, newDto, id));
+        SysDictDataDto originDto = super.startHandle(operate, newDto, id);
         switch (operate) {
             case ADD, EDIT, EDIT_STATUS -> {
                 if (ObjectUtil.isNotNull(newDto.getDictTypeId())) {
                     SysDictTypeDto dictType = SpringUtil.getBean(ISysDictTypeService.class).selectByIdIgnore(newDto.getDictTypeId());
                     newDto.setDictTypeInfo(dictType);
-                }
-            }
-        }
-
-        switch (operate) {
-            case EDIT, EDIT_STATUS -> {
-                if (ObjectUtil.notEqual(originDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("修改失败，无权限！");
-                    }
-                }
-            }
-            case ADD -> {
-                if (ObjectUtil.notEqual(newDto.getDictTypeInfo().getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(newDto.getDictTypeInfo().getTenantId().toString());
-                    } else {
-                        throw new ServiceException("新增失败，无权限！");
-                    }
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
                 }
             }
         }
@@ -99,14 +73,6 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysDictDataDto originDto, SysDictDataDto newDto) {
-        switch (operate) {
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-            case ADD, EDIT, EDIT_STATUS -> SecurityContextHolder.rollLastEnterpriseId();
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -120,11 +86,6 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
     @Override
     protected List<SysDictDataDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysDictDataDto> newList, Collection<? extends Serializable> idList) {
         List<SysDictDataDto> originList = super.startBatchHandle(operate, newList, idList);
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
-        }
         return originList;
     }
 
@@ -138,11 +99,6 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysDictDataDto> originList, Collection<SysDictDataDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 

@@ -32,9 +32,6 @@ public class SysJobLogPo extends TBaseEntity {
     @Excel(name = "调用目标字符串")
     protected String invokeTarget;
 
-    /** 调用租户字符串 */
-    protected String invokeTenant;
-
     /** 日志信息 */
     @Excel(name = "日志信息")
     protected String jobMessage;

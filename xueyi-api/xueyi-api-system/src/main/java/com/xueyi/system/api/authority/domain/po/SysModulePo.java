@@ -42,9 +42,4 @@ public class SysModulePo extends TCBaseEntity {
     @TableField(updateStrategy = FieldStrategy.NEVER)
     protected String isDefault;
 
-    /** 租户Id */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    protected Long tenantId;
-
 }

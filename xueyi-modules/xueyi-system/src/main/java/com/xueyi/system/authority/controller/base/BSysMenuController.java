@@ -48,7 +48,7 @@ public class BSysMenuController extends TreeController<SysMenuQuery, SysMenuDto,
      */
     @Override
     protected void TreeLoopHandle(SysMenuDto dto) {
-        SecurityContextHolder.setTenantIgnoreFun(() -> super.TreeLoopHandle(dto));
+        super.TreeLoopHandle(dto);
     }
 
     /**
@@ -59,7 +59,7 @@ public class BSysMenuController extends TreeController<SysMenuQuery, SysMenuDto,
      */
     @Override
     protected void AETreeStatusHandle(BaseConstants.Operate operate, SysMenuDto dto) {
-        SecurityContextHolder.setTenantIgnoreFun(() -> super.AETreeStatusHandle(operate, dto));
+        super.AETreeStatusHandle(operate, dto);
     }
 
     /**
@@ -69,7 +69,7 @@ public class BSysMenuController extends TreeController<SysMenuQuery, SysMenuDto,
      */
     @Override
     protected void RHandleTreeChild(List<Long> idList) {
-        SecurityContextHolder.setTenantIgnoreFun(() -> super.RHandleTreeChild(idList));
+        super.RHandleTreeChild(idList);
     }
 
     /**
@@ -77,11 +77,11 @@ public class BSysMenuController extends TreeController<SysMenuQuery, SysMenuDto,
      */
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysMenuDto menu) {
-        Boolean isNotUnique = SecurityContextHolder.setTenantIgnoreFun(() -> baseService.checkNameUnique(menu.getId(), menu.getParentId(), menu.getName()));
+        Boolean isNotUnique = baseService.checkNameUnique(menu.getId(), menu.getParentId(), menu.getName());
         if (isNotUnique) {
             warn(StrUtil.format("{}{}{}失败，{}名称已存在！", operate.getInfo(), getNodeName(), menu.getTitle(), getNodeName()));
         }
-        if (menu.isCommon() && SecurityUserUtils.isNotAdminTenant()) {
+        if (menu.isCommon() ) {
             warn(StrUtil.format("{}{}{}失败，无操作权限！", operate.getInfo(), getNodeName(), menu.getTitle()));
         }
     }

@@ -111,8 +111,6 @@ public class SysLogServiceImpl implements ISysLogService {
      */
     private void recordAdminLoginInfo(String sourceName, Long enterpriseId, String enterpriseName, Long userId, String userName, String userNick, String status, String message) {
         SysLoginLogDto loginInfo = new SysLoginLogDto();
-        loginInfo.setEnterpriseId(enterpriseId);
-        loginInfo.setEnterpriseName(enterpriseName);
         loginInfo.setUserId(userId);
         loginInfo.setUserName(userName);
         loginInfo.setUserNick(userNick);

@@ -56,7 +56,7 @@ public class BaseServiceHandle<Q extends BaseEntity, D extends BaseEntity, C ext
         if (StrUtil.isBlank(cacheKey)) {
             return;
         }
-        String cacheKeyName = CacheUtil.getCusCacheKey(cacheKey, isTenant);
+        String cacheKeyName = CacheUtil.getCusCacheKey(cacheKey);
         // 是否存在缓存字段二次组装
         if (operate.isSingle()) {
             subCorrelates(dto, getBasicCorrelate(CorrelateConstants.ServiceType.CACHE_REFRESH));

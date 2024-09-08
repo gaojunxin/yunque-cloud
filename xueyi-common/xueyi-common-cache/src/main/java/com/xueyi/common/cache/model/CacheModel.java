@@ -40,7 +40,7 @@ public class CacheModel implements Serializable {
      * @return 缓存键值
      */
     public String getCacheKey() {
-        return CacheUtil.getCusCacheKey(getCode(), getIsTenant());
+        return CacheUtil.getCusCacheKey(getCode());
     }
 
     /**

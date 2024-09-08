@@ -14,7 +14,6 @@ import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.dict.constant.ConfigConstants;
 import com.xueyi.system.api.dict.domain.dto.SysConfigDto;
@@ -54,7 +53,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      */
     @Override
     public List<SysConfigDto> selectListScope(SysConfigQuery query) {
-        return subCorrelates(selectList(query), SysConfigCorrelate.EN_INFO_SELECT);
+        return selectList(query);
     }
 
     /**
@@ -66,7 +65,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
     @Override
     public SysConfigDto selectById(Serializable id) {
         SysConfigDto dto = baseManager.selectById(id);
-        return subCorrelates(dto, SysConfigCorrelate.EN_INFO_SELECT);
+        return dto;
     }
 
     /**
@@ -90,11 +89,8 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      */
     @Override
     public Boolean syncCache() {
-        Long enterpriseId = SecurityUtils.getEnterpriseId();
         List<SysConfigDto> enterpriseTypeList = baseManager.selectList(null);
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         List<SysConfigDto> commonTypeList = baseManager.selectList(null);
-        SecurityContextHolder.setEnterpriseId(enterpriseId.toString());
         Map<String, SysConfigDto> enterpriseConfigMap = enterpriseTypeList.stream().collect(Collectors.toMap(SysConfigDto::getCode, Function.identity()));
         List<SysConfigDto> addConfigList = new ArrayList<>();
         commonTypeList.forEach(config -> {
@@ -121,7 +117,6 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      * @return 结果 | true/false 唯一/不唯一
      */
     @Override
-    @TenantIgnore
     public boolean checkConfigCodeUnique(Long id, String configCode) {
         return ObjectUtil.isNotNull(baseManager.checkConfigCodeUnique(ObjectUtil.isNull(id) ? BaseConstants.NONE_ID : id, configCode));
     }
@@ -146,38 +141,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      */
     @Override
     protected SysConfigDto startHandle(OperateConstants.ServiceType operate, SysConfigDto newDto, Serializable id) {
-        SysConfigDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> {
-            SysConfigDto info = super.startHandle(operate, newDto, id);
-            return subCorrelates(info, SysConfigCorrelate.EN_INFO_SELECT);
-        });
-        switch (operate) {
-            case ADD -> {
-                if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), newDto.getCacheType()) || StrUtil.equals(DictConstants.DicCacheType.OVERALL.getCode(), newDto.getCacheType())) {
-                    newDto.setTenantId(TenantConstants.COMMON_TENANT_ID);
-                }
-                if (ObjectUtil.notEqual(newDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("新增参数失败，无权限！");
-                    }
-                }
-            }
-            case EDIT, EDIT_STATUS -> {
-                if (ObjectUtil.notEqual(originDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(originDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("修改参数失败，无权限！");
-                    }
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
-                }
-            }
-        }
+        SysConfigDto originDto = super.startHandle(operate, newDto, id);
         return originDto;
     }
 
@@ -191,14 +155,6 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysConfigDto originDto, SysConfigDto newDto) {
-        switch (operate) {
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-            case ADD, EDIT, EDIT_STATUS -> SecurityContextHolder.rollLastEnterpriseId();
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -212,11 +168,6 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
     @Override
     protected List<SysConfigDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysConfigDto> newList, Collection<? extends Serializable> idList) {
         List<SysConfigDto> originList = super.startBatchHandle(operate, newList, idList);
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
-        }
         return originList;
     }
 
@@ -230,11 +181,6 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysConfigDto> originList, Collection<SysConfigDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 
@@ -267,9 +213,7 @@ public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigQuery, SysCon
         // 默认缓存管理方法
         super.refreshCache(operate, operateCache, dto, dtoList, cacheKey, isTenant, SysConfigDto::getCode, SysConfigDto::getValue);
         // 路由缓存管理方法
-        if (SecurityUtils.isCommonTenant()) {
-            ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_CONFIG_KEY;
-            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysConfigDto::getCode, Function.identity());
-        }
+        ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_CONFIG_KEY;
+        super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysConfigDto::getCode, Function.identity());
     }
 }

@@ -33,7 +33,6 @@ public class SysDictTypeManagerImpl extends BaseManagerImpl<SysDictTypeQuery, Sy
                 Wrappers.<SysDictTypePo>lambdaQuery()
                         .ne(SysDictTypePo::getId, Id)
                         .eq(SysDictTypePo::getCode, code)
-                        .eq(SysDictTypePo::getTenantId, TenantConstants.COMMON_TENANT_ID)
                         .last(SqlConstants.LIMIT_ONE));
         return baseConverter.mapperDto(dictType);
     }

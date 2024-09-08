@@ -32,21 +32,6 @@ import java.util.Optional;
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 public class SecurityUtils {
 
-    /** 获取企业Id */
-    public static Long getEnterpriseId() {
-        return SecurityContextHolder.getEnterpriseId();
-    }
-
-    /** 获取企业名称 */
-    public static String getEnterpriseName() {
-        return SecurityContextHolder.getEnterpriseName();
-    }
-
-    /** 获取租户权限标识 */
-    public static String getIsLessor() {
-        return SecurityContextHolder.getIsLessor();
-    }
-
     /** 获取用户Id */
     public static Long getUserId() {
         return SecurityContextHolder.getUserId();
@@ -65,16 +50,6 @@ public class SecurityUtils {
     /** 获取用户权限标识 */
     public static String getUserType() {
         return SecurityContextHolder.getUserType();
-    }
-
-    /** 获取租户源策略组Id */
-    public static Long getStrategyId() {
-        return SecurityContextHolder.getStrategyId();
-    }
-
-    /** 获取租户策略源 */
-    public static String getSourceName() {
-        return SecurityContextHolder.getSourceName();
     }
 
     /** 获取用户key */
@@ -185,31 +160,6 @@ public class SecurityUtils {
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
         return StrUtil.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX) ? token.replaceFirst(TokenConstants.PREFIX, StrUtil.EMPTY) : token;
-    }
-
-    /** 是否为公共租户 */
-    public static boolean isCommonTenant() {
-        return ObjectUtil.equals(SecurityConstants.COMMON_TENANT_ID, getEnterpriseId());
-    }
-
-    /** 是否为空租户信息 */
-    public static boolean isEmptyTenant() {
-        return ObjectUtil.equals(SecurityConstants.EMPTY_TENANT_ID, getEnterpriseId());
-    }
-
-    /** 是否不为空租户信息 */
-    public static boolean isNotEmptyTenant() {
-        return !isEmptyTenant();
-    }
-
-    /** 是否为超管租户 */
-    public static boolean isAdminTenant() {
-        return StrUtil.equals(SecurityConstants.TenantType.ADMIN.getCode(), getIsLessor());
-    }
-
-    /** 是否不为超管租户 */
-    public static boolean isNotAdminTenant() {
-        return !isAdminTenant();
     }
 
     /** 是否为超管用户 */

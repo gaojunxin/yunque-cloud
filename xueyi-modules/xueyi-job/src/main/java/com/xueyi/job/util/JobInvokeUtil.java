@@ -28,17 +28,15 @@ public class JobInvokeUtil {
      */
     public static void invokeMethod(SysJobDto sysJob) throws Exception {
         String invokeTarget = sysJob.getInvokeTarget();
-        String invokeTenant = sysJob.getInvokeTenant();
         String beanName = getBeanName(invokeTarget);
         String methodName = getMethodName(invokeTarget);
         List<Object[]> methodParams = getMethodParams(invokeTarget);
-        List<String> methodTenant = StrUtil.split(invokeTenant, StrUtil.COMMA);
         if (!isValidClassName(beanName)) {
             Object bean = SpringUtil.getBean(beanName);
-            invokeMethod(bean, methodName, methodParams, methodTenant);
+            invokeMethod(bean, methodName, methodParams);
         } else {
             Object bean = Class.forName(beanName).getDeclaredConstructor().newInstance();
-            invokeMethod(bean, methodName, methodParams, methodTenant);
+            invokeMethod(bean, methodName, methodParams);
         }
     }
 
@@ -48,18 +46,10 @@ public class JobInvokeUtil {
      * @param bean         目标对象
      * @param methodName   方法名称
      * @param methodParams 方法参数
-     * @param methodTenant 租户参数 | enterpriseId | isLessor | sourceName
      */
-    private static void invokeMethod(Object bean, String methodName, List<Object[]> methodParams, List<String> methodTenant)
+    private static void invokeMethod(Object bean, String methodName, List<Object[]> methodParams)
             throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
-        if (CollUtil.isNotEmpty(methodTenant)) {
-            SecurityContextHolder.setEnterpriseId(ConvertUtil.toStr(methodTenant.get(NumberUtil.Zero)));
-            SecurityContextHolder.setIsLessor(ConvertUtil.toStr(methodTenant.get(NumberUtil.One)));
-            SecurityContextHolder.setSourceName(ConvertUtil.toStr(methodTenant.get(NumberUtil.Two)));
-        } else {
-            throw new UtilException("定时任务的租户配置不存在！");
-        }
         if (CollUtil.isNotEmpty(methodParams)) {
             Method method = bean.getClass().getMethod(methodName, getMethodParamsType(methodParams));
             method.invoke(bean, getMethodParamsValue(methodParams));

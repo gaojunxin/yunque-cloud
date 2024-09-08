@@ -27,11 +27,11 @@ public class BSysModuleController extends BaseController<SysModuleQuery, SysModu
      */
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysModuleDto module) {
-        Boolean isNotUnique = SecurityContextHolder.setTenantIgnoreFun(() -> baseService.checkNameUnique(module.getId(), module.getName()));
+        Boolean isNotUnique = baseService.checkNameUnique(module.getId(), module.getName());
         if (isNotUnique) {
             warn(StrUtil.format("{}{}{}失败，{}名称已存在！", operate.getInfo(), getNodeName(), module.getName(), getNodeName()));
         }
-        if (module.isCommon() && SecurityUserUtils.isNotAdminTenant()) {
+        if (module.isCommon() ) {
             warn(StrUtil.format("{}{}{}失败，无操作权限！", operate.getInfo(), getNodeName(), module.getName()));
         }
     }

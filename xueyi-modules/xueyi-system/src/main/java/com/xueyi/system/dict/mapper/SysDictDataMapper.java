@@ -1,6 +1,5 @@
 package com.xueyi.system.dict.mapper;
 
-import com.xueyi.common.datasource.annotation.Master;
 import com.xueyi.common.web.entity.mapper.BaseMapper;
 import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
 import com.xueyi.system.api.dict.domain.po.SysDictDataPo;
@@ -11,6 +10,5 @@ import com.xueyi.system.api.dict.domain.query.SysDictDataQuery;
  *
  * @author xueyi
  */
-@Master
 public interface SysDictDataMapper extends BaseMapper<SysDictDataQuery, SysDictDataDto, SysDictDataPo> {
 }

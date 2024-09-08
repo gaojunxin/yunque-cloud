@@ -14,7 +14,6 @@ import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.dict.constant.ConfigConstants;
 import com.xueyi.system.api.dict.domain.dto.SysImExDto;
@@ -54,7 +53,7 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      */
     @Override
     public List<SysImExDto> selectListScope(SysImExQuery query) {
-        return subCorrelates(selectList(query), SysImExCorrelate.EN_INFO_SELECT);
+        return selectList(query);
     }
 
     /**
@@ -66,7 +65,7 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
     @Override
     public SysImExDto selectById(Serializable id) {
         SysImExDto dto = baseManager.selectById(id);
-        return subCorrelates(dto, SysImExCorrelate.EN_INFO_SELECT);
+        return dto;
     }
 
     /**
@@ -90,11 +89,8 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      */
     @Override
     public Boolean syncCache() {
-        Long enterpriseId = SecurityUtils.getEnterpriseId();
         List<SysImExDto> enterpriseTypeList = baseManager.selectList(null);
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         List<SysImExDto> commonTypeList = baseManager.selectList(null);
-        SecurityContextHolder.setEnterpriseId(enterpriseId.toString());
         Map<String, SysImExDto> enterpriseImExMap = enterpriseTypeList.stream().collect(Collectors.toMap(SysImExDto::getCode, Function.identity()));
         List<SysImExDto> addImExList = new ArrayList<>();
         commonTypeList.forEach(config -> {
@@ -121,7 +117,6 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      * @return 结果 | true/false 唯一/不唯一
      */
     @Override
-    @TenantIgnore
     public boolean checkCodeUnique(Long id, String code) {
         return ObjectUtil.isNotNull(baseManager.checkCodeUnique(ObjectUtil.isNull(id) ? BaseConstants.NONE_ID : id, code));
     }
@@ -135,38 +130,7 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      */
     @Override
     protected SysImExDto startHandle(OperateConstants.ServiceType operate, SysImExDto newDto, Serializable id) {
-        SysImExDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> {
-            SysImExDto info = super.startHandle(operate, newDto, id);
-            return subCorrelates(info, SysImExCorrelate.EN_INFO_SELECT);
-        });
-        switch (operate) {
-            case ADD -> {
-                if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), newDto.getCacheType()) || StrUtil.equals(DictConstants.DicCacheType.OVERALL.getCode(), newDto.getCacheType())) {
-                    newDto.setTenantId(TenantConstants.COMMON_TENANT_ID);
-                }
-                if (ObjectUtil.notEqual(newDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("新增配置失败，无权限！");
-                    }
-                }
-            }
-            case EDIT, EDIT_STATUS -> {
-                if (ObjectUtil.notEqual(originDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(originDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("修改配置失败，无权限！");
-                    }
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
-                }
-            }
-        }
+        SysImExDto originDto = super.startHandle(operate, newDto, id);
         return originDto;
     }
 
@@ -180,14 +144,6 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysImExDto originDto, SysImExDto newDto) {
-        switch (operate) {
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-            case ADD, EDIT, EDIT_STATUS -> SecurityContextHolder.rollLastEnterpriseId();
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -201,11 +157,6 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
     @Override
     protected List<SysImExDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysImExDto> newList, Collection<? extends Serializable> idList) {
         List<SysImExDto> originList = super.startBatchHandle(operate, newList, idList);
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
-        }
         return originList;
     }
 
@@ -219,11 +170,6 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysImExDto> originList, Collection<SysImExDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 
@@ -256,9 +202,7 @@ public class SysImExServiceImpl extends BaseServiceImpl<SysImExQuery, SysImExDto
         // 默认缓存管理方法
         super.refreshCache(operate, operateCache, dto, dtoList, cacheKey, isTenant, SysImExDto::getCode, cacheValueFun);
         // 路由缓存管理方法
-        if (SecurityUtils.isCommonTenant()) {
-            ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_IM_EX_KEY;
-            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysImExDto::getCode, Function.identity());
-        }
+        ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_IM_EX_KEY;
+        super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysImExDto::getCode, Function.identity());
     }
 }

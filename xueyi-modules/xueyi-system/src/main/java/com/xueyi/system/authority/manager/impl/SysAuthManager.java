@@ -45,19 +45,4 @@ public class SysAuthManager implements ISysAuthManager {
                 menus.stream().map(SysAuthTree::new).collect(Collectors.toList())));
     }
 
-    /**
-     * 获取企业模块 | 菜单权限树 | 用户范围内
-     *
-     * @return 权限对象集合
-     */
-    @Override
-    public List<SysAuthTree> selectEnterpriseAuthScope() {
-        LoginUser loginUser = SecurityUserUtils.getLoginUser();
-        DataScope dataScope = loginUser.getDataScope();
-        List<SysModuleDto> modules = moduleManager.selectEnterpriseList(dataScope.getAuthGroupIds(), dataScope.getRoleIds(), loginUser.getIsLessor(), loginUser.getUserType());
-        List<SysMenuDto> menus = menuManager.selectEnterpriseList(dataScope.getAuthGroupIds(), dataScope.getRoleIds(), loginUser.getIsLessor(), loginUser.getUserType());
-        return new ArrayList<>(CollUtil.addAll(
-                modules.stream().map(SysAuthTree::new).collect(Collectors.toList()),
-                menus.stream().map(SysAuthTree::new).collect(Collectors.toList())));
-    }
 }

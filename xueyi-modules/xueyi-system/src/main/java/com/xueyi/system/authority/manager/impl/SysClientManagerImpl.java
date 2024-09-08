@@ -7,6 +7,7 @@ import com.xueyi.system.api.authority.domain.po.SysClientPo;
 import com.xueyi.system.api.authority.domain.query.SysClientQuery;
 import com.xueyi.system.authority.domain.model.SysClientConverter;
 import com.xueyi.system.authority.manager.ISysClientManager;
+import com.xueyi.system.authority.mapper.SysClientMapper;
 import org.springframework.stereotype.Component;
 
 /**

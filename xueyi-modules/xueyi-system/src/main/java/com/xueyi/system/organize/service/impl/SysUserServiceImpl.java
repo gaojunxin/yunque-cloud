@@ -1,12 +1,10 @@
 package com.xueyi.system.organize.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.utils.core.DesensitizedUtil;
 import com.xueyi.common.core.utils.core.ObjectUtil;
 import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.common.datasource.annotation.Isolate;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.organize.domain.dto.SysUserDto;
@@ -29,7 +27,6 @@ import java.util.Map;
  * @author xueyi
  */
 @Service
-@Isolate
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserQuery, SysUserDto, SysUserCorrelate, ISysUserManager> implements ISysUserService {
 
     /**
@@ -75,7 +72,6 @@ public class SysUserServiceImpl extends BaseServiceImpl<SysUserQuery, SysUserDto
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int editUserRole(SysUserDto user) {
         return editCorrelates(user, SysUserCorrelate.ROLE_EDIT);
     }

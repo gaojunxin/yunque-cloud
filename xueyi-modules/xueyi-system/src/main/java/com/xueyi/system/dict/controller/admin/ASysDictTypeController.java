@@ -60,9 +60,6 @@ public class ASysDictTypeController extends BSysDictTypeController {
     @GetMapping("/list")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_DICT_LIST)")
     public AjaxResult list(SysDictTypeQuery query) {
-        if (SecurityUserUtils.isAdminTenant()) {
-            SecurityContextHolder.setTenantIgnore();
-        }
         return super.list(query);
     }
 
@@ -73,9 +70,6 @@ public class ASysDictTypeController extends BSysDictTypeController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_DICT_SINGLE)")
     public AjaxResult getInfo(@PathVariable Serializable id) {
-        if (SecurityUserUtils.isAdminTenant()) {
-            SecurityContextHolder.setTenantIgnore();
-        }
         return super.getInfo(id);
     }
 

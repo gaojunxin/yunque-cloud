@@ -26,9 +26,6 @@ public class SysLoginLogPo extends TBaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 企业账号 */
-    protected String enterpriseName;
-
     /** 用户Id */
     protected Long userId;
 

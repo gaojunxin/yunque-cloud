@@ -15,7 +15,6 @@ import com.xueyi.common.core.web.entity.base.BasisEntity;
 import com.xueyi.common.redis.constant.RedisConstants;
 import com.xueyi.common.security.utils.SecurityUserUtils;
 import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.dict.constant.ConfigConstants;
@@ -77,7 +76,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     public List<SysDictTypeDto> selectListScope(SysDictTypeQuery query) {
-        return subCorrelates(selectList(query), SysDictTypeCorrelate.EN_INFO_SELECT);
+        return selectList(query);
     }
 
     /**
@@ -88,7 +87,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     public SysDictTypeDto selectById(Serializable id) {
-        return subCorrelates(baseManager.selectById(id), SysDictTypeCorrelate.EN_INFO_SELECT);
+        return baseManager.selectById(id);
     }
 
     /**
@@ -98,7 +97,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      * @return 数据对象
      */
     @Override
-    @TenantIgnore
     public SysDictTypeDto selectByIdIgnore(Serializable id) {
         return selectById(id);
     }
@@ -108,13 +106,10 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     public Boolean syncCache() {
-        Long enterpriseId = SecurityUtils.getEnterpriseId();
         List<SysDictTypeDto> enterpriseTypeList = baseManager.selectList(null);
         subCorrelates(enterpriseTypeList, getBasicCorrelate(CorrelateConstants.ServiceType.CACHE_REFRESH));
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         List<SysDictTypeDto> commonTypeList = baseManager.selectList(null);
         subCorrelates(commonTypeList, getBasicCorrelate(CorrelateConstants.ServiceType.CACHE_REFRESH));
-        SecurityContextHolder.setEnterpriseId(enterpriseId.toString());
         Map<String, SysDictTypeDto> enterpriseTypeMap = enterpriseTypeList.stream().collect(Collectors.toMap(SysDictTypePo::getCode, Function.identity()));
         List<SysDictTypeDto> addTypeList = new ArrayList<>();
         List<SysDictDataDto> addDataList = new ArrayList<>();
@@ -172,7 +167,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      * @return 结果 | true/false 唯一/不唯一
      */
     @Override
-    @TenantIgnore
     public boolean checkDictCodeUnique(Long Id, String dictCode) {
         return ObjectUtil.isNotNull(baseManager.checkDictCodeUnique(ObjectUtil.isNull(Id) ? BaseConstants.NONE_ID : Id, dictCode));
     }
@@ -186,38 +180,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     protected SysDictTypeDto startHandle(OperateConstants.ServiceType operate, SysDictTypeDto newDto, Serializable id) {
-        SysDictTypeDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> {
-            SysDictTypeDto info = super.startHandle(operate, newDto, id);
-            return subCorrelates(info, SysDictTypeCorrelate.EN_INFO_SELECT);
-        });
-        switch (operate) {
-            case ADD -> {
-                if (StrUtil.equals(DictConstants.DicCacheType.TENANT.getCode(), newDto.getCacheType()) || StrUtil.equals(DictConstants.DicCacheType.OVERALL.getCode(), newDto.getCacheType())) {
-                    newDto.setTenantId(TenantConstants.COMMON_TENANT_ID);
-                }
-                if (ObjectUtil.notEqual(newDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("新增字典失败，无权限！");
-                    }
-                }
-            }
-            case EDIT, EDIT_STATUS -> {
-                if (ObjectUtil.notEqual(originDto.getTenantId(), SecurityUtils.getEnterpriseId())) {
-                    if (SecurityUserUtils.isAdminTenant()) {
-                        SecurityContextHolder.setEnterpriseId(originDto.getTenantId().toString());
-                    } else {
-                        throw new ServiceException("修改字典失败，无权限！");
-                    }
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
-                }
-            }
-        }
+        SysDictTypeDto originDto = super.startHandle(operate, newDto, id);
         return originDto;
     }
 
@@ -231,14 +194,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysDictTypeDto originDto, SysDictTypeDto newDto) {
-        switch (operate) {
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-            case ADD, EDIT, EDIT_STATUS -> SecurityContextHolder.rollLastEnterpriseId();
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -252,11 +207,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
     @Override
     protected List<SysDictTypeDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysDictTypeDto> newList, Collection<? extends Serializable> idList) {
         List<SysDictTypeDto> originList = super.startBatchHandle(operate, newList, idList);
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
-        }
         return originList;
     }
 
@@ -270,11 +220,6 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysDictTypeDto> originList, Collection<SysDictTypeDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 
@@ -307,9 +252,7 @@ public class SysDictTypeServiceImpl extends BaseServiceImpl<SysDictTypeQuery, Sy
         // 默认缓存管理方法
         super.refreshCache(operate, operateCache, dto, dtoList, cacheKey, isTenant, SysDictTypeDto::getCode, SysDictTypeDto::getSubList);
         // 路由缓存管理方法
-        if (SecurityUtils.isCommonTenant()) {
-            ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_DICT_KEY;
-            super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysDictTypeDto::getCode, Function.identity());
-        }
+        ConfigConstants.CacheType routeCacheKey = ConfigConstants.CacheType.ROUTE_DICT_KEY;
+        super.refreshCache(operate, operateCache, dto, dtoList, routeCacheKey.getCode(), routeCacheKey.getIsTenant(), SysDictTypeDto::getCode, Function.identity());
     }
 }

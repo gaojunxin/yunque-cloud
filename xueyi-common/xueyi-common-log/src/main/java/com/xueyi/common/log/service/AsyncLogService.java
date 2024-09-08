@@ -25,14 +25,10 @@ public class AsyncLogService {
      */
     @Async
     public void saveOperateLog(SysOperateLogDto operateLog) {
-        SecurityContextHolder.setEnterpriseIdFun(operateLog.getEnterpriseId(), () ->
-                SecurityContextHolder.setSourceNameFun(operateLog.getSourceName(), () -> {
-                            try {
-                                remoteLogService.saveOperateLog(operateLog);
-                            } catch (Exception e) {
-                                log.error("操作日志记录异常", e);
-                            }
-                        }
-                ));
+        try {
+            remoteLogService.saveOperateLog(operateLog);
+        } catch (Exception e) {
+            log.error("操作日志记录异常", e);
+        }
     }
 }

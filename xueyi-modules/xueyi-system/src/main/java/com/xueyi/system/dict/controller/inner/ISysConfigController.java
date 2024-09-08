@@ -50,7 +50,6 @@ public class ISysConfigController extends BSysConfigController {
     @Operation(summary = "刷新参数缓存 | 默认数据")
     @Log(title = "参数管理", businessType = BusinessType.REFRESH)
     public R<Boolean> refreshCommonCacheInner() {
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         return super.refreshCacheInner();
     }
 

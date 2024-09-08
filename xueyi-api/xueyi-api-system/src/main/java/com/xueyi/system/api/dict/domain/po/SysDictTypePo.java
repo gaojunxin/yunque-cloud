@@ -49,9 +49,4 @@ public class SysDictTypePo extends TBaseEntity {
     @Size(max = 100, message = "字典名称长度不能超过100个字符")
     protected String name;
 
-    /** 租户Id */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    protected Long tenantId;
-
 }

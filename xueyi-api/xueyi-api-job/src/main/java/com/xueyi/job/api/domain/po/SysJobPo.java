@@ -47,10 +47,6 @@ public class SysJobPo extends TBaseEntity {
     @Size(max = 500, message = "调用目标字符串长度不能超过500个字符")
     protected String invokeTarget;
 
-    /** 调用租户字符串 */
-    @TableField(updateStrategy = FieldStrategy.NEVER)
-    protected String invokeTenant;
-
     /** cron执行表达式 */
     @Excel(name = "cron执行表达式")
     @NotBlank(message = "Cron执行表达式不能为空")

@@ -1,7 +1,6 @@
 package com.xueyi.job.manager.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.entity.manager.impl.BaseManagerImpl;
 import com.xueyi.job.api.domain.dto.SysJobDto;
 import com.xueyi.job.api.domain.po.SysJobPo;
@@ -25,7 +24,6 @@ public class SysJobManagerImpl extends BaseManagerImpl<SysJobQuery, SysJobDto, S
      * 项目启动时
      */
     @Override
-    @TenantIgnore
     public List<SysJobDto> initScheduler() {
         List<SysJobPo> jobList = baseMapper.selectList(Wrappers.query());
         return baseConverter.mapperDto(jobList);

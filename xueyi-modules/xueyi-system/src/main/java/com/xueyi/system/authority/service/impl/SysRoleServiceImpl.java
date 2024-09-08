@@ -1,6 +1,5 @@
 package com.xueyi.system.authority.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
@@ -77,7 +76,6 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleQuery, SysRoleDto
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int updateRoleAuth(SysRoleDto role) {
         return editCorrelates(role, SysRoleCorrelate.AUTH_EDIT);
     }
@@ -89,7 +87,6 @@ public class SysRoleServiceImpl extends BaseServiceImpl<SysRoleQuery, SysRoleDto
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int updateDataScope(SysRoleDto role) {
         int row = baseManager.updateDataScope(role.getId(), role.getRoleKey(), role.getDataScope());
         if (row > 0) {

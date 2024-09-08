@@ -18,11 +18,5 @@ public interface ISysAuthManager {
      */
     List<SysAuthTree> selectCommonAuthScope();
 
-    /**
-     * 获取企业模块 | 菜单权限树 | 用户范围内
-     *
-     * @return 权限对象集合
-     */
-    List<SysAuthTree> selectEnterpriseAuthScope();
 
 }

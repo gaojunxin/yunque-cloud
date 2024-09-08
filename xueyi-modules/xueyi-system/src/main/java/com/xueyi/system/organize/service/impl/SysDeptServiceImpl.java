@@ -1,7 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.common.datasource.annotation.Isolate;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.TreeServiceImpl;
 import com.xueyi.system.api.organize.domain.dto.SysDeptDto;
@@ -23,7 +22,6 @@ import java.util.Map;
  * @author xueyi
  */
 @Service
-@Isolate
 public class SysDeptServiceImpl extends TreeServiceImpl<SysDeptQuery, SysDeptDto, SysDeptCorrelate, ISysDeptManager> implements ISysDeptService {
 
     /**

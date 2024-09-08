@@ -53,7 +53,7 @@ public class BSysDictTypeController extends BaseController<SysDictTypeQuery, Sys
     @Override
     protected void AEHandle(BaseConstants.Operate operate, SysDictTypeDto dictType) {
         if (Objects.requireNonNull(operate) == BaseConstants.Operate.ADD) {
-            if (ObjectUtil.isNull(dictType.getTenantId()) && baseService.checkDictCodeUnique(dictType.getId(), dictType.getCode())) {
+            if (baseService.checkDictCodeUnique(dictType.getId(), dictType.getCode())) {
                 warn(StrUtil.format("{}{}{}失败，字典编码已存在", operate.getInfo(), getNodeName(), dictType.getName()));
             }
         }

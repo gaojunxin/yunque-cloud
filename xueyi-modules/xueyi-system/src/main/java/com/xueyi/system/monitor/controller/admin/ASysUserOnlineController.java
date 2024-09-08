@@ -51,7 +51,7 @@ public class ASysUserOnlineController extends BasisController {
     @GetMapping("/list")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_ONLINE_LIST)")
     public AjaxResult list(String ipaddr, String userName) {
-        String cacheKeyPrepend = StrUtil.format("{}:{}:{}:", CacheConstants.AUTHORIZATION, CacheConstants.LoginTokenType.ADMIN.getCode(), SecurityUserUtils.getEnterpriseId());
+        String cacheKeyPrepend = StrUtil.format("{}:{}", CacheConstants.AUTHORIZATION, CacheConstants.LoginTokenType.ADMIN.getCode());
         String cacheKey = StrUtil.format("{}{}", cacheKeyPrepend, "*");
         Collection<String> keys = redisService.keys(cacheKey);
         List<SysUserOnline> userOnlineList = new ArrayList<>();

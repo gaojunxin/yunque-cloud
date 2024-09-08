@@ -32,7 +32,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> T getCacheObject(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode);
         T object = redisService.getCacheObject(key);
         if (ObjectUtil.isNull(object)) {
             refreshCache(consumer);
@@ -50,7 +50,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> Set<T> getCacheSet(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode);
         Set<T> cacheSet = redisService.getCacheSet(key);
         if (ObjectUtil.isNull(cacheSet)) {
             refreshCache(consumer);
@@ -68,7 +68,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> List<T> getCacheList(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode);
         List<T> cacheSet = redisService.getCacheList(key);
         if (ObjectUtil.isNull(cacheSet)) {
             refreshCache(consumer);
@@ -86,7 +86,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> Map<String, T> getCacheMap(String cacheCode, Boolean isTenant, Supplier<Object> consumer) {
-        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode);
         Map<String, T> map = redisService.getCacheMap(key);
         if (MapUtil.isEmpty(map)) {
             refreshCache(consumer);
@@ -105,7 +105,7 @@ public class CacheService {
      * @return 数据对象
      */
     public <T> T getCacheObject(String cacheCode, Boolean isTenant, Supplier<Object> consumer, String code) {
-        String key = CacheUtil.getCusCacheKey(cacheCode, isTenant);
+        String key = CacheUtil.getCusCacheKey(cacheCode);
         T object = redisService.getCacheMapValue(key, code);
         if (ObjectUtil.isNull(object)) {
             refreshCache(consumer);

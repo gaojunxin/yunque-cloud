@@ -19,7 +19,6 @@ import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.authority.service.ISysMenuService;
 import com.xueyi.system.authority.service.ISysModuleService;
 import com.xueyi.system.organize.service.ISysDeptService;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysOrganizeService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
@@ -45,10 +44,6 @@ import static com.xueyi.common.core.constant.basic.SecurityConstants.*;
 @Service
 @RefreshScope
 public class SysLoginServiceImpl implements ISysLoginService {
-
-    @Autowired
-    ISysEnterpriseService enterpriseService;
-
     @Autowired
     ISysDeptService deptService;
 
@@ -66,17 +61,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private ISysOrganizeService organizeService;
-
-    /**
-     * 登录校验 | 根据企业账号查询企业信息
-     *
-     * @param enterpriseName 企业账号
-     * @return 企业对象
-     */
-    @Override
-    public SysEnterpriseDto loginByEnterpriseName(String enterpriseName) {
-        return enterpriseService.selectByName(enterpriseName);
-    }
 
     /**
      * 登录校验 | 根据用户账号查询用户信息
@@ -100,12 +84,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     public Set<String> getRolePermission(
-            List<SysRoleDto> roleList, String isLessor, String userType) {
+            List<SysRoleDto> roleList, String userType) {
         Set<String> roles = new HashSet<>();
-        // 租管租户拥有租管标识权限
-        if (SysEnterpriseDto.isLessor(isLessor)) {
-            roles.add(ROLE_ADMINISTRATOR);
-        }
         // 超管用户拥有超管标识权限
         if (SysUserDto.isAdmin(userType)) {
             roles.add(ROLE_ADMIN);
@@ -123,47 +103,42 @@ public class SysLoginServiceImpl implements ISysLoginService {
     /**
      * 登录校验 | 获取权限模块列表
      *
-     * @param authGroupIds 企业权限组Id集合
      * @param roleIds      角色Id集合
-     * @param isLessor     租户标识
      * @param userType     用户标识
      * @return 模块信息对象集合
      */
     @Override
     public List<SysModuleDto> getModuleList(
-            Set<Long> authGroupIds, Set<Long> roleIds, String isLessor, String userType) {
-        return moduleService.selectEnterpriseList(authGroupIds, roleIds, isLessor, userType);
+            Set<Long> roleIds, String userType) {
+        return moduleService.selectList(null);
     }
 
     /**
      * 登录校验 | 获取权限菜单列表
      *
-     * @param authGroupIds 企业权限组Id集合
      * @param roleIds      角色Id集合
-     * @param isLessor     租户标识
      * @param userType     用户标识
      * @return 菜单信息对象集合
      */
     @Override
     public List<SysMenuDto> getMenuList(
-            Set<Long> authGroupIds, Set<Long> roleIds, String isLessor, String userType) {
-        return menuService.selectEnterpriseList(authGroupIds, roleIds, isLessor, userType);
+            Set<Long> roleIds, String userType) {
+        return menuService.selectList(null);
     }
 
     /**
      * 登录校验 | 获取菜单数据权限
      *
      * @param menuList 菜单信息对象集合
-     * @param isLessor 租户标识
      * @param userType 用户标识
      * @return 菜单权限信息集合
      */
     @Override
     public Set<String> getMenuPermission(
-            List<SysMenuDto> menuList, String isLessor, String userType) {
+            List<SysMenuDto> menuList, String userType) {
         Set<String> perms = new HashSet<>();
         // 租管租户的超管用户拥有所有权限
-        if (SysEnterpriseDto.isLessor(isLessor) && SysUserDto.isAdmin(userType)) {
+        if (SysUserDto.isAdmin(userType)) {
             perms.add(PERMISSION_ADMIN);
         } else {
             // 菜单组合权限表示集合
@@ -284,46 +259,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
                 menuList.stream()
                         .filter(menu -> (menu.isDir() || menu.isMenu() || menu.isDetails()))
                         .collect(Collectors.toList()));
-    }
-
-    /**
-     * 通过域名获取租户信息
-     *
-     * @param domainName 访问域名
-     * @return 企业信息对象
-     */
-    @Override
-    public SysEnterpriseDto getDomainTenant(String domainName) {
-        if (StrUtil.isNotBlank(domainName)) {
-            String doMainQuery;
-            if ("127.0.0.1".equals(domainName) || "localhost".equals(domainName)) {
-                return null;
-            }
-            // 校验是否为IP地址
-            if (IpUtil.isIP(domainName)) {
-                doMainQuery = domainName;
-            } else {
-                try {
-                    // 校验是否为有效域名
-                    InetAddress.getByName(domainName);
-                    // 如果是系统默认域名且二级域名不是www则直接返回二级域名否则直接返回传入域名
-                    if (StrUtil.startWith(domainName, "www.", Boolean.FALSE)) {
-                        doMainQuery = StrUtil.removePrefix(domainName, "www.");
-                    } else {
-                        doMainQuery = domainName;
-                    }
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-            SysEnterpriseQuery enterpriseQuery = new SysEnterpriseQuery();
-            enterpriseQuery.setDomainName(doMainQuery);
-            List<SysEnterpriseDto> list = enterpriseService.selectList(enterpriseQuery);
-            if (CollUtil.isNotEmpty(list)) {
-                return list.get(0);
-            }
-        }
-        return null;
     }
 
     /**

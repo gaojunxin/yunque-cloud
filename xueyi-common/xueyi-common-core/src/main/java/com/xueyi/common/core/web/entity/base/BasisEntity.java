@@ -36,11 +36,6 @@ public class BasisEntity implements Serializable {
     @TableField(exist = false)
     protected Integer sort;
 
-    /** 数据源名称 */
-    @JsonIgnore
-    @TableField(exist = false)
-    protected String sourceName;
-
     /** 操作类型 */
     @JsonIgnore
     @TableField(exist = false)

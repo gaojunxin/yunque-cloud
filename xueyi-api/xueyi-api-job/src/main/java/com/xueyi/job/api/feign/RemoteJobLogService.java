@@ -22,12 +22,9 @@ public interface RemoteJobLogService {
      * 保存调度日志
      *
      * @param jobLog       调度日志实体
-     * @param enterpriseId 企业Id
-     * @param isLessor     企业类型
-     * @param sourceName   数据源
      * @return 结果
      */
 
     @PostMapping(headers = SecurityConstants.FROM_SOURCE_INNER)
-    R<Boolean> saveJobLog(@RequestBody SysJobLogDto jobLog, @RequestHeader(SecurityConstants.ENTERPRISE_ID) Long enterpriseId, @RequestHeader(SecurityConstants.IS_LESSOR) String isLessor, @RequestHeader(SecurityConstants.SOURCE_NAME) String sourceName);
+    R<Boolean> saveJobLog(@RequestBody SysJobLogDto jobLog);
 }

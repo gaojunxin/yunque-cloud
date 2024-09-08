@@ -30,20 +30,4 @@ public class ASysAdminLoginController extends BasisController {
     @Autowired
     private ISysLoginService loginService;
 
-    /**
-     * 校验域名是否存在默认租户
-     *
-     * @param url 域名信息
-     */
-    @AdminAuth(isAnonymous = true)
-    @GetMapping("/getEnterpriseByDomainName")
-    public AjaxResult getDomainTenant(@RequestParam String url) {
-        Map<String, String> map = new HashMap<>();
-        if (StringUtils.isNotBlank(url)) {
-            SysEnterpriseDto enterpriseInfo = loginService.getDomainTenant(url);
-            Optional.ofNullable(enterpriseInfo).map(SysEnterprise::getDomainName)
-                    .ifPresent(domainName -> map.put("name", domainName));
-        }
-        return success(map);
-    }
 }

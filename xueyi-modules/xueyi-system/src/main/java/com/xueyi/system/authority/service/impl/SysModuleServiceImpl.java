@@ -52,8 +52,7 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
     @Override
 //    @DataScope(userAlias = CREATE_BY, mapperScope = {"SysModuleMapper"})
     public List<SysModuleDto> selectListScope(SysModuleQuery module) {
-        boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-        return SecurityContextHolder.setTenantIgnoreFun(() -> subCorrelates(super.selectListScope(module), SysModuleCorrelate.EN_INFO_SELECT), isAdminTenant);
+        return super.selectListScope(module);
     }
 
     /**
@@ -64,22 +63,7 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
      */
     @Override
     public SysModuleDto selectInfoById(Serializable id) {
-        boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-        return SecurityContextHolder.setTenantIgnoreFun(() -> subCorrelates(selectById(id), SysModuleCorrelate.EN_INFO_SELECT), isAdminTenant);
-    }
-
-    /**
-     * 获取企业有权限且状态正常的模块
-     *
-     * @param authGroupIds 企业权限组Id集合
-     * @param roleIds      角色Id集合
-     * @param isLessor     租户标识
-     * @param userType     用户标识
-     * @return 模块对象集合
-     */
-    @Override
-    public List<SysModuleDto> selectEnterpriseList(Set<Long> authGroupIds, Set<Long> roleIds, String isLessor, String userType) {
-        return baseManager.selectEnterpriseList(authGroupIds, roleIds, isLessor, userType);
+        return selectById(id);
     }
 
     /**
@@ -91,15 +75,8 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
      */
     @Override
     protected SysModuleDto startHandle(OperateConstants.ServiceType operate, SysModuleDto newDto, Serializable id) {
-        SysModuleDto originDto = SecurityContextHolder.setTenantIgnoreFun(() -> super.startHandle(operate, newDto, id));
+        SysModuleDto originDto = super.startHandle(operate, newDto, id);
         switch (operate) {
-            case ADD -> {
-                if (newDto.isCommon()) {
-                    newDto.setTenantId(TenantConstants.COMMON_TENANT_ID);
-                } else if (ObjectUtil.isNull(newDto.getTenantId())) {
-                    newDto.setTenantId(SecurityUserUtils.getEnterpriseId());
-                }
-            }
             case EDIT -> {
                 if (ObjectUtil.isNull(originDto)) {
                     throw new ServiceException("数据不存在！");
@@ -107,30 +84,13 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
                     throw new ServiceException(StrUtil.format("{}模块{}失败，不允许变更公共类型！", operate.getInfo(), newDto.getName()));
                 }
                 newDto.setIsCommon(originDto.getIsCommon());
-                newDto.setTenantId(originDto.getTenantId());
             }
             case EDIT_STATUS -> {
                 newDto.setIsCommon(originDto.getIsCommon());
-                newDto.setTenantId(originDto.getTenantId());
             }
             case DELETE -> {
-                if (SecurityUserUtils.isNotAdminTenant() && (originDto.isCommon() || ObjectUtil.notEqual(originDto.getTenantId(), SecurityUserUtils.getEnterpriseId()))) {
+                if ((originDto.isCommon() )) {
                     throw new ServiceException("无操作权限，公共模块不允许删除！");
-                }
-            }
-        }
-        switch (operate) {
-            case ADD, EDIT, EDIT_STATUS -> {
-                if (newDto.isNotCommon() && SecurityUserUtils.isNotAdminTenant() && ObjectUtil.notEqual(SecurityUserUtils.getEnterpriseId(), newDto.getTenantId())) {
-                    throw new ServiceException(StrUtil.format("{}模块{}失败，仅允许配置本企业私有模块！", operate.getInfo(), newDto.getName()));
-                }
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setEnterpriseId(newDto.getTenantId().toString());
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.setTenantIgnore();
                 }
             }
         }
@@ -147,18 +107,6 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
      */
     @Override
     protected void endHandle(OperateConstants.ServiceType operate, int row, SysModuleDto originDto, SysModuleDto newDto) {
-        switch (operate) {
-            case ADD, EDIT, EDIT_STATUS -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.rollLastEnterpriseId();
-                }
-            }
-            case DELETE -> {
-                if (SecurityUserUtils.isAdminTenant()) {
-                    SecurityContextHolder.clearTenantIgnore();
-                }
-            }
-        }
         super.endHandle(operate, row, originDto, newDto);
     }
 
@@ -171,19 +119,14 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
      */
     @Override
     protected List<SysModuleDto> startBatchHandle(OperateConstants.ServiceType operate, Collection<SysModuleDto> newList, Collection<? extends Serializable> idList) {
-        List<SysModuleDto> originList = SecurityContextHolder.setTenantIgnoreFun(() -> super.startBatchHandle(operate, newList, idList));
+        List<SysModuleDto> originList = super.startBatchHandle(operate, newList, idList);
         if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            boolean isAdminTenant = SecurityUserUtils.isAdminTenant();
-            Long enterpriseId = SecurityUserUtils.getEnterpriseId();
-            originList = originList.stream().filter(item -> isAdminTenant || (item.isNotCommon() && ObjectUtil.equals(item.getTenantId(), enterpriseId)))
+            originList = originList.stream().filter(item -> (item.isNotCommon() ))
                     .collect(Collectors.toList());
             if (CollUtil.isEmpty(originList)) {
                 throw new ServiceException("无待删除模块！");
             }
 
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.setTenantIgnore();
-            }
         }
         return originList;
     }
@@ -198,11 +141,6 @@ public class SysModuleServiceImpl extends BaseServiceImpl<SysModuleQuery, SysMod
      */
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysModuleDto> originList, Collection<SysModuleDto> newList) {
-        if (operate == OperateConstants.ServiceType.BATCH_DELETE) {
-            if (SecurityUserUtils.isAdminTenant()) {
-                SecurityContextHolder.clearTenantIgnore();
-            }
-        }
         super.endBatchHandle(operate, rows, originList, newList);
     }
 }

@@ -49,7 +49,6 @@ public class SysConfigManagerImpl extends BaseManagerImpl<SysConfigQuery, SysCon
                 Wrappers.<SysConfigPo>lambdaQuery()
                         .ne(SysConfigPo::getId, id)
                         .eq(SysConfigPo::getCode, code)
-                        .eq(SysConfigPo::getTenantId, TenantConstants.COMMON_TENANT_ID)
                         .last(SqlConstants.LIMIT_ONE));
         return baseConverter.mapperDto(config);
     }

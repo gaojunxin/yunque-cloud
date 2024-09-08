@@ -43,8 +43,4 @@ public class SysImExPo extends TBaseEntity {
     @TableField(updateStrategy = FieldStrategy.NEVER)
     protected String cacheType;
 
-    /** 租户Id */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    protected Long tenantId;
 }

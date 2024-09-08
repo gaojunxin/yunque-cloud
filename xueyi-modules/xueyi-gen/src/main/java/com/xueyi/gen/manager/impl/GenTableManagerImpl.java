@@ -1,6 +1,5 @@
 package com.xueyi.gen.manager.impl;
 
-import com.xueyi.common.datasource.annotation.Isolate;
 import com.xueyi.common.web.entity.manager.impl.BaseManagerImpl;
 import com.xueyi.gen.domain.dto.GenTableDto;
 import com.xueyi.gen.domain.model.GenTableConverter;
@@ -26,7 +25,6 @@ public class GenTableManagerImpl extends BaseManagerImpl<GenTableQuery, GenTable
      * @param table 业务对象
      * @return 数据库表集合
      */
-    @Isolate
     @Override
     public List<GenTableDto> selectDbTableList(GenTableQuery table) {
         return baseMapper.selectDbTableList(table);
@@ -38,7 +36,6 @@ public class GenTableManagerImpl extends BaseManagerImpl<GenTableQuery, GenTable
      * @param names 表名称组
      * @return 数据库表集合
      */
-    @Isolate
     @Override
     public List<GenTableDto> selectDbTableListByNames(String[] names) {
         return baseMapper.selectDbTableListByNames(names);

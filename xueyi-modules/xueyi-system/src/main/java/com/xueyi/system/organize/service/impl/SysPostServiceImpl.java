@@ -1,8 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.common.datasource.annotation.Isolate;
 import com.xueyi.common.web.correlate.contant.CorrelateConstants;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.organize.domain.dto.SysPostDto;
@@ -25,7 +23,6 @@ import java.util.Map;
  * @author xueyi
  */
 @Service
-@Isolate
 public class SysPostServiceImpl extends BaseServiceImpl<SysPostQuery, SysPostDto, SysPostCorrelate, ISysPostManager> implements ISysPostService {
 
     /**
@@ -68,7 +65,6 @@ public class SysPostServiceImpl extends BaseServiceImpl<SysPostQuery, SysPostDto
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int editPostRole(SysPostDto post) {
         return editCorrelates(post, SysPostCorrelate.ROLE_EDIT);
     }

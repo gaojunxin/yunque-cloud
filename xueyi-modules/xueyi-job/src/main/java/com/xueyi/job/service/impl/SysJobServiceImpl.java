@@ -1,6 +1,5 @@
 package com.xueyi.job.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.OperateConstants;
 import com.xueyi.common.core.exception.job.TaskException;
 import com.xueyi.common.core.utils.core.StrUtil;
@@ -83,7 +82,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int pauseJob(SysJobDto job) throws SchedulerException {
         job.setStatus(ScheduleConstants.Status.PAUSE.getCode());
         int row = baseManager.updateStatus(job);
@@ -98,7 +96,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
      * @return 结果
      */
     @Override
-    @DSTransactional
     public int resumeJob(SysJobDto job) throws SchedulerException {
         job.setStatus(ScheduleConstants.Status.NORMAL.getCode());
         int row = baseManager.updateStatus(job);
@@ -112,7 +109,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
      * @param id Id
      */
     @Override
-    @DSTransactional
     public boolean run(Long id) throws SchedulerException {
         SysJobDto job = baseManager.selectById(id);
         JobDataMap dataMap = new JobDataMap();
@@ -141,15 +137,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
     }
 
     /**
-     * 初始化调用租户字符串
-     *
-     * @param job 任务对象
-     */
-    private void initInvokeTenant(SysJobDto job) {
-        job.setInvokeTenant(SecurityUtils.getEnterpriseId() + "L, '" + SecurityUtils.getIsLessor() + "', '" + SecurityUtils.getSourceName() + "'");
-    }
-
-    /**
      * 单条操作 - 开始处理
      *
      * @param operate 服务层 - 操作类型
@@ -161,7 +148,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
         SysJobDto originDto = super.startHandle(operate, newDto, id);
         if (Objects.requireNonNull(operate) == OperateConstants.ServiceType.ADD) {
             newDto.setStatus(ScheduleConstants.Status.PAUSE.getCode());
-            initInvokeTenant(newDto);
         }
         return originDto;
     }
@@ -187,7 +173,6 @@ public class SysJobServiceImpl extends BaseServiceImpl<SysJobQuery, SysJobDto, S
                 }
             }
             case EDIT -> {
-                newDto.setInvokeTenant(originDto.getInvokeTenant());
                 try {
                     updateSchedulerJob(newDto, originDto.getJobGroup());
                 } catch (SchedulerException | TaskException e) {

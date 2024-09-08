@@ -20,9 +20,4 @@ public class TBaseEntity extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 租户Id */
-    @JsonIgnore
-    @TableField(exist = false)
-    protected Long enterpriseId;
-
 }

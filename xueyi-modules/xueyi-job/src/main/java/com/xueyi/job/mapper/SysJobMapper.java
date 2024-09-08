@@ -1,6 +1,5 @@
 package com.xueyi.job.mapper;
 
-import com.xueyi.common.datasource.annotation.Master;
 import com.xueyi.common.web.entity.mapper.BaseMapper;
 import com.xueyi.job.api.domain.dto.SysJobDto;
 import com.xueyi.job.api.domain.po.SysJobPo;
@@ -11,6 +10,5 @@ import com.xueyi.job.api.domain.query.SysJobQuery;
  *
  * @author xueyi
  */
-@Master
 public interface SysJobMapper extends BaseMapper<SysJobQuery, SysJobDto, SysJobPo> {
 }

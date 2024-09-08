@@ -42,9 +42,5 @@ public class SysConfigPo extends TBaseEntity {
     @TableField(updateStrategy = FieldStrategy.NEVER)
     protected String type;
 
-    /** 租户Id */
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @TableField(insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
-    protected Long tenantId;
 
 }

@@ -43,7 +43,6 @@ public class ISysDictTypeController extends BSysDictTypeController {
     @Operation(summary = "刷新字典缓存 | 默认数据")
     @Log(title = "字典类型", businessType = BusinessType.REFRESH)
     public R<Boolean> refreshCommonCacheInner() {
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         return super.refreshCacheInner();
     }
 }

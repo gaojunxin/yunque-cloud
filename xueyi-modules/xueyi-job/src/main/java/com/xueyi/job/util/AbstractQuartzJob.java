@@ -72,7 +72,6 @@ public abstract class AbstractQuartzJob implements Job {
         jobLog.setName(job.getName());
         jobLog.setJobGroup(job.getJobGroup());
         jobLog.setInvokeTarget(job.getInvokeTarget());
-        jobLog.setInvokeTenant(job.getInvokeTenant());
         jobLog.setStartTime(startTime);
         jobLog.setStopTime(LocalDateTime.now());
         Duration between = LocalDateTimeUtil.between(jobLog.getStartTime(), jobLog.getStopTime());
@@ -84,15 +83,8 @@ public abstract class AbstractQuartzJob implements Job {
         } else {
             jobLog.setStatus(DictConstants.DicStatus.NORMAL.getCode());
         }
-        String[] methodParams = jobLog.getInvokeTenant().split(",(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
-        String enterpriseIdStr = StrUtil.trimToEmpty(methodParams[0]);
-        Long enterpriseId = Long.valueOf(StrUtil.sub(enterpriseIdStr, 0, enterpriseIdStr.length() - 1));
-        String isLessorStr = StrUtil.trimToEmpty(methodParams[1]);
-        String isLessor = StrUtil.sub(isLessorStr, 1, isLessorStr.length() - 1);
-        String sourceNameStr = StrUtil.trimToEmpty(methodParams[2]);
-        String sourceName = StrUtil.sub(sourceNameStr, 1, sourceNameStr.length() - 1);
         // 写入数据库当中
-        SpringUtil.getBean(RemoteJobLogService.class).saveJobLog(jobLog, enterpriseId, isLessor, sourceName);
+        SpringUtil.getBean(RemoteJobLogService.class).saveJobLog(jobLog);
     }
 
     /**

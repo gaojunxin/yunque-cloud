@@ -43,7 +43,6 @@ public class ISysImExController extends BSysImExController {
     @Operation(summary = "刷新配置缓存 | 默认数据")
     @Log(title = "导入导出配置管理", businessType = BusinessType.REFRESH)
     public R<Boolean> refreshCommonCacheInner() {
-        SecurityContextHolder.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID.toString());
         return super.refreshCacheInner();
     }
 }

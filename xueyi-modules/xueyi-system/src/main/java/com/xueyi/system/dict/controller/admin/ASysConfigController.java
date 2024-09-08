@@ -82,9 +82,6 @@ public class ASysConfigController extends BSysConfigController {
     @GetMapping("/list")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_CONFIG_LIST)")
     public AjaxResult list(SysConfigQuery query) {
-        if (SecurityUserUtils.isAdminTenant()) {
-            SecurityContextHolder.setTenantIgnore();
-        }
         return super.list(query);
     }
 
@@ -95,9 +92,6 @@ public class ASysConfigController extends BSysConfigController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_CONFIG_SINGLE)")
     public AjaxResult getInfo(@PathVariable Serializable id) {
-        if (SecurityUserUtils.isAdminTenant()) {
-            SecurityContextHolder.setTenantIgnore();
-        }
         return super.getInfo(id);
     }
 

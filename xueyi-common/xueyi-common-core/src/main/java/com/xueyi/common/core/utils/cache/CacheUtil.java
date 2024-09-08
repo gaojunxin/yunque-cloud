@@ -27,21 +27,6 @@ public class CacheUtil {
     /**
      * 获取缓存键值 | 自定义
      *
-     * @param code     缓存编码
-     * @param isTenant 租户级缓存
-     * @return 缓存键值
-     */
-    public static String getCusCacheKey(String code, Boolean isTenant) {
-        Long enterpriseId = SecurityContextHolder.getEnterpriseId();
-        if (isTenant && (ObjectUtil.isNull(enterpriseId) || ObjectUtil.equals(SecurityConstants.EMPTY_TENANT_ID, enterpriseId))) {
-            throw new UtilException("获取字典失败，未找到企业Id标识");
-        }
-        return getCusCacheKey(code, isTenant, isTenant ? enterpriseId : null);
-    }
-
-    /**
-     * 获取缓存键值 | 自定义
-     *
      * @param code         缓存编码
      * @param isTenant     租户级缓存
      * @param enterpriseId 企业Id

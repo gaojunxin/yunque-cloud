@@ -2,8 +2,6 @@ package com.xueyi.gen.manager.impl;
 
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.utils.core.StrUtil;
-import com.xueyi.common.datasource.annotation.Isolate;
-import com.xueyi.common.datasource.annotation.Master;
 import com.xueyi.common.web.entity.manager.impl.BaseManagerImpl;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.model.GenTableColumnConverter;
@@ -29,7 +27,6 @@ public class GenTableColumnManagerImpl extends BaseManagerImpl<GenTableColumnQue
      * @param tableName 表名称
      * @return 数据库表列信息
      */
-    @Master
     @Override
     public List<GenTableColumnDto> selectDbTableColumnsByName(String tableName) {
         return selectDbTableColumnsByName(tableName, null);
@@ -42,9 +39,8 @@ public class GenTableColumnManagerImpl extends BaseManagerImpl<GenTableColumnQue
      * @param sourceName 数据源
      * @return 数据库表列信息
      */
-    @Isolate
     @Override
     public List<GenTableColumnDto> selectDbTableColumnsByName(String tableName, String sourceName) {
-        return SecurityContextHolder.setSourceNameFun(sourceName, () -> baseMapper.selectDbTableColumnsByName(tableName), StrUtil.isNotBlank(sourceName));
+        return baseMapper.selectDbTableColumnsByName(tableName);
     }
 }

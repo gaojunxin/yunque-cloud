@@ -1,7 +1,6 @@
 package com.xueyi.gen.service.impl;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.HttpConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
@@ -85,7 +84,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      */
     @Override
     public List<GenTableDto> selectDbTableList(GenTableQuery table) {
-        return SecurityContextHolder.setSourceNameFun(StrUtil.isNotBlank(table.getSourceName()) ? table.getSourceName() : TenantConstants.Source.MASTER.getCode(), () -> baseManager.selectDbTableList(table));
+        return baseManager.selectDbTableList(table);
     }
 
     /**
@@ -97,7 +96,7 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      */
     @Override
     public List<GenTableDto> selectDbTableListByNames(String[] tableNames, String sourceName) {
-        return SecurityContextHolder.setSourceNameFun(StrUtil.isNotBlank(sourceName) ? sourceName : TenantConstants.Source.MASTER.getCode(), () -> baseManager.selectDbTableListByNames(tableNames));
+        return baseManager.selectDbTableListByNames(tableNames);
     }
 
     /**
@@ -108,7 +107,6 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      */
 
     @Override
-    @DSTransactional
     public void importGenTable(List<GenTableDto> tableList, String sourceName) {
         try {
             tableList.forEach(table -> {
@@ -133,7 +131,6 @@ public class GenTableServiceImpl extends BaseServiceImpl<GenTableQuery, GenTable
      * @param table 业务信息
      */
     @Override
-    @DSTransactional
     public int update(GenTableDto table) {
         int row = baseManager.update(table);
         if (row > 0) {

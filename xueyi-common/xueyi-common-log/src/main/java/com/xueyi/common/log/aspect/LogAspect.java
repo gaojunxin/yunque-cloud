@@ -101,18 +101,10 @@ public class LogAspect {
                     .map(url -> StrUtil.sub(url, 0, 255))
                     .ifPresent(operateLog::setUrl);
             BaseLoginUser<?> loginUser = tokenService.getLoginUser();
-            // 策略源
-            String sourceName = Optional.ofNullable(SecurityUtils.getSourceName()).filter(StrUtil::isNotBlank)
-                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getSourceName)
-                            .orElse(TenantConstants.Source.SLAVE.getCode()));
             // 用户Id
             Long userId = Optional.ofNullable(SecurityUtils.getUserId()).filter(id -> ObjectUtil.notEqual(SecurityConstants.EMPTY_USER_ID, id))
                     .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getUserId)
                             .orElse(SecurityConstants.EMPTY_USER_ID));
-            // 企业Id
-            Long enterpriseId = Optional.ofNullable(SecurityUtils.getEnterpriseId()).filter(id -> ObjectUtil.notEqual(SecurityConstants.EMPTY_TENANT_ID, id))
-                    .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getEnterpriseId)
-                            .orElse(SecurityConstants.EMPTY_TENANT_ID));
             // 用户名
             String userName = Optional.ofNullable(SecurityUtils.getUserName()).filter(StrUtil::isNotBlank)
                     .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getUserName)
@@ -121,11 +113,9 @@ public class LogAspect {
             String userNick = Optional.ofNullable(SecurityUtils.getNickName()).filter(StrUtil::isNotBlank)
                     .orElseGet(() -> Optional.ofNullable(loginUser).map(BaseLoginUser::getNickName)
                             .orElse(StrUtil.EMPTY));
-            operateLog.setSourceName(sourceName);
             operateLog.setUserId(userId);
             operateLog.setUserName(userName);
             operateLog.setUserNick(userNick);
-            operateLog.setEnterpriseId(enterpriseId);
             Optional.ofNullable(e).ifPresent(ex -> {
                 operateLog.setStatus(BusinessStatus.FAIL.getCode());
                 operateLog.setErrorMsg(StrUtil.sub(ex.getMessage(), 0, 2000));

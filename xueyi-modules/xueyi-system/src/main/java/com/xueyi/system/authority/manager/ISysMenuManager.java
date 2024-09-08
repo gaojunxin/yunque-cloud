@@ -23,17 +23,6 @@ public interface ISysMenuManager extends ITreeManager<SysMenuQuery, SysMenuDto> 
     List<SysMenuDto> selectCommonList();
 
     /**
-     * 获取企业有权限且状态正常的菜单
-     *
-     * @param authGroupIds 企业权限组Id集合
-     * @param roleIds      角色Id集合
-     * @param isLessor     租户标识
-     * @param userType     用户标识
-     * @return 菜单对象集合
-     */
-    List<SysMenuDto> selectEnterpriseList(Set<Long> authGroupIds, Set<Long> roleIds, String isLessor, String userType);
-
-    /**
      * 根据模块Id查询菜单路由
      *
      * @param moduleId 模块Id
