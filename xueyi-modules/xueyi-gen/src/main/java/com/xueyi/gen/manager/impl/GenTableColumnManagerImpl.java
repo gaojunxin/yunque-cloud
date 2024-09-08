@@ -29,18 +29,7 @@ public class GenTableColumnManagerImpl extends BaseManagerImpl<GenTableColumnQue
      */
     @Override
     public List<GenTableColumnDto> selectDbTableColumnsByName(String tableName) {
-        return selectDbTableColumnsByName(tableName, null);
-    }
-
-    /**
-     * 根据表名称查询数据库表列信息 | 租户库
-     *
-     * @param tableName  表名称
-     * @param sourceName 数据源
-     * @return 数据库表列信息
-     */
-    @Override
-    public List<GenTableColumnDto> selectDbTableColumnsByName(String tableName, String sourceName) {
         return baseMapper.selectDbTableColumnsByName(tableName);
     }
+
 }

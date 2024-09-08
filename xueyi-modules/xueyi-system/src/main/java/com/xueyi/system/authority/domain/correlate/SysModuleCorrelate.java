@@ -6,7 +6,6 @@ import com.xueyi.common.web.correlate.domain.Indirect;
 import com.xueyi.common.web.correlate.service.CorrelateService;
 import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.api.authority.domain.dto.SysModuleDto;
-import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.authority.domain.merge.SysRoleModuleMerge;
 import com.xueyi.system.authority.mapper.merge.SysRoleModuleMergeMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.xueyi.common.web.correlate.contant.CorrelateConstants.SubOperate.DELETE;
-import static com.xueyi.common.web.correlate.contant.CorrelateConstants.SubOperate.SELECT;
 
 /**
  * 系统服务 | 权限模块 | 模块 关联映射

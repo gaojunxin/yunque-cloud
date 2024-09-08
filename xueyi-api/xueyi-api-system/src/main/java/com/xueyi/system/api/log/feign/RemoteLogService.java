@@ -31,10 +31,8 @@ public interface RemoteLogService {
      * 保存访问记录
      *
      * @param loginInfo    访问实体
-     * @param enterpriseId 企业Id
-     * @param sourceName   数据源
      * @return 结果
      */
     @PostMapping(value = "/inner/loginLog", headers = SecurityConstants.FROM_SOURCE_INNER)
-    R<Boolean> saveLoginInfo(@RequestBody SysLoginLogDto loginInfo, @RequestHeader(SecurityConstants.ENTERPRISE_ID) Long enterpriseId, @RequestHeader(SecurityConstants.SOURCE_NAME) String sourceName);
+    R<Boolean> saveLoginInfo(@RequestBody SysLoginLogDto loginInfo);
 }

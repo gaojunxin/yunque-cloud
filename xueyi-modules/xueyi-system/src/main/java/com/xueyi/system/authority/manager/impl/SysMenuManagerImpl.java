@@ -13,10 +13,6 @@ import com.xueyi.system.api.authority.constant.AuthorityConstants;
 import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.api.authority.domain.po.SysMenuPo;
 import com.xueyi.system.api.authority.domain.query.SysMenuQuery;
-import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
-import com.xueyi.system.api.organize.domain.dto.SysUserDto;
-import com.xueyi.system.authority.domain.merge.SysAuthGroupMenuMerge;
-import com.xueyi.system.authority.domain.merge.SysRoleMenuMerge;
 import com.xueyi.system.authority.domain.model.SysMenuConverter;
 import com.xueyi.system.authority.manager.ISysMenuManager;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
@@ -26,10 +22,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 系统服务 | 权限模块 | 菜单管理 数据封装层处理

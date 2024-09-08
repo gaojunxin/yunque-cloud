@@ -54,7 +54,6 @@ public class ASysUserController extends BSysUserController {
         LoginUser loginUser = tokenService.getLoginUser();
         baseService.userDesensitized(loginUser.getUser());
         HashMap<String, Object> map = new HashMap<>();
-        map.put("enterprise", loginUser.getEnterprise());
         map.put("user", loginUser.getUser());
         DataScope dataScope = tokenService.getDataScope();
         map.put("roles", dataScope.getRoles());

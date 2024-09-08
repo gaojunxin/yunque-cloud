@@ -11,8 +11,6 @@ import com.xueyi.common.core.utils.core.StrUtil;
 import com.xueyi.common.core.utils.ip.IpUtil;
 import com.xueyi.common.core.utils.servlet.ServletUtil;
 import com.xueyi.common.core.web.model.BaseLoginUser;
-import com.xueyi.common.core.web.model.SysEnterprise;
-import com.xueyi.common.core.web.model.SysSource;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;

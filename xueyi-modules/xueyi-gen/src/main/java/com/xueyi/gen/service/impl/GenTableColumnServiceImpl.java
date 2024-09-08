@@ -29,8 +29,6 @@ public class GenTableColumnServiceImpl extends BaseServiceImpl<GenTableColumnQue
      */
     @Override
     public List<GenTableColumnDto> selectDbTableColumnsByName(String tableName, String sourceName) {
-        return StrUtil.isNotBlank(sourceName) && StrUtil.notEquals(TenantConstants.Source.MASTER.getCode(), sourceName)
-                ? baseManager.selectDbTableColumnsByName(tableName, sourceName)
-                : baseManager.selectDbTableColumnsByName(tableName);
+        return baseManager.selectDbTableColumnsByName(tableName);
     }
 }

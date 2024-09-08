@@ -6,7 +6,6 @@ import com.xueyi.common.web.correlate.domain.Indirect;
 import com.xueyi.common.web.correlate.service.CorrelateService;
 import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.api.authority.domain.dto.SysModuleDto;
-import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.authority.domain.merge.SysRoleMenuMerge;
 import com.xueyi.system.authority.mapper.merge.SysRoleMenuMergeMapper;
 import com.xueyi.system.authority.service.ISysModuleService;

@@ -70,12 +70,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
     /** 登录IP地址 */
     protected String ipaddr;
 
-    /** 源策略组 */
-    protected SysSource source;
-
-    /** 企业信息 */
-    protected SysEnterprise enterprise;
-
     /** 用户信息 */
     protected User user;
 
@@ -111,16 +105,4 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
         return userName;
     }
 
-    /** 初始化企业信息 */
-    public void initEnterprise(SysEnterprise enterprise) {
-        setEnterpriseId(enterprise.getId());
-        setEnterpriseName(enterprise.getName());
-        setIsLessor(enterprise.getIsLessor());
-    }
-
-    /** 初始化数据源信息 */
-    public void initSource(SysSource source) {
-        setStrategyId(source.getStrategyId());
-        setSourceName(source.getMaster());
-    }
 }

@@ -5,7 +5,6 @@ import com.xueyi.common.web.correlate.domain.Direct;
 import com.xueyi.common.web.correlate.service.CorrelateService;
 import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
 import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
-import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.dict.service.ISysDictDataService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
