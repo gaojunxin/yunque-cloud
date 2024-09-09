@@ -14,6 +14,11 @@
         xueyi-gateway网关模块
     </description>
 
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <dependencies>
 
         <!-- Xueyi Common Dependency Nacos -->
