@@ -24,9 +24,6 @@ import java.util.List;
 @Component
 public class SysModuleManagerImpl extends BaseManagerImpl<SysModuleQuery, SysModuleDto, SysModulePo, SysModuleMapper, SysModuleConverter> implements ISysModuleManager {
 
-    @Autowired
-    private SysRoleModuleMergeMapper roleModuleMergeMapper;
-
     /**
      * 获取全部状态正常公共模块
      *
