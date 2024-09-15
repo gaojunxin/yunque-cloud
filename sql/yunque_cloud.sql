@@ -1,103 +1,12 @@
-# DROP DATABASE IF EXISTS `xy-cloud`;
+# DROP DATABASE IF EXISTS `yunque-cloud`;
 #
-# CREATE DATABASE  `xy-cloud` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+# CREATE DATABASE  `yunque-cloud` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 #
 # SET NAMES utf8mb4;
 # SET FOREIGN_KEY_CHECKS = 0;
 #
-# USE `xy-cloud`;
+# USE `yunque-cloud`;
 
--- ----------------------------
--- 1、租户信息表
--- ----------------------------
-drop table if exists te_tenant;
-create table te_tenant (
-  id		                bigint	            not null                                comment '租户Id',
-  strategy_id		        bigint	            not null                                comment '策略Id',
-  name		                varchar(50)	        not null	                            comment '租户账号',
-  system_name		        varchar(50)	        not null 	                            comment '系统名称',
-  nick		                varchar(50)	        not null 	                            comment '租户名称',
-  domain_name               varchar(100)        default null                            comment '租户域名',
-  logo		                varchar(200)	    default ''	                            comment '租户logo',
-  name_frequency            tinyint             default 0                               comment '账号修改次数',
-  is_lessor                 char(1)             not null default 'N'	                comment '超管租户（Y是 N否）',
-  sort                      int unsigned        default 0                               comment '显示顺序',
-  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
-  remark                    varchar(200)        default null                            comment '备注',
-  create_by                 bigint              default null                            comment '创建者',
-  create_time               datetime            default current_timestamp               comment '创建时间',
-  update_by                 bigint              default null                            comment '更新者',
-  update_time               datetime            on update current_timestamp             comment '更新时间',
-  is_default                char(1)             not null default 'N'	                comment '默认租户（Y是 N否）',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  primary key (id)
-) engine = innodb comment = '租户信息表';
-
--- ----------------------------
--- 初始化-租户信息表数据
--- ----------------------------
-insert into te_tenant (id, is_lessor, is_default, strategy_id,  name, system_name, nick, logo)
-values (1, 'Y', 'Y', 1, 'administrator', '租管租户', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg'),
-       (2, 'N', 'N', 1, 'xueYi', '雪忆科技', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg');
-
--- ----------------------------
--- 2、策略信息表
--- ----------------------------
-drop table if exists te_strategy;
-create table te_strategy (
-  id		                bigint	            not null                                comment '策略Id',
-  name                      varchar(100)	    not null default ''	                    comment '策略名称',
-  source_id                 bigint	            not null	                            comment '数据源Id',
-  source_slave              varchar(200)	    not null	                            comment '数据源编码',
-  sort                      int unsigned        default 0                               comment '显示顺序',
-  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
-  source_type_info          json                                                        comment '策略组类型配置信息',
-  remark                    varchar(200)        default null                            comment '备注',
-  create_by                 bigint              default null                            comment '创建者',
-  create_time               datetime            default current_timestamp               comment '创建时间',
-  update_by                 bigint              default null                            comment '更新者',
-  update_time               datetime            on update current_timestamp             comment '更新时间',
-  is_default                char(1)             not null default 'N'	                comment '默认策略（Y是 N否）',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  primary key (id)
-) engine = innodb comment = '数据源策略表';
-
--- ----------------------------
--- 初始化-策略信息表数据
--- ----------------------------
-insert into te_strategy(id, name, is_default, source_id, source_slave, sort)
-values (1, '默认注册策略', 'Y', 1, 'slave', 1);
-
--- ----------------------------
--- 3、数据源信息表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
--- ----------------------------
-drop table if exists te_source;
-create table te_source (
-  id		                bigint	            not null                                comment '数据源Id',
-  name		                varchar(50)	        not null                                comment '数据源名称',
-  slave		                varchar(200)	    not null	                            comment '数据源编码',
-  driver_class_name		    varchar(200)	    not null	                            comment '驱动',
-  url_prepend	            varchar(200)	    not null	                            comment '连接地址',
-  url_append	            varchar(200)	    not null default ''	                    comment '连接参数',
-  user_name	                varchar(100) 	    not null	                            comment '用户名',
-  password	                varchar(100) 	    not null default ''	                    comment '密码',
-  sort                      int unsigned        default 0                               comment '显示顺序',
-  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
-  remark                    varchar(200)        default null                            comment '备注',
-  create_by                 bigint              default null                            comment '创建者',
-  create_time               datetime            default current_timestamp               comment '创建时间',
-  update_by                 bigint              default null                            comment '更新者',
-  update_time               datetime            on update current_timestamp             comment '更新时间',
-  is_default                char(1)             not null default 'N'	                comment '默认数据源（Y是 N否）',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  primary key (id)
-) engine = innodb comment = '数据源信息表';
-
--- ----------------------------
--- 初始化-数据源信息表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
--- ----------------------------
-insert into te_source(id, name, is_default, slave, driver_class_name, url_prepend, url_append, user_name, password)
-values (1, '注册数据源', 'Y', 'slave', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud1', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&allowMultiQueries=true&serverTimezone=GMT%2B8', 'root', 'password');
 
 -- ----------------------------
 -- 4、模块信息表
