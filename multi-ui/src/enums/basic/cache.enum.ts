@@ -28,9 +28,6 @@ export const APP_LOCAL_CACHE_KEY = 'COMMON__LOCAL__KEY__';
 // base global session key
 export const APP_SESSION_CACHE_KEY = 'COMMON__SESSION__KEY__';
 
-// login enterpriseName local session key
-export const ENTERPRISE_NAME_SESSION_CACHE_KEY = 'ENTERPRISE_NAME__SESSION__KEY';
-
 // login userName local session key
 export const USER_NAME_SESSION_CACHE_KEY = 'USER_NAME__SESSION__KEY';
 

@@ -10,7 +10,7 @@
 
     <name>xueyi</name>
     <url>https://xueyitt.cn</url>
-    <description>雪忆管理系统</description>
+    <description>云雀管理系统</description>
 
     <properties>
         <revision>${xueyi.version}</revision>

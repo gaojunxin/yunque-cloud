@@ -10,11 +10,6 @@ import lombok.Getter;
  */
 public class OrganizeConstants {
 
-    /** 企业账号长度限制 */
-    public static final int ENTERPRISE_NAME_MIN_LENGTH = 2;
-
-    public static final int ENTERPRISE_NAME_MAX_LENGTH = 30;
-
     /** 用户名长度限制 */
     public static final int USERNAME_MIN_LENGTH = 2;
 

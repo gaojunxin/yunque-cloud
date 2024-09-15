@@ -66,35 +66,20 @@ public class AdminDetailsPasswordProvider implements IUserDetailsService {
     public void checkParams(HttpServletRequest request) {
         MultiValueMap<String, String> parameters = ServletUtil.getParameters(request);
 
-        // 企业账号校验
-        String enterpriseName = parameters.getFirst(SecurityConstants.LoginParam.ENTERPRISE_NAME.getCode());
         String userName = parameters.getFirst(SecurityConstants.LoginParam.USER_NAME.getCode());
         String password = parameters.getFirst(SecurityConstants.LoginParam.PASSWORD.getCode());
 
-        // 企业账号||员工账号||密码为空 错误
-        if (StrUtil.isBlank(enterpriseName) || StrUtil.isBlank(userName) || StrUtil.isBlank(password)) {
-            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "企业账号/员工账号/密码必须填写");
-            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "企业账号/员工账号/密码必须填写", null));
-        }
-
-        // 企业账号不在指定范围内 错误
-        if (enterpriseName.length() < OrganizeConstants.ENTERPRISE_NAME_MIN_LENGTH
-                || enterpriseName.length() > OrganizeConstants.ENTERPRISE_NAME_MAX_LENGTH) {
-            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "企业账号不在指定范围");
-            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "企业账号不在指定范围", null));
-        }
-
         // 员工账号不在指定范围内 错误
-        if (userName.length() < OrganizeConstants.USERNAME_MIN_LENGTH
-                || userName.length() > OrganizeConstants.USERNAME_MAX_LENGTH) {
-            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "员工账号不在指定范围");
+        if (userName != null && (userName.length() < OrganizeConstants.USERNAME_MIN_LENGTH
+                || userName.length() > OrganizeConstants.USERNAME_MAX_LENGTH)) {
+            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(userName, Constants.LOGIN_FAIL, "员工账号不在指定范围");
             throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "员工账号不在指定范围", null));
         }
 
         // 密码如果不在指定范围内 错误
-        if (password.length() < OrganizeConstants.PASSWORD_MIN_LENGTH
-                || password.length() > OrganizeConstants.PASSWORD_MAX_LENGTH) {
-            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "用户密码不在指定范围");
+        if (password != null && (password.length() < OrganizeConstants.PASSWORD_MIN_LENGTH
+                || password.length() > OrganizeConstants.PASSWORD_MAX_LENGTH)) {
+            SpringUtil.getBean(ISysLogService.class).recordLoginInfo(userName, Constants.LOGIN_FAIL, "用户密码不在指定范围");
             throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, "用户密码不在指定范围", null));
         }
     }
@@ -106,11 +91,9 @@ public class AdminDetailsPasswordProvider implements IUserDetailsService {
      * @return 用户信息
      */
     public UsernamePasswordAuthenticationToken buildToken(Map<String, Object> reqParameters) {
-        String enterpriseName = (String) reqParameters.get(SecurityConstants.LoginParam.ENTERPRISE_NAME.getCode());
         String userName = (String) reqParameters.get(SecurityConstants.LoginParam.USER_NAME.getCode());
         String password = (String) reqParameters.get(SecurityConstants.LoginParam.PASSWORD.getCode());
         Map<String, String> loginMap = new HashMap<>();
-        loginMap.put(SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode(), enterpriseName);
         loginMap.put(SecurityConstants.BaseSecurity.USER_NAME.getCode(), userName);
         loginMap.put(SecurityConstants.BaseSecurity.PASSWORD.getCode(), password);
         return new UsernamePasswordAuthenticationToken(loginMap, password);
@@ -129,29 +112,27 @@ public class AdminDetailsPasswordProvider implements IUserDetailsService {
         if (MapUtil.isEmpty(loginMap)) {
             loginMap = new HashMap<>();
         }
-        String enterpriseName = loginMap.get(SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode());
         String userName = loginMap.get(SecurityConstants.BaseSecurity.USER_NAME.getCode());
         String password = loginMap.get(SecurityConstants.BaseSecurity.PASSWORD.getCode());
-        return loadUser(enterpriseName, userName, password);
+        return loadUser(userName, password);
     }
 
     /**
      * 登录验证
      *
-     * @param enterpriseName 企业名称
      * @param userName       用户名
      * @param password       密码
      * @return 用户信息
      */
     @SneakyThrows
-    public LoginUser loadUser(String enterpriseName, String userName, String password) {
+    public LoginUser loadUser(String userName, String password) {
         // 查询登录信息
-        R<LoginUser> loginInfoResult = remoteLoginService.getLoginInfoInner(enterpriseName, userName, password);
+        R<LoginUser> loginInfoResult = remoteLoginService.getLoginInfoInner(userName, password);
         if (loginInfoResult.isFail()) {
             throw new UsernameNotFoundException("服务调用失败，请稍后再试！");
         } else if (ObjectUtil.isNull(loginInfoResult.getData())) {
-            logService.recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, loginInfoResult.getMsg());
-            throw new UsernameNotFoundException("企业账号/员工账号/密码错误，请检查！");
+            logService.recordLoginInfo(userName, Constants.LOGIN_FAIL, loginInfoResult.getMsg());
+            throw new UsernameNotFoundException("员工账号/密码错误，请检查！");
         }
         LoginUser loginUser = loginInfoResult.getData();
         if (BaseConstants.Status.DISABLE.getCode().equals(loginUser.getUser().getStatus())) {

@@ -79,6 +79,18 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
     }
 
     /**
+     * 获取有权限且状态正常的菜单
+     *
+     * @param roleIds      角色Id集合
+     * @param userType     用户标识
+     * @return 菜单对象集合
+     */
+    @Override
+    public List<SysMenuDto> selectEnterpriseList(Set<Long> roleIds, String userType) {
+        return baseManager.selectEnterpriseList(roleIds, userType);
+    }
+
+    /**
      * 根据模块Id查询菜单路由
      *
      * @param moduleId 模块Id

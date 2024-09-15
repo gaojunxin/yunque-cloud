@@ -41,70 +41,6 @@ public class JwtUtil {
     }
 
     /**
-     * 根据令牌获取企业Id
-     *
-     * @param token 令牌
-     * @return 企业Id
-     */
-
-    public static String getEnterpriseId(String token) {
-        Claims claims = parseToken(token);
-        return getEnterpriseId(claims);
-    }
-
-    /**
-     * 根据身份信息获取企业Id
-     *
-     * @param claims 身份信息
-     * @return 企业Id
-     */
-    public static String getEnterpriseId(Claims claims) {
-        return getValue(claims, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode());
-    }
-
-    /**
-     * 根据令牌获取企业账号
-     *
-     * @param token 令牌
-     * @return 企业账号
-     */
-    public static String getEnterpriseName(String token) {
-        Claims claims = parseToken(token);
-        return getEnterpriseName(claims);
-    }
-
-    /**
-     * 根据身份信息获取企业账号
-     *
-     * @param claims 身份信息
-     * @return 企业账号
-     */
-    public static String getEnterpriseName(Claims claims) {
-        return getValue(claims, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode());
-    }
-
-    /**
-     * 根据令牌获取企业类型
-     *
-     * @param token 令牌
-     * @return 企业类型
-     */
-    public static String getIsLessor(String token) {
-        Claims claims = parseToken(token);
-        return getIsLessor(claims);
-    }
-
-    /**
-     * 根据身份信息获取企业类型
-     *
-     * @param claims 身份信息
-     * @return 企业类型
-     */
-    public static String getIsLessor(Claims claims) {
-        return getValue(claims, SecurityConstants.BaseSecurity.IS_LESSOR.getCode());
-    }
-
-    /**
      * 根据令牌获取用户Id
      *
      * @param token 令牌
@@ -207,27 +143,6 @@ public class JwtUtil {
      */
     public static String getAccountType(Claims claims) {
         return getValue(claims, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode());
-    }
-
-    /**
-     * 根据令牌获取租户策略源
-     *
-     * @param token 令牌
-     * @return 租户策略源
-     */
-    public static String getSourceName(String token) {
-        Claims claims = parseToken(token);
-        return getSourceName(claims);
-    }
-
-    /**
-     * 根据令牌获取租户策略源
-     *
-     * @param claims 身份信息
-     * @return 租户策略源
-     */
-    public static String getSourceName(Claims claims) {
-        return getValue(claims, SecurityConstants.BaseSecurity.SOURCE_NAME.getCode());
     }
 
     /**

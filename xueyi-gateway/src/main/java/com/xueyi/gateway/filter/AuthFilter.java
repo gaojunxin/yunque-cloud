@@ -77,19 +77,10 @@ public class AuthFilter implements WebFilter {
         }
 
         // JWT解析信息
-        String baseEnterpriseId = JwtUtil.getEnterpriseId(claims);
-        String baseEnterpriseName = JwtUtil.getEnterpriseName(claims);
-        String baseIsLessor = JwtUtil.getIsLessor(claims);
-        String baseStrategyId = JwtUtil.getStrategyId(claims);
-        String baseSourceName = JwtUtil.getSourceName(claims);
         String baseUserId = JwtUtil.getUserId(claims);
         String baseUserName = JwtUtil.getUserName(claims);
         String baseNickName = JwtUtil.getNickName(claims);
         String baseUserType = JwtUtil.getUserType(claims);
-
-        if (StrUtil.hasBlank(baseEnterpriseId, baseEnterpriseName, baseIsLessor, baseSourceName)) {
-            return unauthorizedResponse(exchange, chain, isWhites, "令牌验证失败");
-        }
 
         switch (accountType) {
             case ADMIN, EXTERNAL -> {
@@ -123,12 +114,7 @@ public class AuthFilter implements WebFilter {
         }
 
         // 设置Token解析信息到请求
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode(), baseEnterpriseId);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getBaseCode(), baseEnterpriseName);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode(), accountType.getCode());
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.IS_LESSOR.getBaseCode(), baseIsLessor);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.STRATEGY_ID.getBaseCode(), baseStrategyId);
-        ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode(), baseSourceName);
 
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_ID.getBaseCode(), baseUserId);
         ServletUtil.addHeader(mutate, SecurityConstants.BaseSecurity.USER_NAME.getBaseCode(), baseUserName);

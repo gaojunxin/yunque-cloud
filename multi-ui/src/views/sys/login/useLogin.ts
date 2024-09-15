@@ -50,9 +50,6 @@ export function useFormValid<T extends Object = any>(formRef: Ref<FormInstance>)
 export function useFormRules(formData?: Recordable) {
   const { t } = useI18n();
 
-  const getEnterpriseNameFormRule = computed(() =>
-    createRule(t('sys.login.enterpriseNamePlaceholder')),
-  );
   const getUserNameFormRule = computed(() => createRule(t('sys.login.userNamePlaceholder')));
   const getPasswordFormRule = computed(() => createRule(t('sys.login.passwordPlaceholder')));
   const getSmsFormRule = computed(() => createRule(t('sys.login.smsPlaceholder')));
@@ -75,7 +72,6 @@ export function useFormRules(formData?: Recordable) {
   };
 
   const getFormRules = computed((): { [k: string]: ValidationRule | ValidationRule[] } => {
-    const enterpriseNameFormRule = unref(getEnterpriseNameFormRule);
     const userNameFormRule = unref(getUserNameFormRule);
     const passwordFormRule = unref(getPasswordFormRule);
     const smsFormRule = unref(getSmsFormRule);
@@ -89,7 +85,6 @@ export function useFormRules(formData?: Recordable) {
       // register form rules
       case LoginStateEnum.REGISTER:
         return {
-          enterpriseName: enterpriseNameFormRule,
           userName: userNameFormRule,
           password: passwordFormRule,
           confirmPassword: [
@@ -102,7 +97,6 @@ export function useFormRules(formData?: Recordable) {
       // reset password form rules
       case LoginStateEnum.RESET_PASSWORD:
         return {
-          enterpriseName: enterpriseNameFormRule,
           userName: userNameFormRule,
           ...mobileRule,
         };
@@ -114,7 +108,6 @@ export function useFormRules(formData?: Recordable) {
       // login form rules
       default:
         return {
-          enterpriseName: enterpriseNameFormRule,
           userName: userNameFormRule,
           password: passwordFormRule,
         };

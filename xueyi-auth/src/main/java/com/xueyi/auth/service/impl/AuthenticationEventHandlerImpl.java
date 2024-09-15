@@ -71,9 +71,8 @@ public class AuthenticationEventHandlerImpl implements AuthenticationSuccessHand
                 case ADMIN -> {
                     switch (grantType) {
                         case PASSWORD -> {
-                            String enterpriseName = request.getParameter(SecurityConstants.LoginParam.ENTERPRISE_NAME.getCode());
                             String userName = request.getParameter(SecurityConstants.LoginParam.USER_NAME.getCode());
-                            errorMsg.append(StrUtil.format("企业账号:{}，用户账号:{}", enterpriseName, userName));
+                            errorMsg.append(StrUtil.format("用户账号:{}", userName));
                         }
                         default -> {
                         }

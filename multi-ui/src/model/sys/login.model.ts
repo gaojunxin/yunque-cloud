@@ -4,7 +4,6 @@ import { EnterpriseIM, UserIM } from '../system/organize';
  * @description: Login interface parameters
  */
 export interface LoginPM {
-  enterpriseName?: string;
   userName: string;
   password: string;
   code: string;

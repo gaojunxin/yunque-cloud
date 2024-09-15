@@ -53,12 +53,11 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
      * 构建令牌缓存路径
      *
      * @param type         密钥类型
-     * @param enterpriseId 企业Id
      * @param userId       用户名Id
      * @param tokenValue   token值
      * @return 令牌缓存路径
      */
-    String getTokenAddress(String type, Long enterpriseId, Long userId, String tokenValue);
+    String getTokenAddress(String type, Long userId, String tokenValue);
 
     /**
      * 排序值 | 默认取最大的
@@ -167,15 +166,11 @@ public interface ITokenService<User, LoginUser extends BaseLoginUser<User>> exte
 
         claimsMap.put(SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode(), TokenConstants.PREFIX + loginUser.getAccessToken());
         claimsMap.put(SecurityConstants.BaseSecurity.REFRESH_TOKEN.getCode(), TokenConstants.PREFIX + loginUser.getRefreshToken());
-        claimsMap.put(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getCode(), loginUser.getEnterpriseId());
-        claimsMap.put(SecurityConstants.BaseSecurity.ENTERPRISE_NAME.getCode(), loginUser.getEnterpriseName());
         claimsMap.put(SecurityConstants.BaseSecurity.IS_LESSOR.getCode(), loginUser.getIsLessor());
         claimsMap.put(SecurityConstants.BaseSecurity.USER_ID.getCode(), loginUser.getUserId());
         claimsMap.put(SecurityConstants.BaseSecurity.USER_NAME.getCode(), loginUser.getUserName());
         claimsMap.put(SecurityConstants.BaseSecurity.NICK_NAME.getCode(), loginUser.getNickName());
         claimsMap.put(SecurityConstants.BaseSecurity.USER_TYPE.getCode(), loginUser.getUserType());
-        claimsMap.put(SecurityConstants.BaseSecurity.STRATEGY_ID.getCode(), loginUser.getStrategyId());
-        claimsMap.put(SecurityConstants.BaseSecurity.SOURCE_NAME.getCode(), loginUser.getSourceName());
         claimsMap.put(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getCode(), loginUser.getAccountType().getCode());
 
         return claimsMap;

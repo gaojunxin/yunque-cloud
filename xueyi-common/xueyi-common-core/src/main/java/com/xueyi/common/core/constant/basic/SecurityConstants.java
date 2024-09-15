@@ -15,15 +15,6 @@ public class SecurityConstants {
     /** 空用户Id */
     public static final Long EMPTY_USER_ID = BaseConstants.NONE_ID;
 
-    /** 空租户Id */
-    public static final Long EMPTY_TENANT_ID = BaseConstants.NONE_ID;
-
-    /** 公共数据租户Id */
-    public static final Long COMMON_TENANT_ID = BaseConstants.COMMON_ID;
-
-    /** 租管角色标识 */
-    public static final String ROLE_ADMINISTRATOR = "administrator";
-
     /** 超管角色标识 */
     public static final String ROLE_ADMIN = "admin";
 
@@ -207,7 +198,6 @@ public class SecurityConstants {
     @AllArgsConstructor
     public enum LoginParam {
 
-        ENTERPRISE_NAME("enterpriseName", "企业账号"),
         USER_NAME("userName", "用户账号"),
         PASSWORD("password", "用户密码");
 
@@ -270,9 +260,6 @@ public class SecurityConstants {
         TOKEN("token", "用户唯一标识"),
         ACCESS_TOKEN("access_token", "用户唯一标识 - 访问令牌"),
         REFRESH_TOKEN("refresh_token", "用户唯一标识 - 刷新令牌"),
-        ENTERPRISE("enterprise", "企业信息"),
-        ENTERPRISE_ID(SecurityConstants.ENTERPRISE_ID, "企业Id"),
-        ENTERPRISE_NAME("enterprise_name", "企业账号"),
         PASSWORD("password", "用户密码"),
         USER("user", "用户信息"),
         USER_ID("user_id", "用户Id"),
@@ -281,12 +268,8 @@ public class SecurityConstants {
         IS_LESSOR(SecurityConstants.IS_LESSOR, "企业类型"),
         USER_TYPE("user_type", "用户类型"),
         USER_KEY("user_key", "用户标识"),
-        SOURCE("source", "租户策略源"),
-        STRATEGY_ID(SecurityConstants.STRATEGY_ID, "租户源策略组Id"),
-        SOURCE_NAME(SecurityConstants.SOURCE_NAME, "租户主数据源名称"),
         USER_INFO("user_info", "登录用户"),
         ACCOUNT_TYPE("account_type", "账户类型"),
-        TENANT_IGNORE("tenant_ignore", "租户控制忽略"),
         EXPIRE_TIME("expire_time", "过期时间");
 
         private final String code;

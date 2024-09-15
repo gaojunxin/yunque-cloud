@@ -45,17 +45,16 @@ public class TokenUserService implements ITokenService<SysUserDto, LoginUser> {
      * 构建令牌缓存路径
      *
      * @param type         密钥类型
-     * @param enterpriseId 企业Id
      * @param userId       用户名Id
      * @param tokenValue   token值
      * @return 令牌缓存路径
      */
     @Override
-    public String getTokenAddress(String type, Long enterpriseId, Long userId, String tokenValue) {
-        if (ObjectUtil.isNull(enterpriseId) || StrUtil.isBlank(tokenValue)) {
+    public String getTokenAddress(String type, Long userId, String tokenValue) {
+        if (StrUtil.isBlank(tokenValue)) {
             throw new NullPointerException("enterpriseId or tokenValue has empty");
         }
-        return StrUtil.format("{}:{}:{}:{}:{}:{}", CacheConstants.AUTHORIZATION, CacheConstants.LoginTokenType.ADMIN.getCode(), enterpriseId, userId, type, tokenValue);
+        return StrUtil.format("{}:{}:{}:{}:{}", CacheConstants.AUTHORIZATION, CacheConstants.LoginTokenType.ADMIN.getCode(), userId, type, tokenValue);
     }
 
     /**

@@ -20,12 +20,11 @@ public interface RemoteAdminLoginService {
     /**
      * 查询登录登录信息
      *
-     * @param enterpriseName 企业账号
      * @param userName       员工账号
      * @param password       密码
      * @return 结果
      */
     @GetMapping(headers = SecurityConstants.FROM_SOURCE_INNER)
-    R<LoginUser> getLoginInfoInner(@RequestParam("enterpriseName") String enterpriseName, @RequestParam("userName") String userName, @RequestParam("password") String password);
+    R<LoginUser> getLoginInfoInner(@RequestParam("userName") String userName, @RequestParam("password") String password);
 
 }

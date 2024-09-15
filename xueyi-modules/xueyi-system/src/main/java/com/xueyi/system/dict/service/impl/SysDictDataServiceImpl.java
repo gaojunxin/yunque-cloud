@@ -122,8 +122,8 @@ public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataQuery, Sy
                 Collection<SysDictDataDto> list = operate.isBatch() ? dtoList : new ArrayList<>() {{
                     add(dto);
                 }};
-                List<String> enterpriseCaches = list.stream().map(SysDictDataDto::getTenantId).collect(Collectors.toSet())
-                        .stream().map(item -> CacheUtil.getCusCacheKey(cacheKey, Boolean.TRUE, item)).toList();
+                List<String> enterpriseCaches = list
+                        .stream().map(item -> CacheUtil.getCusCacheKey(cacheKey)).toList();
                 redisService.deleteObject(enterpriseCaches);
             }
         }

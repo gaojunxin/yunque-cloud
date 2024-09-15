@@ -78,7 +78,7 @@ const transform: AxiosTransform = {
         timeoutMsg = t('sys.api.timeoutMessage');
         const userStore = useUserStoreWithOut();
         // 被动登出，带redirect地址
-        userStore.logout(false);
+        // userStore.logout(false);
         break;
       default:
         if (msg) {

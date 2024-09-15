@@ -58,11 +58,9 @@ public class AuthAspect implements Ordered {
         if (!innerAuth.isAnonymous()) {
             // 用户信息验证
             if (ObjectUtil.isNotNull(innerAuth) && innerAuth.isUser()) {
-                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode());
                 String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getBaseCode());
-                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode());
                 String accountType = request.getHeader(SecurityConstants.BaseSecurity.ACCOUNT_TYPE.getBaseCode());
-                if ((StrUtil.hasBlank(enterpriseId, userId, sourceName, accountType))) {
+                if ((StrUtil.hasBlank(userId, accountType))) {
                     log.warn("请求地址'{}'，没有设置用户信息", request.getRequestURI());
                     throw new InnerAuthException("没有设置用户信息，不允许访问");
                 }
@@ -92,10 +90,8 @@ public class AuthAspect implements Ordered {
             }
             // 用户信息验证
             if (ObjectUtil.isNotNull(adminAuth) && adminAuth.isUser()) {
-                String enterpriseId = request.getHeader(SecurityConstants.BaseSecurity.ENTERPRISE_ID.getBaseCode());
                 String userId = request.getHeader(SecurityConstants.BaseSecurity.USER_ID.getBaseCode());
-                String sourceName = request.getHeader(SecurityConstants.BaseSecurity.SOURCE_NAME.getBaseCode());
-                if ((StrUtil.hasBlank(enterpriseId, userId, sourceName, accountType))) {
+                if ((StrUtil.hasBlank(userId, accountType))) {
                     log.warn("请求地址'{}'，没有设置用户信息", request.getRequestURI());
                     throw new InnerAuthException("没有设置用户信息，不允许访问");
                 }

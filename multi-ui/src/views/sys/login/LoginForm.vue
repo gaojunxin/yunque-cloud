@@ -1,14 +1,6 @@
 <template>
   <LoginFormTitle v-show="getShow" class="enter-x" />
   <Form class="p-4 enter-x" :model="formData" :rules="getFormRules" ref="formRef" v-show="getShow">
-    <FormItem name="enterpriseName" class="enter-x" v-show="!hasDomainName">
-      <Input
-        size="large"
-        v-model:value="formData.enterpriseName"
-        :placeholder="t('sys.login.enterpriseName')"
-        class="fix-auto-fill"
-      />
-    </FormItem>
     <FormItem name="userName" class="enter-x">
       <Input
         size="large"
@@ -118,12 +110,10 @@
   import { onKeyStroke } from '@vueuse/core';
   import { useMessage } from '@/hooks/web/useMessage';
   import { useUserStore } from '@/store/modules/user';
-  import { getEnterpriseNameByDomainName } from '@/api/sys/login.api';
   import { LoginStateEnum, useFormRules, useFormValid, useLoginState } from './useLogin';
   import { useDesign } from '@/hooks/web/useDesign';
   import { useI18n } from '@/hooks/web/useI18n';
   import {
-    ENTERPRISE_NAME_SESSION_CACHE_KEY,
     PASSWORD_SESSION_CACHE_KEY,
     REMEMBER_ME_SESSION_CACHE_KEY,
     USER_NAME_SESSION_CACHE_KEY,
@@ -147,7 +137,6 @@
   const rememberMe = ref(localStorage.getItem(REMEMBER_ME_SESSION_CACHE_KEY) === 'true' || false);
 
   const formData = reactive({
-    enterpriseName: localStorage.getItem(ENTERPRISE_NAME_SESSION_CACHE_KEY) || '',
     userName: localStorage.getItem(USER_NAME_SESSION_CACHE_KEY) || '',
     password: localStorage.getItem(PASSWORD_SESSION_CACHE_KEY) || '',
     code: '',
@@ -172,7 +161,6 @@
     try {
       loading.value = true;
       const userInfo = await userStore.login({
-        enterpriseName: data.enterpriseName,
         userName: data.userName,
         password: data.password,
         code: data.code,
@@ -195,27 +183,16 @@
       await handleCodeImage();
     } finally {
       if (rememberMe.value) {
-        localStorage.setItem(ENTERPRISE_NAME_SESSION_CACHE_KEY, data.enterpriseName);
         localStorage.setItem(USER_NAME_SESSION_CACHE_KEY, data.userName);
         localStorage.setItem(PASSWORD_SESSION_CACHE_KEY, data.password);
         localStorage.setItem(REMEMBER_ME_SESSION_CACHE_KEY, rememberMe.value.toString());
       } else {
-        localStorage.removeItem(ENTERPRISE_NAME_SESSION_CACHE_KEY);
         localStorage.removeItem(USER_NAME_SESSION_CACHE_KEY);
         localStorage.removeItem(PASSWORD_SESSION_CACHE_KEY);
         localStorage.removeItem(REMEMBER_ME_SESSION_CACHE_KEY);
       }
       formData.code = '';
       loading.value = false;
-    }
-  }
-
-  // 获取域名对应企业名称
-  async function handleDomainName() {
-    const data = await getEnterpriseNameByDomainName();
-    if (data?.name) {
-      formData.enterpriseName = data.name;
-      hasDomainName.value = true;
     }
   }
 
@@ -228,8 +205,6 @@
   }
 
   onMounted(() => {
-    // 初始执行一次验证码获取
-    handleDomainName();
     handleCodeImage();
   });
 </script>

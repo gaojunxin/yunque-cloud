@@ -32,13 +32,12 @@ public class SysLogServiceImpl implements ISysLogService {
     /**
      * 记录登录信息 | 无企业信息
      *
-     * @param enterpriseName 企业名称
      * @param userName       用户名
      * @param status         状态
      * @param message        消息内容
      */
     @Override
-    public void recordLoginInfo(String enterpriseName, String userName, String status, String message) {
+    public void recordLoginInfo(String userName, String status, String message) {
         recordAdminLoginInfo(SecurityConstants.EMPTY_USER_ID, userName, StrUtil.EMPTY, status, message);
     }
 
@@ -86,9 +85,6 @@ public class SysLogServiceImpl implements ISysLogService {
         }
         SecurityConstants.AccountType accountType = SecurityConstants.AccountType.getByCode(accountTypeStr);
 
-        String sourceName = JwtUtil.getSourceName(claims);
-        Long enterpriseId = Long.valueOf(JwtUtil.getEnterpriseId(claims));
-        String enterpriseName = JwtUtil.getEnterpriseName(claims);
         Long userId = Long.valueOf(JwtUtil.getUserId(claims));
         String userName = JwtUtil.getUserName(claims);
         String nickName = JwtUtil.getNickName(claims);

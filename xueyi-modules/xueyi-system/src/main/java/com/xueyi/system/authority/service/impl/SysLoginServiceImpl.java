@@ -74,7 +74,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * 登录校验 | 获取角色数据权限
      *
      * @param roleList 角色信息集合
-     * @param isLessor 租户标识
      * @param userType 用户标识
      * @return 角色权限信息
      */
@@ -119,7 +118,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
     @Override
     public List<SysMenuDto> getMenuList(
             Set<Long> roleIds, String userType) {
-        return menuService.selectList(null);
+        return menuService.selectEnterpriseList(roleIds, userType);
     }
 
     /**

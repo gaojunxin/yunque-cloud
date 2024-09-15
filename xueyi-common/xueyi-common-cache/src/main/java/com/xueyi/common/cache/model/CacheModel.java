@@ -43,13 +43,4 @@ public class CacheModel implements Serializable {
         return CacheUtil.getCusCacheKey(getCode());
     }
 
-    /**
-     * 获取缓存键值 | 指定企业Id
-     *
-     * @param enterpriseId 企业Id
-     * @return 缓存键值
-     */
-    public String getCacheKey(Long enterpriseId) {
-        return CacheUtil.getCusCacheKey(getCode(), getIsTenant(), enterpriseId);
-    }
 }

@@ -42,7 +42,6 @@ public class LoginUser extends BaseLoginUser<SysUserDto> {
 
     /** 初始化权限范围 */
     public DataScope getDataScope() {
-        scope.setEnterpriseId(enterpriseId);
         scope.setUserId(userId);
         scope.setIsLessor(isLessor);
         scope.setUserType(userType);

@@ -3,7 +3,6 @@ import { BaseEntity, BasicFetchResult, BasicPageParams } from '@/model';
 /** loginLog info model */
 export interface LoginLogIM extends BaseEntity {
   id: string;
-  enterpriseName: string;
   userName: string;
   userId: string;
   ipaddr: string;
@@ -18,7 +17,6 @@ export type LoginLogLM = LoginLogIM[];
 /** loginLog param model */
 export interface LoginLogPM extends BaseEntity {
   id?: string;
-  enterpriseName?: string;
   userName?: string;
   userId?: string;
   ipaddr?: string;

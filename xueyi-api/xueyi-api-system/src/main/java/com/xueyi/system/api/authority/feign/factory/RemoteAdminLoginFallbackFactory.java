@@ -21,7 +21,7 @@ public class RemoteAdminLoginFallbackFactory implements FallbackFactory<RemoteAd
         log.error("登录服务调用失败:{}", throwable.getMessage());
         return new RemoteAdminLoginService() {
             @Override
-            public R<LoginUser> getLoginInfoInner(String enterpriseName, String userName, String password) {
+            public R<LoginUser> getLoginInfoInner(String userName, String password) {
                 return R.fail("获取登录信息失败:" + throwable.getMessage());
             }
         };

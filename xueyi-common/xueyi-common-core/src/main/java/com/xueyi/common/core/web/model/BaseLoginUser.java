@@ -34,12 +34,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
     /** 用户唯一标识 - 令牌 */
     protected String codeToken;
 
-    /** 企业账号Id */
-    protected Long enterpriseId;
-
-    /** 企业账号 */
-    protected String enterpriseName;
-
     /** 用户名Id */
     protected Long userId;
 
@@ -57,12 +51,6 @@ public class BaseLoginUser<User> implements UserDetails, OAuth2AuthenticatedPrin
 
     /** 用户标识 */
     protected String userType;
-
-    /** 源策略组Id */
-    protected Long strategyId;
-
-    /** 主数据源 */
-    protected String sourceName;
 
     /** 登录时间 */
     protected Long loginTime;

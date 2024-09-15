@@ -45,7 +45,7 @@ public class RedisOAuth2AuthorizationHandler implements OAuth2AuthorizationServi
                     .map(OAuth2Authorization.Token::getToken)
                     .map(OAuth2RefreshToken::getTokenValue)
                     .orElseThrow(() -> new NullPointerException("refreshToken cannot be null"));
-            loginUser.setRefreshToken(tokenService.getTokenAddress(OAuth2ParameterNames.REFRESH_TOKEN, loginUser.getEnterpriseId(), loginUser.getUserId(), refreshToken));
+            loginUser.setRefreshToken(tokenService.getTokenAddress(OAuth2ParameterNames.REFRESH_TOKEN, loginUser.getUserId(), refreshToken));
         }
 
         // build access token
@@ -54,13 +54,13 @@ public class RedisOAuth2AuthorizationHandler implements OAuth2AuthorizationServi
                     .map(OAuth2Authorization.Token::getToken)
                     .map(OAuth2AccessToken::getTokenValue)
                     .orElseThrow(() -> new NullPointerException("accessToken cannot be null"));
-            loginUser.setAccessToken(tokenService.getTokenAddress(OAuth2ParameterNames.ACCESS_TOKEN, loginUser.getEnterpriseId(), loginUser.getUserId(), accessToken));
+            loginUser.setAccessToken(tokenService.getTokenAddress(OAuth2ParameterNames.ACCESS_TOKEN, loginUser.getUserId(), accessToken));
         }
 
         // build state token
         if (isState(authorization)) {
             String token = authorization.getAttribute(OAuth2ParameterNames.STATE);
-            loginUser.setStateToken(tokenService.getTokenAddress(OAuth2ParameterNames.STATE, loginUser.getEnterpriseId(), loginUser.getUserId(), token));
+            loginUser.setStateToken(tokenService.getTokenAddress(OAuth2ParameterNames.STATE, loginUser.getUserId(), token));
         }
 
         // build code token
@@ -68,7 +68,7 @@ public class RedisOAuth2AuthorizationHandler implements OAuth2AuthorizationServi
             OAuth2AuthorizationCode authorizationCodeToken = Optional.ofNullable(authorization.getToken(OAuth2AuthorizationCode.class))
                     .map(OAuth2Authorization.Token::getToken)
                     .orElseThrow(() -> new NullPointerException("authorizationCodeToken cannot be null"));
-            loginUser.setCodeToken(tokenService.getTokenAddress(OAuth2ParameterNames.CODE, loginUser.getEnterpriseId(), loginUser.getUserId(), authorizationCodeToken.getTokenValue()));
+            loginUser.setCodeToken(tokenService.getTokenAddress(OAuth2ParameterNames.CODE, loginUser.getUserId(), authorizationCodeToken.getTokenValue()));
         }
 
         // build redis cache

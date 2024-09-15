@@ -11,7 +11,6 @@ enum Api {
   Logout = '/auth/logout',
   GetUserInfo = '/system/admin/user/getInfo',
   GetEnterpriseInfo = '/system/admin/enterprise/getInfo',
-  GetDomainName = '/system/admin/login/admin/getEnterpriseByDomainName',
 }
 
 /**
@@ -24,17 +23,6 @@ export function getCodeImg() {
   );
 }
 
-/**
- * @description: get enterpriseName By domainName api
- */
-export const getEnterpriseNameByDomainName = () =>
-  defHttp.get<EnterpriseIM>(
-    {
-      url: Api.GetDomainName,
-      params: { url: window.location.hostname },
-    },
-    { errorMessageMode: 'none', withToken: false },
-  );
 
 /**
  * @description: user oauth2 login api

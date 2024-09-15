@@ -25,15 +25,11 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
     @SneakyThrows
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
-            setSecurityContext(request, SecurityConstants.BaseSecurity.ENTERPRISE_ID);
-            setSecurityContext(request, SecurityConstants.BaseSecurity.ENTERPRISE_NAME);
             setSecurityContext(request, SecurityConstants.BaseSecurity.IS_LESSOR);
             setSecurityContext(request, SecurityConstants.BaseSecurity.USER_ID);
             setSecurityContext(request, SecurityConstants.BaseSecurity.USER_NAME);
             setSecurityContext(request, SecurityConstants.BaseSecurity.NICK_NAME);
             setSecurityContext(request, SecurityConstants.BaseSecurity.USER_TYPE);
-            setSecurityContext(request, SecurityConstants.BaseSecurity.STRATEGY_ID);
-            setSecurityContext(request, SecurityConstants.BaseSecurity.SOURCE_NAME);
             setSecurityContext(request, SecurityConstants.BaseSecurity.ACCOUNT_TYPE);
 
             SecurityContextHolder.setAccessToken(ServletUtil.getHeader(request, SecurityConstants.BaseSecurity.ACCESS_TOKEN.getCode()));

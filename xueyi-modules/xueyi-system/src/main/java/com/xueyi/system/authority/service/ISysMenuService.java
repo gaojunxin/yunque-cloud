@@ -33,5 +33,14 @@ public interface ISysMenuService extends ITreeService<SysMenuQuery, SysMenuDto> 
      */
     List<SysMenuDto> getRoutes(Long moduleId, Collection<Long> menuIds);
 
+    /**
+     * 获取企业有权限且状态正常的菜单
+     *
+     * @param roleIds      角色Id集合
+     * @param userType     用户标识
+     * @return 菜单对象集合
+     */
+    List<SysMenuDto> selectEnterpriseList(Set<Long> roleIds, String userType);
+
 
 }

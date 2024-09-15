@@ -13,12 +13,11 @@ public interface ISysLogService {
     /**
      * 记录登录信息 | 无企业信息
      *
-     * @param enterpriseName 企业名称
      * @param userName       用户名
      * @param status         状态
      * @param message        消息内容
      */
-    void recordLoginInfo(String enterpriseName, String userName, String status, String message);
+    void recordLoginInfo(String userName, String status, String message);
 
     /**
      * 记录登录信息 | 无用户信息

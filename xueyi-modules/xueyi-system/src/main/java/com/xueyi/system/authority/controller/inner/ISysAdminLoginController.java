@@ -45,7 +45,7 @@ public class ISysAdminLoginController extends BasisController {
      */
     @GetMapping
     @InnerAuth(isAnonymous = true)
-    public R<LoginUser> getLoginInfoInner(@RequestParam String enterpriseName, @RequestParam String userName, @RequestParam String password) {
+    public R<LoginUser> getLoginInfoInner(@RequestParam String userName, @RequestParam String password) {
         SysUserDto user = loginService.loginByUser(userName, password);
         // 不存在直接返回空数据 | 与网络调用错误区分
         if (ObjectUtil.isNull(user)) {
