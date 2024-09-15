@@ -1,56 +1,27 @@
-<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">XueYi-MultiSaas</h1>
-<h4 align="center">基于 Vue3/TypeScript/Ant-Design UI 和 Spring Cloud & Alibaba/Mybatis-Plus 的多租户SaaS开发框架。</h4>
-<p align="center">
-    <a style="margin-right: 5px">
-       <img src="https://img.shields.io/badge/XueYi--MultiSaas-v3.3.4-brightgreen" alt="xueYi-MultiSaas">
-    </a>
-    <a style="margin-right: 5px">
-       <img src="https://gitee.com/xueyitiantang/XueYi-MultiSaas/badge/star.svg?theme=dark" alt="xueYi-MultiSaas">
-    </a>
-    <a style="margin-right: 5px">
-       <img src="https://gitee.com/xueyitiantang/XueYi-MultiSaas/badge/fork.svg?theme=dark" alt="xueYi-MultiSaas">
-    </a>
-</p>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">yunque-cloud</h1>
+<h4 align="center">基于 Vue3/TypeScript/Ant-Design UI 和 Spring Cloud & Alibaba/Mybatis-Plus 的开发框架。</h4>
 
 ## 简介
 
 基于SpringBoot | Spring Cloud & Alibaba | Mybatis-Plus | Vue3 | vite4 | TypeScript | Ant-Design-Vue UI
-的微服务多租户SaaS开发框架，为企业级多租户Saas及集团化应用提供快速开发解决方案。
+的微服务开发框架，为企业级应用提供快速开发解决方案。
 
-## 特性
-
-- **多重隔离控制**：物理隔离&&逻辑隔离，共享多租户&&隔离多租户
-- **动态多源策略**：动态源增减&&租户动态识别源
-- **租户控制优化**：通用数据&&混合租户&&独立租户多种租户模式，自动拦截，开发无感知
-- **权限控制优化**：部门&&岗位&&用户多级可控，自动拦截，开发无感知
-- **租户可配菜单**：多种混合模式控制租户菜单
-- **组织管理优化**：更完善的组织架构操作与管理逻辑
-- **微聚合多前端**：公共抽离，降低系统重复冗余
+本项目基于[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)开发，去掉了多租户功能，并针对企业级业务进行优化。
 
 ## 交流
 
 - 请移步右上角  **一键三连** :kissing_heart:
-- QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj)
+- 点击链接加入群聊【yunque-cloud交流群】：https://qm.qq.com/q/MFAIcNIZk4
 - 若发现bug，请提Issues。
 
 ## 预览
 
-- **普通账户**
-  > 企业账号：xueYi   
-  员工账号：admin   
+- **普通账户** 
+  账号：admin   
   密码：admin123
 
-- **租管账户**
-  > 企业账号：administrator   
-  员工账号：admin   
-  密码：admin123
-
-- **演示**
-  > [multi.xueyitt.cn](https://multi.xueyitt.cn)
 - **文档**
   > [doc.xueyitt.cn](https://doc.xueyitt.cn)
-- **视频**
-  > [space.bilibili.com](https://space.bilibili.com/479745149)
 
 ## 结构
 
@@ -67,7 +38,6 @@ com.xueyi
 ├── xueyi-api             // 接口模块
 │       ├── xueyi-api-file                            // 文件接口
 │       ├── xueyi-api-system                          // 系统接口
-│       ├── xueyi-api-tenant                          // 租户接口
 │       └── xueyi-api-job                             // 调度接口
 ├── xueyi-common          // 通用模块
 │       ├── xueyi-common-cache                        // 缓存管理
@@ -100,9 +70,6 @@ com.xueyi
 │               ├── monitor                           // 监控模块
 │               ├── notice                            // 公告模块
 │               └── organize                          // 组织模块
-│       └── xueyi-tenant                              // 租管模块 [9700]
-│               ├── source                            // 多数据源
-│               └── tenant                            // 租户策略
 ├── xueyi-visual          // 图形化管理模块
 │       └── xueyi-visual-monitor                      // 监控中心 [9100]
 └── pom.xml                // 公共依赖
@@ -141,6 +108,7 @@ com.xueyi
 
 **源于开源，回归开源**
 
+* 感谢雪忆天堂开源的[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)
 * 感谢Vben开源的[vue-vben-admin](https://github.com/vbenjs/vue-vben-admin)
 * 感谢苞米豆开源的[mybatis-plus](https://github.com/baomidou/mybatis-plus)
 * 感谢小锅盖开源的[dynamic](https://gitee.com/baomidou/dynamic-datasource-spring-boot-starter)
