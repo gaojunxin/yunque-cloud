@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.yunque</groupId>
+        <artifactId>yunque</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>yunque-common-bom</module>
+        <module>yunque-common-log</module>
+        <module>yunque-common-web</module>
+        <module>yunque-common-core</module>
+        <module>yunque-common-redis</module>
+        <module>yunque-common-seata</module>
+        <module>yunque-common-cache</module>
+        <module>yunque-common-swagger</module>
+        <module>yunque-common-security</module>
+        <module>yunque-common-datascope</module>
+        <module>yunque-common-datasource</module>
+        <module>yunque-common-dependency</module>
+        <module>yunque-common-sms</module>
+        <module>yunque-common-mail</module>
+        <module>yunque-common-mq</module>
+    </modules>
+
+    <artifactId>yunque-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        yunque-common通用模块
+    </description>
+
+</project>

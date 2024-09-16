@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <groupId>com.yunque</groupId>
+    <artifactId>yunque-common-bom</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
+
+    <description>
+        yunque-common-bom通用模块依赖配置
+    </description>
+
+    <properties>
+        <revision>${yunque.version}</revision>
+        <yunque.version>3.3.4</yunque.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- 核心模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-core</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 通信模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-web</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 接口模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-swagger</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 安全模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-security</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 权限范围 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-datascope</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 多数据源 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-datasource</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 通用开发依赖 - Data -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-dependency-data</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 通用开发依赖 - Nacos -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-dependency-nacos</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 日志记录 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-log</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 缓存管理 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-cache</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 缓存服务 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-redis</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 分布式事务 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-seata</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 邮件模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mail</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- 短信模块 -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-sms</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - MQTT -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mq-mqtt</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Redis -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mq-redis</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Rabbit -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mq-rabbit</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Rocket -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mq-rocket</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+
+            <!-- MQ模块 - Kafka -->
+            <dependency>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-mq-kafka</artifactId>
+                <version>${yunque.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

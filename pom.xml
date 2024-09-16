@@ -4,17 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.xueyi</groupId>
-    <artifactId>xueyi</artifactId>
+    <groupId>com.yunque</groupId>
+    <artifactId>yunque</artifactId>
     <version>${revision}</version>
 
-    <name>xueyi</name>
+    <name>yunque</name>
     <url>https://xueyitt.cn</url>
     <description>云雀管理系统</description>
 
     <properties>
-        <revision>${xueyi.version}</revision>
-        <xueyi.version>3.3.4</xueyi.version>
+        <revision>${yunque.version}</revision>
+        <yunque.version>3.3.4</yunque.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
@@ -267,18 +267,18 @@
 
             <!-- API模块依赖配置 -->
             <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-api-bom</artifactId>
-                <version>${xueyi.version}</version>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-api-bom</artifactId>
+                <version>${yunque.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
             <!-- 通用模块依赖配置 -->
             <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-common-bom</artifactId>
-                <version>${xueyi.version}</version>
+                <groupId>com.yunque</groupId>
+                <artifactId>yunque-common-bom</artifactId>
+                <version>${yunque.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -303,12 +303,12 @@
     </dependencyManagement>
 
     <modules>
-        <module>xueyi-auth</module>
-        <module>xueyi-gateway</module>
-        <module>xueyi-visual</module>
-        <module>xueyi-modules</module>
-        <module>xueyi-api</module>
-        <module>xueyi-common</module>
+        <module>yunque-auth</module>
+        <module>yunque-gateway</module>
+        <module>yunque-visual</module>
+        <module>yunque-modules</module>
+        <module>yunque-api</module>
+        <module>yunque-common</module>
     </modules>
     <packaging>pom</packaging>
 

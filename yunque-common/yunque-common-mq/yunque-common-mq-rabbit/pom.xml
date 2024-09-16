@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.yunque</groupId>
+        <artifactId>yunque-common-mq</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>yunque-common-mq-rabbit</artifactId>
+    <description>
+        yunque-common-mq-rabbit MQ-RabbitMQ模块
+    </description>
+
+    <dependencies>
+
+        <!-- yunque Common Redis -->
+        <dependency>
+            <groupId>com.yunque</groupId>
+            <artifactId>yunque-common-redis</artifactId>
+        </dependency>
+
+        <!-- 消息队列 - Rabbit -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+        </dependency>
+
+    </dependencies>
+</project>
