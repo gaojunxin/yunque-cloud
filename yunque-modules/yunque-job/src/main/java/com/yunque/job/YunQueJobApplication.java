@@ -1,19 +1,26 @@
-package com.yunque.gateway;
+package com.yunque.job;
 
+import com.yunque.common.security.annotation.EnableCustomConfig;
+import com.yunque.common.security.annotation.EnableResourceServer;
+import com.yunque.common.security.annotation.EnableRyFeignClients;
+import com.yunque.common.swagger.annotation.EnableCustomSwagger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
- * 网关启动程序
+ * 定时任务
  *
  * @author xueyi
  */
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class XueYiGatewayApplication {
+@EnableCustomConfig
+@EnableCustomSwagger
+@EnableResourceServer
+@EnableRyFeignClients
+@SpringBootApplication
+public class YunQueJobApplication {
     public static void main(String[] args) {
-        SpringApplication.run(XueYiGatewayApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  网关模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(YunQueJobApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  定时任务模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "  _____     __   ____     __        \n" +
                 "  \\   _\\   /  /  \\   \\   /  /   \n" +
                 "  .-./ ). /  '    \\  _. /  '       \n" +

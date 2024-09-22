@@ -17,9 +17,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableResourceServer
 @EnableRyFeignClients
 @SpringBootApplication
-public class XueYiSystemApplication {
+public class YunQueSystemApplication {
     public static void main(String[] args) {
-        SpringApplication.run(XueYiSystemApplication.class, args);
+        SpringApplication.run(YunQueSystemApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "  _____     __   ____     __        \n" +
                 "  \\   _\\   /  /  \\   \\   /  /   \n" +

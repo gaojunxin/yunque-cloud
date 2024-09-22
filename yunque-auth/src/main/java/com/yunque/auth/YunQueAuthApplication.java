@@ -1,20 +1,23 @@
-package com.yunque.modules.monitor;
+package com.yunque.auth;
 
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
+import com.yunque.common.security.annotation.EnableResourceServer;
+import com.yunque.common.security.annotation.EnableRyFeignClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 /**
- * 监控中心
+ * 认证授权中心
  *
  * @author xueyi
  */
-@EnableAdminServer
-@SpringBootApplication
-public class XueYiMonitorApplication {
+@EnableResourceServer
+@EnableRyFeignClients
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+public class YunQueAuthApplication {
     public static void main(String[] args) {
-        SpringApplication.run(XueYiMonitorApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  监控中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(YunQueAuthApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  认证授权中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "  _____     __   ____     __        \n" +
                 "  \\   _\\   /  /  \\   \\   /  /   \n" +
                 "  .-./ ). /  '    \\  _. /  '       \n" +

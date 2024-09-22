@@ -21,9 +21,9 @@ import org.springframework.context.annotation.Import;
 @EnableRyFeignClients
 @Import({ApplicationConfig.class, JacksonConfig.class, FdfsClientConfig.class})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-public class XueYiFileApplication {
+public class YunQueFileApplication {
     public static void main(String[] args) {
-        SpringApplication.run(XueYiFileApplication.class, args);
+        SpringApplication.run(YunQueFileApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  文件服务模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 "  _____     __   ____     __        \n" +
                 "  \\   _\\   /  /  \\   \\   /  /   \n" +
