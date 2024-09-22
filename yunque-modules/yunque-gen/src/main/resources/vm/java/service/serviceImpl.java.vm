@@ -10,7 +10,7 @@ import ${rdPackageName}.domain.query.${ClassName}Query;
 import ${rdPackageName}.domain.correlate.${ClassName}Correlate;
 import ${rdPackageName}.service.I${ClassName}Service;
 import ${rdPackageName}.manager.I${ClassName}Manager;
-import com.xueyi.common.web.entity.service.impl.${Entity}ServiceImpl;
+import com.yunque.common.web.entity.service.impl.${Entity}ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

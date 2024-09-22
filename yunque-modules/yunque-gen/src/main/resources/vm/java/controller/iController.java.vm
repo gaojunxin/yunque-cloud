@@ -1,13 +1,13 @@
 package ${rdPackageName}.controller.inner;
 
 #if($api.cache)
-import com.xueyi.common.core.web.result.R;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
+import com.yunque.common.core.web.result.R;
+import com.yunque.common.log.annotation.Log;
+import com.yunque.common.log.enums.BusinessType;
 import org.springframework.web.bind.annotation.GetMapping;
 #end
 import io.swagger.v3.oas.annotations.Operation;
-import com.xueyi.common.security.annotation.InnerAuth;
+import com.yunque.common.security.annotation.InnerAuth;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ${rdPackageName}.controller.base.B${ClassName}Controller;

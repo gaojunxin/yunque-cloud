@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.*;
 #if($tableIdShow)
 import com.baomidou.mybatisplus.annotation.TableName;
 #end
-import com.xueyi.common.core.web.${entityUrl}.${baseUrl}.${Entity};
+import com.yunque.common.core.web.${entityUrl}.${baseUrl}.${Entity};
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.xueyi.mqtt.config;
+package com.yunque.mqtt.config;
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Condition;

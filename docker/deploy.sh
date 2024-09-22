@@ -32,17 +32,17 @@ port(){
 
 # 启动基础环境（必须）
 base(){
-	docker-compose up -d xueyi-mysql xueyi-redis xueyi-nacos xueyi-rabbit
+	docker-compose up -d yunque-mysql yunque-redis yunque-nacos yunque-rabbit
 }
 
 # 启动程序模块（必须）
 modules(){
-	docker-compose up -d xueyi-gateway xueyi-auth xueyi-modules-system xueyi-modules-tenant xueyi-nginx
+	docker-compose up -d yunque-gateway yunque-auth yunque-modules-system yunque-modules-tenant yunque-nginx
 }
 
 # 启动程序模块 | 次要 | 根据需求启动
 monitor(){
-	docker-compose up -d xueyi-modules-file xueyi-modules-gen xueyi-modules-job xueyi-visual-monitor
+	docker-compose up -d yunque-modules-file yunque-modules-gen yunque-modules-job yunque-visual-monitor
 }
 
 # 关闭所有环境/模块

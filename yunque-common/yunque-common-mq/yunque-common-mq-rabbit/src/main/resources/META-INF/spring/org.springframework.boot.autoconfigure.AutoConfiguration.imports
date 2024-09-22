@@ -1,3 +1,3 @@
-com.xueyi.common.mq.rabbit.config.properties.RabbitProperties
-com.xueyi.common.mq.rabbit.config.RabbitMQConfiguration
-com.xueyi.common.mq.rabbit.service.impl.RabbitServiceImpl
+com.yunque.common.mq.rabbit.config.properties.RabbitProperties
+com.yunque.common.mq.rabbit.config.RabbitMQConfiguration
+com.yunque.common.mq.rabbit.service.impl.RabbitServiceImpl

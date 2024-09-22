@@ -1,7 +1,7 @@
-package com.xueyi.mqtt.config;
+package com.yunque.mqtt.config;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.xueyi.mqtt.basicClient.MqttBaseAcceptClient;
+import com.yunque.mqtt.basicClient.MqttBaseAcceptClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;

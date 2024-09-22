@@ -1,14 +1,14 @@
-package com.xueyi.common.mq.rabbit.config;
+package com.yunque.common.mq.rabbit.config;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.xueyi.common.core.exception.UtilException;
-import com.xueyi.common.core.utils.core.CollUtil;
-import com.xueyi.common.core.utils.core.MapUtil;
-import com.xueyi.common.core.utils.core.ObjectUtil;
-import com.xueyi.common.core.utils.core.StrUtil;
-import com.xueyi.common.mq.rabbit.config.properties.RabbitProperties;
+import com.yunque.common.core.exception.UtilException;
+import com.yunque.common.core.utils.core.CollUtil;
+import com.yunque.common.core.utils.core.MapUtil;
+import com.yunque.common.core.utils.core.ObjectUtil;
+import com.yunque.common.core.utils.core.StrUtil;
+import com.yunque.common.mq.rabbit.config.properties.RabbitProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

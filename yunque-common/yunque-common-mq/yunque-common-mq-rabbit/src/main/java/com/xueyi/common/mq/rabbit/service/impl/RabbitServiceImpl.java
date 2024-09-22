@@ -1,7 +1,7 @@
-package com.xueyi.common.mq.rabbit.service.impl;
+package com.yunque.common.mq.rabbit.service.impl;
 
-import com.xueyi.common.mq.rabbit.config.properties.RabbitProperties;
-import com.xueyi.common.mq.rabbit.service.RabbitService;
+import com.yunque.common.mq.rabbit.config.properties.RabbitProperties;
+import com.yunque.common.mq.rabbit.service.RabbitService;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

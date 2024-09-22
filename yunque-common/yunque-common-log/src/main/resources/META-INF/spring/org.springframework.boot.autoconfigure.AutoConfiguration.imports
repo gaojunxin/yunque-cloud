@@ -1,2 +1,2 @@
-com.xueyi.common.log.service.AsyncLogService
-com.xueyi.common.log.aspect.LogAspect
+com.yunque.common.log.service.AsyncLogService
+com.yunque.common.log.aspect.LogAspect

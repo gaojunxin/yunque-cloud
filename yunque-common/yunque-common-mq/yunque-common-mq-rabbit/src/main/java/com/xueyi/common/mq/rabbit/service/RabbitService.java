@@ -1,4 +1,4 @@
-package com.xueyi.common.mq.rabbit.service;
+package com.yunque.common.mq.rabbit.service;
 
 /**
  * RabbitMQ消息 工具类

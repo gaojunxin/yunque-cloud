@@ -1,10 +1,10 @@
-package com.xueyi.common.mq.redis.core.pubsub;
+package com.yunque.common.mq.redis.core.pubsub;
 
 import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson2.JSON;
-import com.xueyi.common.mq.redis.core.RedisMQTemplate;
-import com.xueyi.common.mq.redis.core.interceptor.RedisMessageInterceptor;
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.RedisMQTemplate;
+import com.yunque.common.mq.redis.core.interceptor.RedisMessageInterceptor;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.data.redis.connection.Message;

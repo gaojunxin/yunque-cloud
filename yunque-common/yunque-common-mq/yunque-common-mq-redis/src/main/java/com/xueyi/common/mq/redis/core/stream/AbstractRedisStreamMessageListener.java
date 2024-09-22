@@ -1,10 +1,10 @@
-package com.xueyi.common.mq.redis.core.stream;
+package com.yunque.common.mq.redis.core.stream;
 
 import cn.hutool.core.util.TypeUtil;
 import com.alibaba.fastjson2.JSON;
-import com.xueyi.common.mq.redis.core.RedisMQTemplate;
-import com.xueyi.common.mq.redis.core.interceptor.RedisMessageInterceptor;
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.RedisMQTemplate;
+import com.yunque.common.mq.redis.core.interceptor.RedisMessageInterceptor;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;

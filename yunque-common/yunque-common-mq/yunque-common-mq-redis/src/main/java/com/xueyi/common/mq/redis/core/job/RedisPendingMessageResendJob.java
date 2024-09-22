@@ -1,8 +1,8 @@
-package com.xueyi.common.mq.redis.core.job;
+package com.yunque.common.mq.redis.core.job;
 
 import cn.hutool.core.collection.CollUtil;
-import com.xueyi.common.mq.redis.core.RedisMQTemplate;
-import com.xueyi.common.mq.redis.core.stream.AbstractRedisStreamMessageListener;
+import com.yunque.common.mq.redis.core.RedisMQTemplate;
+import com.yunque.common.mq.redis.core.stream.AbstractRedisStreamMessageListener;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;

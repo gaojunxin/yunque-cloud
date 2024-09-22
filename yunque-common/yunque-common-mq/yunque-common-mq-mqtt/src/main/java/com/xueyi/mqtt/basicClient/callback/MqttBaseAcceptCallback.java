@@ -1,11 +1,11 @@
-package com.xueyi.mqtt.basicClient.callback;
+package com.yunque.mqtt.basicClient.callback;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.xueyi.mqtt.basicClient.MqttBaseAcceptClient;
-import com.xueyi.mqtt.basicClient.handle.MqttBaseAcceptHandle;
-import com.xueyi.mqtt.config.properties.MqttProperties;
+import com.yunque.mqtt.basicClient.MqttBaseAcceptClient;
+import com.yunque.mqtt.basicClient.handle.MqttBaseAcceptHandle;
+import com.yunque.mqtt.config.properties.MqttProperties;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;

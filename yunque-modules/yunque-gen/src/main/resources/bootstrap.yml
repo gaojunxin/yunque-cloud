@@ -13,7 +13,7 @@ nacos:
 # 应用名称配置
 application:
   title: 代码生成服务
-  name: xueyi-gen
+  name: yunque-gen
 
 # Spring
 spring:

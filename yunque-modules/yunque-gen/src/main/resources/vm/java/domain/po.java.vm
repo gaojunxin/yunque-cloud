@@ -16,7 +16,7 @@ import ${import};
 #set($Entity = "T" + $Entity)
 #set($entityUrl="tenant")
 #end
-import com.xueyi.common.core.web.${entityUrl}.${baseUrl}.${Entity};
+import com.yunque.common.core.web.${entityUrl}.${baseUrl}.${Entity};
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 #set($tableIdShow=true)
 #set($excelShow=true)
@@ -31,7 +31,7 @@ import com.baomidou.mybatisplus.annotation.*;
 #end
 #if($column.isImport || $column.isExport)
 #if($excelShow)
-import com.xueyi.common.core.annotation.Excel;
+import com.yunque.common.core.annotation.Excel;
 #set($excelShow=false)
 #end
 #end
@@ -53,7 +53,7 @@ import java.io.Serial;
 
 #set($excludeTimes=${excludeProperty.size()} > 4)
 #if($excludeTimes)
-import static com.xueyi.common.core.constant.basic.EntityConstants.*;
+import static com.yunque.common.core.constant.basic.EntityConstants.*;
 #end
 #set($times = 0)
 #foreach($field in $excludeProperty)
@@ -63,7 +63,7 @@ import static com.xueyi.common.core.constant.basic.EntityConstants.*;
 #set($excludeField= $excludeField + ", "+${field})
 #end
 #if(!$excludeTimes)
-import static com.xueyi.common.core.constant.basic.EntityConstants.${field};
+import static com.yunque.common.core.constant.basic.EntityConstants.${field};
 #end
 #set($times = $times + 1)
 #end

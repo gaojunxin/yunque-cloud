@@ -1,7 +1,7 @@
-package com.xueyi.mqtt.basicClient;
+package com.yunque.mqtt.basicClient;
 
-import com.xueyi.mqtt.basicClient.callback.MqttBaseSendCallBack;
-import com.xueyi.mqtt.config.properties.MqttProperties;
+import com.yunque.mqtt.basicClient.callback.MqttBaseSendCallBack;
+import com.yunque.mqtt.config.properties.MqttProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;

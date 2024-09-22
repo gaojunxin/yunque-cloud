@@ -5,7 +5,7 @@ package ${rdPackageName}.controller.base;
 #elseif($table.tree)
 #set($Entity="Tree")
 #end
-import com.xueyi.common.web.entity.controller.${Entity}Controller;
+import com.yunque.common.web.entity.controller.${Entity}Controller;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import ${rdPackageName}.service.I${ClassName}Service;

@@ -1,7 +1,7 @@
-package com.xueyi.common.mq.redis.core.pubsub;
+package com.yunque.common.mq.redis.core.pubsub;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
 
 /**
  * Redis Channel Message 抽象类

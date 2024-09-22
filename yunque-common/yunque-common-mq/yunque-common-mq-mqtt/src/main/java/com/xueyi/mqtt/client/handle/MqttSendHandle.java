@@ -1,6 +1,6 @@
-package com.xueyi.mqtt.client.handle;
+package com.yunque.mqtt.client.handle;
 
-import com.xueyi.mqtt.basicClient.handle.MqttBaseSendHandle;
+import com.yunque.mqtt.basicClient.handle.MqttBaseSendHandle;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Component;

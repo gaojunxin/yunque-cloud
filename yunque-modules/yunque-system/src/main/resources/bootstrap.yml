@@ -13,7 +13,7 @@ nacos:
 # 应用名称配置
 application:
   title: 系统服务
-  name: xueyi-system
+  name: yunque-system
 
 # Spring
 spring:

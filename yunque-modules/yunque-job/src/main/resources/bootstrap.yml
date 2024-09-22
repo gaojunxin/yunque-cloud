@@ -13,7 +13,7 @@ nacos:
 # 应用名称配置
 application:
   title: 定时任务服务
-  name: xueyi-job
+  name: yunque-job
 
 # Spring
 spring:

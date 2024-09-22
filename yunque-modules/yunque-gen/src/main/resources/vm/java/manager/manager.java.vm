@@ -7,7 +7,7 @@ package ${rdPackageName}.manager;
 #end
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;
-import com.xueyi.common.web.entity.manager.I${Entity}Manager;
+import com.yunque.common.web.entity.manager.I${Entity}Manager;
 
 /**
  * ${moduleFunctionName}管理 数据封装层

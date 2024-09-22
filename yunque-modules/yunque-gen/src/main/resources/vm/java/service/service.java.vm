@@ -7,7 +7,7 @@ package ${rdPackageName}.service;
 #end
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
-import com.xueyi.common.web.entity.service.I${Entity}Service;
+import com.yunque.common.web.entity.service.I${Entity}Service;
 
 /**
  * ${moduleFunctionName}管理 服务层

@@ -1,6 +1,6 @@
-package com.xueyi.common.mq.rabbit.config.properties;
+package com.yunque.common.mq.rabbit.config.properties;
 
-import com.xueyi.common.core.utils.core.StrUtil;
+import com.yunque.common.core.utils.core.StrUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;

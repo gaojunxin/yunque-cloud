@@ -1,13 +1,13 @@
-package com.xueyi.common.mq.redis.config;
+package com.yunque.common.mq.redis.config;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
-import com.xueyi.common.mq.redis.core.RedisMQTemplate;
-import com.xueyi.common.mq.redis.core.job.RedisPendingMessageResendJob;
-import com.xueyi.common.mq.redis.core.pubsub.AbstractRedisChannelMessageListener;
-import com.xueyi.common.mq.redis.core.stream.AbstractRedisStreamMessageListener;
-import com.xueyi.common.redis.configure.RedisConfig;
+import com.yunque.common.mq.redis.core.RedisMQTemplate;
+import com.yunque.common.mq.redis.core.job.RedisPendingMessageResendJob;
+import com.yunque.common.mq.redis.core.pubsub.AbstractRedisChannelMessageListener;
+import com.yunque.common.mq.redis.core.stream.AbstractRedisStreamMessageListener;
+import com.yunque.common.redis.configure.RedisConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;

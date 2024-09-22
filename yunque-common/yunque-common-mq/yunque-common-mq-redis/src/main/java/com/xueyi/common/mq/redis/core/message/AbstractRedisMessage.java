@@ -1,4 +1,4 @@
-package com.xueyi.common.mq.redis.core.message;
+package com.yunque.common.mq.redis.core.message;
 
 import lombok.Data;
 

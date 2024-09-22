@@ -1,9 +1,9 @@
-package com.xueyi.mqtt.client.callback;
+package com.yunque.mqtt.client.callback;
 
 import cn.hutool.extra.spring.SpringUtil;
-import com.xueyi.mqtt.basicClient.callback.MqttBaseAcceptCallback;
-import com.xueyi.mqtt.client.MqttAcceptClient;
-import com.xueyi.mqtt.config.properties.MqttProperties;
+import com.yunque.mqtt.basicClient.callback.MqttBaseAcceptCallback;
+import com.yunque.mqtt.client.MqttAcceptClient;
+import com.yunque.mqtt.config.properties.MqttProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

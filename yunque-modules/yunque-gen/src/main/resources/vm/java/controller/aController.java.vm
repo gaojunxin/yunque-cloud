@@ -1,16 +1,16 @@
 package ${rdPackageName}.controller.admin;
 
-import com.xueyi.common.core.web.result.AjaxResult;
-import com.xueyi.common.core.web.validate.V_A;
-import com.xueyi.common.core.web.validate.V_E;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
+import com.yunque.common.core.web.result.AjaxResult;
+import com.yunque.common.core.web.validate.V_A;
+import com.yunque.common.core.web.validate.V_E;
+import com.yunque.common.log.annotation.Log;
+import com.yunque.common.log.enums.BusinessType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import ${rdPackageName}.controller.base.B${ClassName}Controller;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import io.swagger.v3.oas.annotations.Operation;
-import com.xueyi.common.security.annotation.AdminAuth;
+import com.yunque.common.security.annotation.AdminAuth;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

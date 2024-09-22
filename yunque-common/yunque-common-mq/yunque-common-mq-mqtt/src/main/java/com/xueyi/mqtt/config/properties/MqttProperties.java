@@ -1,4 +1,4 @@
-package com.xueyi.mqtt.config.properties;
+package com.yunque.mqtt.config.properties;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;

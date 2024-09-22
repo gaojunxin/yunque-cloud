@@ -1,4 +1,4 @@
-package com.xueyi.mqtt.basicClient.handle;
+package com.yunque.mqtt.basicClient.handle;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.core.Ordered;

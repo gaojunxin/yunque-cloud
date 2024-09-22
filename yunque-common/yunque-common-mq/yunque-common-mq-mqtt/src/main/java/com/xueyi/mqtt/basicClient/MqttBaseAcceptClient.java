@@ -1,7 +1,7 @@
-package com.xueyi.mqtt.basicClient;
+package com.yunque.mqtt.basicClient;
 
-import com.xueyi.mqtt.basicClient.callback.MqttBaseAcceptCallback;
-import com.xueyi.mqtt.config.properties.MqttProperties;
+import com.yunque.mqtt.basicClient.callback.MqttBaseAcceptCallback;
+import com.yunque.mqtt.config.properties.MqttProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,8 @@
-package com.xueyi.common.mq.redis.config;
+package com.yunque.common.mq.redis.config;
 
-import com.xueyi.common.mq.redis.core.RedisMQTemplate;
-import com.xueyi.common.mq.redis.core.interceptor.RedisMessageInterceptor;
-import com.xueyi.common.redis.configure.RedisConfig;
+import com.yunque.common.mq.redis.core.RedisMQTemplate;
+import com.yunque.common.mq.redis.core.interceptor.RedisMessageInterceptor;
+import com.yunque.common.redis.configure.RedisConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;

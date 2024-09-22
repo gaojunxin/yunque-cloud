@@ -1,4 +1,4 @@
-package com.xueyi.common.mq.rabbit.contant;
+package com.yunque.common.mq.rabbit.contant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

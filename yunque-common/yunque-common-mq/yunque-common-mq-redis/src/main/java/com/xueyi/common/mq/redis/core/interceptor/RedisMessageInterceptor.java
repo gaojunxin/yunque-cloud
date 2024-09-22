@@ -1,6 +1,6 @@
-package com.xueyi.common.mq.redis.core.interceptor;
+package com.yunque.common.mq.redis.core.interceptor;
 
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
 
 /**
  * {@link AbstractRedisMessage} 消息拦截器

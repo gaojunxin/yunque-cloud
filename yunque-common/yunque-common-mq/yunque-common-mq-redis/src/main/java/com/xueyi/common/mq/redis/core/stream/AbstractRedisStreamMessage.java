@@ -1,7 +1,7 @@
-package com.xueyi.common.mq.redis.core.stream;
+package com.yunque.common.mq.redis.core.stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
 
 /**
  * Redis Stream Message 抽象类

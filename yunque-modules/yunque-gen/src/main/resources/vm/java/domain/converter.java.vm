@@ -5,7 +5,7 @@ package ${rdPackageName}.domain.model;
 #elseif($table.tree)
 #set($Entity="TreeConverter")
 #end
-import com.xueyi.common.core.web.entity.model.${Entity};
+import com.yunque.common.core.web.entity.model.${Entity};
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.po.${ClassName}Po;
 import ${rdPackageName}.domain.query.${ClassName}Query;

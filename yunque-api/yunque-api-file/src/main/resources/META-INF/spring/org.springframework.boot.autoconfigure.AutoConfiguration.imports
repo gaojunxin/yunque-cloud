@@ -1,2 +1,2 @@
-com.xueyi.file.api.feign.factory.RemoteFileFallbackFactory
-com.xueyi.file.api.feign.factory.RemoteFileManageFallbackFactory
+com.yunque.file.api.feign.factory.RemoteFileFallbackFactory
+com.yunque.file.api.feign.factory.RemoteFileManageFallbackFactory

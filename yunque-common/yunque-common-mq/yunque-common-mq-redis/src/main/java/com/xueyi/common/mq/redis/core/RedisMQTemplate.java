@@ -1,10 +1,10 @@
-package com.xueyi.common.mq.redis.core;
+package com.yunque.common.mq.redis.core;
 
 import com.alibaba.fastjson2.JSON;
-import com.xueyi.common.mq.redis.core.interceptor.RedisMessageInterceptor;
-import com.xueyi.common.mq.redis.core.message.AbstractRedisMessage;
-import com.xueyi.common.mq.redis.core.pubsub.AbstractRedisChannelMessage;
-import com.xueyi.common.mq.redis.core.stream.AbstractRedisStreamMessage;
+import com.yunque.common.mq.redis.core.interceptor.RedisMessageInterceptor;
+import com.yunque.common.mq.redis.core.message.AbstractRedisMessage;
+import com.yunque.common.mq.redis.core.pubsub.AbstractRedisChannelMessage;
+import com.yunque.common.mq.redis.core.stream.AbstractRedisStreamMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.redis.connection.stream.RecordId;

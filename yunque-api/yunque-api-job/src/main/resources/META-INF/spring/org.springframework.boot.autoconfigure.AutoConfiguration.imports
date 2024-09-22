@@ -1,1 +1,1 @@
-com.xueyi.job.api.feign.factory.RemoteJobLogFallbackFactory
+com.yunque.job.api.feign.factory.RemoteJobLogFallbackFactory

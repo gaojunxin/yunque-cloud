@@ -8,8 +8,8 @@ package ${rdPackageName}.mapper;
 import ${rdPackageName}.domain.query.${ClassName}Query;
 import ${rdPackageName}.domain.dto.${ClassName}Dto;
 import ${rdPackageName}.domain.po.${ClassName}Po;
-import com.xueyi.common.web.entity.mapper.${Entity}Mapper;
-import com.xueyi.common.datasource.annotation.${sourceMode};
+import com.yunque.common.web.entity.mapper.${Entity}Mapper;
+import com.yunque.common.datasource.annotation.${sourceMode};
 
 /**
  * ${moduleFunctionName}管理 数据层
