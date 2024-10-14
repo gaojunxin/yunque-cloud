@@ -42,5 +42,15 @@ public interface ISysMenuService extends ITreeService<SysMenuQuery, SysMenuDto> 
      */
     List<SysMenuDto> selectEnterpriseList(Set<Long> roleIds, String userType);
 
+    /**
+     *
+     * 构建菜单树
+     *
+     * [详细描述，可以包括方法的功能、使用注意事项等]
+     *
+     * @param list
+     * @return
+     */
+    public List<SysMenuDto> buildTree(List<SysMenuDto> list);
 
 }

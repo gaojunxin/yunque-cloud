@@ -1,6 +1,5 @@
 package com.yunque.system.authority.controller.admin;
 
-import com.yunque.common.core.utils.TreeUtil;
 import com.yunque.common.core.utils.core.CollUtil;
 import com.yunque.common.core.utils.core.ObjectUtil;
 import com.yunque.common.core.web.result.AjaxResult;
@@ -61,7 +60,7 @@ public class ASysMenuController extends BSysMenuController {
             }
             if (CollUtil.isNotEmpty(dataScope.getMenuIds())) {
                 List<SysMenuDto> menus = baseService.getRoutes(moduleId, dataScope.getMenuIds());
-                menuMap.put(moduleKey, MRouteUtils.buildMenus(TreeUtil.buildTree(menus)));
+                menuMap.put(moduleKey, MRouteUtils.buildMenus(baseService.buildTree(menus)));
             } else {
                 menuMap.put(moduleKey, new ArrayList<>());
             }
@@ -77,7 +76,19 @@ public class ASysMenuController extends BSysMenuController {
     @GetMapping("/list")
     @PreAuthorize("@ss.hasAuthority(@Auth.SYS_MENU_LIST)")
     public AjaxResult list(SysMenuQuery menu) {
-        return super.list(menu);
+        List<SysMenuDto> list;
+        if (ObjectUtil.equals(Boolean.TRUE, menu.getExNodes())) {
+            Serializable id = menu.getId();
+            menu.initId();
+            list = baseService.selectListScope(menu);
+            SHandleExNodes(list, id);
+        } else {
+            list = baseService.selectListScope(menu);
+        }
+        if (ObjectUtil.equals(Boolean.TRUE, menu.getDefaultNode())) {
+            list.add(TopNodeBuilder(menu));
+        }
+        return success(baseService.buildTree(list));
     }
 
     /**

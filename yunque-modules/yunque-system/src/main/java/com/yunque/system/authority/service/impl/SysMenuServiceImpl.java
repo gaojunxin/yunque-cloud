@@ -23,11 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -232,5 +228,128 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuQuery, SysMenuDto
     @Override
     protected void endBatchHandle(OperateConstants.ServiceType operate, int rows, Collection<SysMenuDto> originList, Collection<SysMenuDto> newList) {
         super.endBatchHandle(operate, rows, originList, newList);
+    }
+
+    /**
+     * 构建树结构
+     * 存在默认参数 详见BaseConstants.Entity
+     * IdName = ID | FIdName = PARENT_ID | childrenName = CHILDREN | topNode = TOP_NODE | killScattered = false | killNoneChild = true
+     *
+     * @param list 组装列表
+     * @return 树结构列表
+     */
+    public List<SysMenuDto> buildTree(List<SysMenuDto> list) {
+        return buildTree(list, BaseConstants.Entity.ID.getCode(),
+                BaseConstants.Entity.PARENT_ID.getCode(),
+                BaseConstants.Entity.CHILDREN.getCode(),
+                BaseConstants.TOP_ID,
+                false,
+                true);
+    }
+
+    /**
+     * 构建树结构
+     *
+     * @param list          组装列表
+     * @param IdName        Id字段名称
+     * @param FIdName       父级Id字段名称
+     * @param childrenName  children字段名称
+     * @param topNode       顶级节点
+     * @param killScattered 是否移除无法追溯到顶级节点 (true 是 | false 否)
+     * @param killNoneChild 是否移除空子节点集合
+     * @return 树结构列表
+     */
+    public List<SysMenuDto> buildTree(List<SysMenuDto> list, String IdName, String FIdName, String childrenName, Serializable topNode, boolean killScattered, boolean killNoneChild) {
+        List<SysMenuDto> returnList = new ArrayList<>();
+        List<Long> tempList = new ArrayList<>();
+        SysMenuDto top = null;
+        boolean hasTopNode = false;
+        if (CollUtil.isNotEmpty(list)) {
+            for (SysMenuDto vo : list) {
+                if (ObjectUtil.equal(vo.getId(), topNode)) {
+                    hasTopNode = true;
+                    top = vo;
+                    list.remove(vo);
+                    break;
+                }
+            }
+            for (SysMenuDto vo : list) {
+                tempList.add(vo.getId());
+            }
+            for (SysMenuDto vo : list) {
+                // 如果是顶级节点, 遍历该父节点的所有子节点
+                if (!tempList.contains((vo.getParentId()))) {
+                    recursionFn(list, vo, killNoneChild);
+                    returnList.add(vo);
+                }
+            }
+        }
+
+        if (returnList.isEmpty()) {
+            returnList = list;
+        }
+        if (killScattered) {
+            deleteNoTopNode(returnList, topNode);
+        }
+        if (hasTopNode && ObjectUtil.isNotNull(top)) {
+            List<SysMenuDto> topList = new ArrayList<>();
+            if (killNoneChild) {
+                if (CollUtil.isNotEmpty(returnList)) {
+                    top.setChildren(returnList);
+                }
+            } else {
+                top.setChildren(returnList);
+            }
+            topList.add(top);
+            return topList;
+        }
+        return returnList;
+    }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<SysMenuDto> list, SysMenuDto t, boolean killNoneChild) {
+        // 得到子节点列表
+        List<SysMenuDto> childList = getChildList(list, t);
+        if (killNoneChild) {
+            if (CollUtil.isNotEmpty(childList)) {
+                t.setChildren(childList);
+            }
+        } else {
+            t.setChildren(childList);
+        }
+        for (SysMenuDto tChild : childList) {
+            if (hasChild(list, tChild)) {
+                recursionFn(list, tChild, killNoneChild);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<SysMenuDto> getChildList(List<SysMenuDto> list, SysMenuDto t) {
+        List<SysMenuDto> tList = new ArrayList<>();
+        for (SysMenuDto n : list) {
+            if (ObjectUtil.isNotNull(n.getParentId()) && (n.getParentId()).longValue() == (t.getId()).longValue()) {
+                tList.add(n);
+            }
+        }
+        return tList;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<SysMenuDto> list, SysMenuDto t) {
+        return CollUtil.isNotEmpty(getChildList(list, t));
+    }
+
+    /**
+     * 删除无法溯源至顶级节点的值
+     */
+    private void deleteNoTopNode(List<SysMenuDto> list, Serializable topNode) {
+        list.removeIf(vo -> !Objects.equals(vo.getParentId(), topNode));
     }
 }
